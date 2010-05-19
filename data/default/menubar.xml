@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+	<item id="library"/>
+	<item id="networkLibrary"/>
+	<item id="toc"/>
+	<item id="bookmarks"/>
+	<item id="night"/>
+	<item id="day"/>
+	<item id="search"/>
+	<item id="preferences"/>
+	<item id="preferences-old"/>
+	<item id="bookInfo"/>
+	<item id="rotate"/>
+	<item id="increaseFont"/>
+	<item id="decreaseFont"/>
+	<submenu id="navigate">
+		<item id="gotoHome"/>
+		<item id="gotoSectionStart"/>
+		<item id="gotoSectionEnd"/>
+		<item id="nextTOCSection"/>
+		<item id="previousTOCSection"/>
+		<item id="undo"/>
+		<item id="redo"/>
+	</submenu>
+</menubar>

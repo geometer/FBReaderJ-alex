@@ -1,0 +1,42 @@
+===== 0.6.5 (May 14, 2010) =====
+
+* Network library view has been completely changed: each subcatalog opens in new window
+* "Network search" item has been added to the Network Library
+* "My Books" item never becomes hidden; Authentication dialog is showed if needed
+* Options menu has been added to Network Catalogs
+* Books directory is now configurable
+* Manybooks catalog has been added
+* A processing of ePub internal hyperlinks with "/../" in the path has been fixed
+* German interface translation (by Victor Massini) has been added
+
+===== 0.6.4 (May 1, 2010) =====
+
+* Zip decompressing has been fixed
+
+===== 0.6.3 (Apr 30, 2010) =====
+
+* A problem with some zip-archives has been fixed
+* Searching for books in network catalogs has been implemented
+* Stopping catalogs loading from context menu
+* Users registration in Litres network catalog
+
+===== 0.6.2 (Apr 26, 2010) =====
+
+* Downloader service priority has been decreased for better UI responsivity
+* New menu items: Rotate Screen, Zoom In, Zoom Out
+* A problem with %-escaped file names inside ePubs has been fixed
+* Small fixes in "Old" Preferences Dialog (by Robert Stockton)
+
+===== 0.6.1 (Apr 23, 2010) =====
+
+* User can preview a book before downloading/purchasing
+* French resources have been updated
+
+===== 0.6.0 (Apr 19, 2010) =====
+
+* Chinese text layouting has been implemented (we use native liblinebreak library
+  from http://vimgadgets.cvs.sourceforge.net/vimgadgets/common/tools/linebreak/)
+* Network libraries integration has been included
+* Chinese interface translation has been added (by shucang.com)
+* French interface translation has been added (by Sébastien Rodriguez & Pierre Senellart)
+* Meta information reading for ePubs from www.gutenberg.org has been fixed
