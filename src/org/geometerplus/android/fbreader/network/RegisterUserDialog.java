@@ -165,7 +165,7 @@ class RegisterUserDialog extends NetworkDialog {
 	}
 
 	public void prepareDialog(Dialog dialog) {
-		final NetworkAuthenticationManager mgr = myLink.authenticationManager();
+		//final NetworkAuthenticationManager mgr = myLink.authenticationManager();
 
 		((TextView) dialog.findViewById(R.id.network_register_login)).setText((myLogin != null) ? myLogin : "");
 		((TextView) dialog.findViewById(R.id.network_register_password)).setText((myPassword != null) ? myPassword : "");

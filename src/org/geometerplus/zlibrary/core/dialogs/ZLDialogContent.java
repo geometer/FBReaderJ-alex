@@ -21,8 +21,6 @@ package org.geometerplus.zlibrary.core.dialogs;
 
 import java.util.*;
 
-import org.geometerplus.zlibrary.core.util.*;
-
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.optionEntries.ZLSimpleBoolean3OptionEntry;
 import org.geometerplus.zlibrary.core.optionEntries.ZLSimpleBooleanOptionEntry;
@@ -31,7 +29,7 @@ import org.geometerplus.zlibrary.core.options.*;
 
 public abstract class ZLDialogContent {
 	private final ZLResource myResource;
-	protected final ArrayList Views = new ArrayList();
+	protected final ArrayList<ZLOptionView> Views = new ArrayList<ZLOptionView>();
 	
 	private static ZLOptionEntry createEntryByOption(ZLSimpleOption option) {
 		switch (option.getType()) {

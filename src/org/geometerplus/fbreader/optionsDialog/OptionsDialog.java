@@ -22,12 +22,12 @@ package org.geometerplus.fbreader.optionsDialog;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.dialogs.*;
 import org.geometerplus.zlibrary.core.optionEntries.*;
-import org.geometerplus.zlibrary.core.options.*;
+//import org.geometerplus.zlibrary.core.options.*;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.text.view.style.*;
+//import org.geometerplus.zlibrary.text.view.style.*;
 
 import org.geometerplus.fbreader.fbreader.*;
-import org.geometerplus.fbreader.formats.PluginCollection;
+//import org.geometerplus.fbreader.formats.PluginCollection;
 
 public class OptionsDialog {
 	private ZLOptionsDialog myDialog;
@@ -81,7 +81,7 @@ public class OptionsDialog {
 		}
 	}
 	
-	private static class StateOptionEntry extends ZLToggleBooleanOptionEntry {
+	/*private static class StateOptionEntry extends ZLToggleBooleanOptionEntry {
 		private boolean myState;
 		
 		public StateOptionEntry(ZLBooleanOption option) {
@@ -93,9 +93,9 @@ public class OptionsDialog {
 			myState = state;
 			super.onStateChanged(state);
 		}
-	}
+	}*/
 
-	private static class SpecialFontSizeEntry extends ZLSimpleSpinOptionEntry {
+	/*private static class SpecialFontSizeEntry extends ZLSimpleSpinOptionEntry {
 		private StateOptionEntry myFirst;
 		private StateOptionEntry mySecond;
 		
@@ -111,5 +111,5 @@ public class OptionsDialog {
 					(mySecond.isVisible() && mySecond.myState)
 			);
 		}	
-	}
+	}*/
 }

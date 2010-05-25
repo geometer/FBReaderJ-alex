@@ -27,8 +27,8 @@ import org.geometerplus.zlibrary.core.language.ZLLanguageMatcher.ZLWordBasedMatc
 import org.geometerplus.zlibrary.core.util.ZLUnicodeUtil;
 
 public class ZLLanguageDetector {
-	private ArrayList myUtf8Matchers = new ArrayList();
-	private	ArrayList myNonUtf8Matchers = new ArrayList();
+	private ArrayList<ZLWordBasedMatcher> myUtf8Matchers = new ArrayList<ZLWordBasedMatcher>();
+	private	ArrayList<ZLWordBasedMatcher> myNonUtf8Matchers = new ArrayList<ZLWordBasedMatcher>();
 	//private	ArrayList<ZLChineseMatcher> myChineseMatchers;
 
 	// 0: no break
@@ -137,7 +137,7 @@ public class ZLLanguageDetector {
 						}
 						String str = new String(buffer); 
 						word += str.substring(wordStart,wordStart + ptr - wordStart);	
-						for (Iterator it = wbMatchers.iterator(); it.hasNext(); ) {
+						for (Iterator<ZLWordBasedMatcher> it = wbMatchers.iterator(); it.hasNext(); ) {
 							((ZLWordBasedMatcher)it.next()).processWord(word, length2);
 						}
 						word = "";
@@ -157,7 +157,7 @@ public class ZLLanguageDetector {
 
 		LanguageInfo info = null;
 		
-		for (Iterator it = wbMatchers.iterator(); it.hasNext(); ) {
+		for (Iterator<ZLWordBasedMatcher> it = wbMatchers.iterator(); it.hasNext(); ) {
 			ZLWordBasedMatcher itzl = (ZLWordBasedMatcher)it.next();
 			int criterion = itzl.criterion();
 			if (criterion > matchingCriterion) {

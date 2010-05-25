@@ -25,7 +25,7 @@ import org.geometerplus.zlibrary.core.util.*;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 
 abstract public class ZLPaintContext {
-	private final ArrayList myFamilies = new ArrayList();
+	private final ArrayList<String> myFamilies = new ArrayList<String>();
 
 	public interface LineStyle {
 		int SOLID_LINE = 0;
@@ -145,7 +145,7 @@ abstract public class ZLPaintContext {
 	abstract public void drawFilledCircle(int x, int y, int r);
 	abstract public void drawOutline(int[] xs, int ys[]);
 
-	public ArrayList fontFamilies() {
+	public ArrayList<String> fontFamilies() {
 		if (myFamilies.isEmpty()) {
 			fillFamiliesList(myFamilies);
 		}
@@ -153,5 +153,5 @@ abstract public class ZLPaintContext {
 	}	
 	
 	abstract public String realFontFamilyName(String fontFamily);
-	abstract protected void fillFamiliesList(ArrayList families);
+	abstract protected void fillFamiliesList(ArrayList<String> families);
 }

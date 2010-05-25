@@ -21,18 +21,17 @@ package org.geometerplus.zlibrary.core.application;
 
 import java.util.*;
 import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
 
 class ZLKeyBindingsReader extends ZLXMLReaderAdapter {
-	private final HashMap myKeymap;
+	private final HashMap<String, String> myKeymap;
 	
 	public boolean dontCacheAttributeValues() {
 		return true;
 	}
 
-	public ZLKeyBindingsReader(HashMap keymap) {
+	public ZLKeyBindingsReader(HashMap<String, String> keymap) {
 		myKeymap = keymap; 
 	}
 		

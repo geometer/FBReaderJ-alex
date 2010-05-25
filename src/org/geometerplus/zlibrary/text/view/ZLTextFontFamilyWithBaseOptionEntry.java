@@ -27,7 +27,7 @@ import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 
 public class ZLTextFontFamilyWithBaseOptionEntry extends ZLFontFamilyOptionEntry {
-	private static final ArrayList ourAllFamilies = new ArrayList();
+	private static final ArrayList<String> ourAllFamilies = new ArrayList<String>();
 
 	private final ZLResource myResource;
 		
@@ -36,9 +36,9 @@ public class ZLTextFontFamilyWithBaseOptionEntry extends ZLFontFamilyOptionEntry
 		myResource = resource;
 	}
 
-	public ArrayList getValues() {
+	public ArrayList<String> getValues() {
 		if (ourAllFamilies.size() == 0) {
-			final ArrayList families = super.getValues();
+			final ArrayList<String> families = super.getValues();
 			ourAllFamilies.add(myResource.getResource("unchanged").getValue());
 			ourAllFamilies.addAll(families);
 		}

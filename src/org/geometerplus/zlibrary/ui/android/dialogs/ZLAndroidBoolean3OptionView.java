@@ -78,14 +78,14 @@ class ZLAndroidBoolean3OptionView extends ZLAndroidOptionView {
 	}
 
 	private class ComboAdapter extends BaseAdapter implements Spinner.OnItemSelectedListener {
-		EditText myEditor;
+		//EditText myEditor;
 
-		public void onItemSelected(AdapterView parent, View v, int position, long id) {
+		public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 			//final ZLBoolean3OptionEntry comboEntry = (ZLBoolean3OptionEntry)myOption;
 			//comboEntry.onValueSelected(position);
 		}
 
-		public void onNothingSelected(AdapterView parent) {
+		public void onNothingSelected(AdapterView<?> parent) {
 		}
 
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -135,10 +135,6 @@ class ZLAndroidBoolean3OptionView extends ZLAndroidOptionView {
 
 		public long getItemId(int position) {
 			return position;
-		}
-
-		public boolean stableIds() {
-			return true;
 		}
 	}
 }

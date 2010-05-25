@@ -20,7 +20,6 @@
 package org.geometerplus.zlibrary.core.dialogs;
 
 import java.util.*;
-import org.geometerplus.zlibrary.core.util.*;
 
 public abstract class ZLComboOptionEntry extends ZLOptionEntry {
 	private final boolean myEditable;
@@ -58,7 +57,7 @@ public abstract class ZLComboOptionEntry extends ZLOptionEntry {
 	
 	public abstract String initialValue();
 	
-	public abstract ArrayList/*<String>*/ getValues();
+	public abstract ArrayList<String> getValues();
 	
 	public abstract void onAccept(String value);
 

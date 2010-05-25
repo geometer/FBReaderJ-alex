@@ -19,8 +19,7 @@
 
 package org.geometerplus.zlibrary.core.dialogs;
 
-import java.util.*;
-import org.geometerplus.zlibrary.core.util.*;
+/*import java.util.*;
 
 public abstract class ZLOrderOptionEntry extends ZLOptionEntry {
 	private final ArrayList myValues = new ArrayList();
@@ -35,4 +34,4 @@ public abstract class ZLOrderOptionEntry extends ZLOptionEntry {
 	public ArrayList getValues() {
 		return myValues;
 	}
-}
+}*/

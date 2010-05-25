@@ -71,5 +71,5 @@ public class ZLAndroidApplication extends Application {
 		return myData.get(key);
 	}
 
-	private final HashMap myData = new HashMap();
+	private final HashMap<Object, Object> myData = new HashMap<Object, Object>();
 }

@@ -104,6 +104,6 @@ public abstract class ZLLanguageMatcher {
 
 		private int myProCounter;
 	    private int myContraCounter;
-	    private	ArrayList/*<String>*/ myDictionary = new ArrayList();
+	    private	ArrayList<String> myDictionary = new ArrayList<String>();
 	};
 }

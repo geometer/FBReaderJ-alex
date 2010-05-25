@@ -72,9 +72,9 @@ public class ZLColorOptionBuilder {
 
 		public void onAccept(ZLColor color) {
 			onReset(color);
-			final ArrayList optionNames = myData.myOptionNames;
-			final HashMap options = myData.myOptions;
-			final HashMap colors = myData.myCurrentColors;
+			final ArrayList<String> optionNames = myData.myOptionNames;
+			final HashMap<String,ZLColorOption> options = myData.myOptions;
+			final HashMap<String,ZLColor> colors = myData.myCurrentColors;
 			final int len = optionNames.size();
 			for (int i = 0; i < len; i++) {
 				Object name = optionNames.get(i);
@@ -94,7 +94,7 @@ public class ZLColorOptionBuilder {
 			myData = data;
 		}
 		
-		public ArrayList getValues() {
+		public ArrayList<String> getValues() {
 			return myData.myOptionNames;
 		}
 
@@ -120,8 +120,8 @@ public class ZLColorOptionBuilder {
 		private ZLColorOptionEntry myColorEntry;
 		private String myCurrentOptionName;
 		private String myPreviousOptionName;
-		private final ArrayList/*<String>*/ myOptionNames = new ArrayList();
-		private final HashMap/*<String,ZLColor>*/ myCurrentColors = new HashMap();
-		private final HashMap/*<String,ZLColorOption>*/ myOptions = new HashMap();
+		private final ArrayList<String> myOptionNames = new ArrayList<String>();
+		private final HashMap<String,ZLColor> myCurrentColors = new HashMap<String,ZLColor>();
+		private final HashMap<String,ZLColorOption> myOptions = new HashMap<String,ZLColorOption>();
 	}		
 }

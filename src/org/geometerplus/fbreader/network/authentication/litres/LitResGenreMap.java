@@ -26,7 +26,6 @@ class LitResGenreMap {
 
 	private static LitResGenreMap ourInstance;
 
-	private boolean myInitialized;
 	LinkedList<LitResGenre> myGenresTree;
 	HashMap<String, LitResGenre> myGenresMap;
 	HashMap<LitResGenre, String> myGenresTitles;
