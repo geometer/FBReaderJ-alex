@@ -53,23 +53,8 @@ public final class FBView extends ZLTextView {
 	}
 
 	final void doScrollPage(boolean forward) {
-		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
-		if (preferences.AnimateOption.getValue()) {
-			if (forward) {
-				ZLTextWordCursor cursor = getEndCursor();
-				if (cursor != null && !cursor.isNull() && !cursor.isEndOfParagraph() || !cursor.getParagraphCursor().isLast()) {
-					startAutoScrolling(preferences.HorizontalOption.getValue() ? PAGE_RIGHT : PAGE_BOTTOM);
-				}
-			} else {
-				ZLTextWordCursor cursor = getStartCursor();
-				if (cursor != null && !cursor.isNull() && !cursor.isStartOfParagraph() || !cursor.getParagraphCursor().isFirst()) {
-					startAutoScrolling(preferences.HorizontalOption.getValue() ? PAGE_LEFT : PAGE_TOP);
-				}
-			}
-		} else {
-			scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
-			ZLApplication.Instance().repaintView();
-		}
+		scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
+		ZLApplication.Instance().repaintView();
 	}
 
 	void followHyperlink(ZLTextHyperlink hyperlink) {
@@ -144,19 +129,11 @@ public final class FBView extends ZLTextView {
 					if (cursor == null || cursor.isNull()) {
 						return false;
 					}
-					if (!cursor.isStartOfParagraph() || !cursor.getParagraphCursor().isFirst()) {
-						ZLApplication.Instance().scrollViewTo(horizontal ? PAGE_LEFT : PAGE_TOP, diff);
-					}
 				} else if (diff < 0) {
 					ZLTextWordCursor cursor = getEndCursor();
 					if (cursor == null || cursor.isNull()) {
 						return false;
 					}
-					if (!cursor.isEndOfParagraph() || !cursor.getParagraphCursor().isLast()) {
-						ZLApplication.Instance().scrollViewTo(horizontal ? PAGE_RIGHT : PAGE_BOTTOM, -diff);
-					}
-				} else {
-					ZLApplication.Instance().scrollViewTo(PAGE_CENTRAL, 0);
 				}
 				return true;
 			}
@@ -200,14 +177,7 @@ public final class FBView extends ZLTextView {
 							((diff < 0) ? PAGE_RIGHT : PAGE_LEFT) :
 							((diff < 0) ? PAGE_BOTTOM : PAGE_TOP);
 					}
-					if (ScrollingPreferences.Instance().AnimateOption.getValue()) {
-						startAutoScrolling(viewPage);
-					} else {
-						ZLApplication.Instance().scrollViewTo(PAGE_CENTRAL, 0);
-						onScrollingFinished(viewPage);
-						ZLApplication.Instance().repaintView();
-						setScrollingActive(false);
-					}
+					startAutoScrolling(viewPage);
 				}
 				return true;
 			}

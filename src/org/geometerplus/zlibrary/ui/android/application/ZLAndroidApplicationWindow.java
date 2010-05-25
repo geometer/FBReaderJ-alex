@@ -112,10 +112,6 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		widget.postInvalidate();
 	}
 
-	protected void scrollViewTo(int viewPage, int shift) {
-		getViewWidget().scrollTo(viewPage, shift);
-	}
-
 	protected void startViewAutoScrolling(int viewPage) {
 		getViewWidget().startAutoScrolling(viewPage);
 	}
