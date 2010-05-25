@@ -45,4 +45,6 @@ abstract public class ZLApplicationWindow {
 	abstract protected boolean canRotate();
 
 	abstract protected void close();
+
+	abstract protected void updateEpdView(int delay);
 }

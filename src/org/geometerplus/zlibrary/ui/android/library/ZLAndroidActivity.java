@@ -154,6 +154,8 @@ public abstract class ZLAndroidActivity extends Activity {
 		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 
+	public abstract void updateEpdView(int delay);
+
 	private int myChangeCounter;
 	private int myOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 	private void setAutoRotationMode() {

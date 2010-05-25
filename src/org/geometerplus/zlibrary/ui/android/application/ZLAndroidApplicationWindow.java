@@ -127,4 +127,8 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 	public void close() {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).finish();
 	}
+
+	public void updateEpdView(int delay) {
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).updateEpdView(delay);
+	}
 }

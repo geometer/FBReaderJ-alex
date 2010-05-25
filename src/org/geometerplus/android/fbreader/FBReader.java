@@ -26,6 +26,7 @@ import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -108,13 +109,11 @@ public final class FBReader extends ZLAndroidActivity {
 			root.addView(myPanel.ControlPanel, p);
 		}
 
-		final View view = findViewById(R.id.epd_layout);
-		if (view instanceof ViewGroup) {
-			EPDView.Instance().bindLayout((ViewGroup) view);
-			EPDView.Instance().updateEpdViewDelay(200);
-			System.err.println("EPD -- bindLayout & updateEpdViewDelay(200)");
-		}
+		System.err.println("EPD -- bindLayout & updateEpdViewDelay(200)");
+		final LinearLayout view = (LinearLayout) findViewById(R.id.epd_layout);
+		EPDView.Instance().bindLayout((ViewGroup) view);
 		EPDView.Instance().setVdsActive(true);
+		EPDView.Instance().updateEpdViewDelay(200);
 	}
 
 	private PowerManager.WakeLock myWakeLock;
@@ -156,10 +155,14 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onStop();
 	}
 
-
-	public void onUserInteraction() {
-		System.err.println("EPD -- updateEpdView()");
-		EPDView.Instance().updateEpdViewDelay(200);
+	@Override
+	public void updateEpdView(int delay) {
+		System.err.println("EPD -- updateEpdView(delay = " + delay + ")");
+		if (delay <= 0) {
+			EPDView.Instance().updateEpdView();
+		} else {
+			EPDView.Instance().updateEpdViewDelay(200);
+		}
 	}
 
 	

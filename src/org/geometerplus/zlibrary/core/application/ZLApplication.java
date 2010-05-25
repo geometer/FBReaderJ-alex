@@ -82,7 +82,8 @@ public abstract class ZLApplication {
 
 	public final void repaintView() {
 		if (myWindow != null) {
-			myWindow.repaintView();
+			//myWindow.repaintView();
+			myWindow.updateEpdView(100);
 		}
 	}
 
@@ -102,6 +103,9 @@ public abstract class ZLApplication {
 	}
 
 	public final void onViewChanged() {
+		if (myWindow != null) {
+			myWindow.updateEpdView(0);
+		}
 		for (ButtonPanel panel : myPanels) {
 			panel.hide();
 		}

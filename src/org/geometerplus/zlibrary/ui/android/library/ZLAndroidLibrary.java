@@ -67,6 +67,12 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		}
 	}
 
+	public void updateEpdView(int delay) {
+		if (myActivity != null) {
+			myActivity.updateEpdView(delay);
+		}
+	}
+	
 	public ZLAndroidPaintContext getPaintContext() {
 		return getWidget().getPaintContext();
 	}
