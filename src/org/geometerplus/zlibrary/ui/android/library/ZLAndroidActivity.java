@@ -145,13 +145,13 @@ public abstract class ZLAndroidActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		View view = findViewById(R.id.main_view);
+		View view = findViewById(R.id.main_view_epd);
 		return ((view != null) && view.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		View view = findViewById(R.id.main_view);
+		View view = findViewById(R.id.main_view_epd);
 		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 
@@ -190,7 +190,7 @@ public abstract class ZLAndroidActivity extends Activity {
 	}
 
 	void rotate() {
-		View view = findViewById(R.id.main_view);
+		View view = findViewById(R.id.main_view_epd);
 		if (view != null) {
 			switch (getRequestedOrientation()) {
 				case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:

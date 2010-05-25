@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/root_view"
+	android:id="@+id/root_view_root"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:orientation="vertical"
 >
-	<org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget
-		android:id="@+id/main_view"
+	<RelativeLayout
+		android:id="@+id/root_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:focusable="true"
-		android:scrollbars="vertical"
-		android:scrollbarAlwaysDrawVerticalTrack="true"
-	/>
-</RelativeLayout>
+	>
+		<TextView
+			android:id="@+id/main_view_lcd"
+			android:text="foo"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		/>
+	</RelativeLayout>
+	<LinearLayout
+		android:id="@+id/epd_layout"
+		android:orientation="vertical"
+		android:layout_width="600px"
+		android:layout_height="800px"
+		android:visibility="invisible"
+	>
+		<org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget
+			android:id="@+id/main_view_epd"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+			android:focusable="true"
+			android:scrollbars="vertical"
+			android:scrollbarAlwaysDrawVerticalTrack="true"
+		/>
+	</LinearLayout>
+</LinearLayout>

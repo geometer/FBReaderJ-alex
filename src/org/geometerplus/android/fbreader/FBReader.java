@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -106,6 +107,14 @@ public final class FBReader extends ZLAndroidActivity {
 			p.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			root.addView(myPanel.ControlPanel, p);
 		}
+
+		final View view = findViewById(R.id.epd_layout);
+		if (view instanceof ViewGroup) {
+			EPDView.Instance().bindLayout((ViewGroup) view);
+			EPDView.Instance().updateEpdViewDelay(200);
+			System.err.println("EPD -- bindLayout & updateEpdViewDelay(200)");
+		}
+		EPDView.Instance().setVdsActive(true);
 	}
 
 	private PowerManager.WakeLock myWakeLock;
@@ -139,6 +148,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onStop() {
+		EPDView.Instance().setVdsActive(false);
 		if (myPanel.ControlPanel != null) {
 			myPanel.ControlPanel.hide(false);
 			myPanel.ControlPanel = null;
@@ -146,6 +156,13 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onStop();
 	}
 
+
+	public void onUserInteraction() {
+		System.err.println("EPD -- updateEpdView()");
+		EPDView.Instance().updateEpdViewDelay(200);
+	}
+
+	
 	void showTextSearchControls(boolean show) {
 		if (myPanel.ControlPanel != null) {
 			if (show) {
