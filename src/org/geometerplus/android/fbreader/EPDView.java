@@ -44,7 +44,7 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		System.err.println("onPageUp -- Update EPD");
+		System.err.println("EPD -- onPageUp -- updateEpdViewDelay(100);");
 		ZLApplication.Instance().startViewAutoScrolling(ZLView.PAGE_TOP);
 		updateEpdViewDelay(100);
 		return true;
@@ -52,7 +52,7 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		System.err.println("onPageDown -- Update EPD");
+		System.err.println("EPD -- onPageDown -- updateEpdViewDelay(100);");
 		ZLApplication.Instance().startViewAutoScrolling(ZLView.PAGE_BOTTOM);
 		updateEpdViewDelay(100);
 		return true;
