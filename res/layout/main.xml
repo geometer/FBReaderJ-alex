@@ -12,10 +12,14 @@
 		android:layout_height="fill_parent"
 	>
 		<TextView
-			android:id="@+id/main_view_lcd"
-			android:text="foo"
+			android:id="@+id/fbreader_prototype_text"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="FBReader Prototype"
+			android:gravity="center_horizontal"
+			android:paddingTop="8dp"
+			android:paddingBottom="8dp"
 		/>
 	</RelativeLayout>
 	<LinearLayout

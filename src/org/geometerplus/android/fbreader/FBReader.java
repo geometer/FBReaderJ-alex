@@ -20,12 +20,11 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -39,7 +38,7 @@ import org.geometerplus.fbreader.fbreader.ActionCode;
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
 
-	private int myFullScreenFlag;
+	//private int myFullScreenFlag;
 
 	private static class TextSearchButtonPanel implements ZLApplication.ButtonPanel {
 		boolean Visible;
@@ -69,12 +68,12 @@ public final class FBReader extends ZLAndroidActivity {
 		System.err.println(tele.getNetworkOperator());
 		*/
 		Instance = this;
-		final ZLAndroidApplication application = ZLAndroidApplication.Instance();
+		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		myFullScreenFlag =
 			application.ShowStatusBarOption.getValue() ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		getWindow().setFlags(
 			WindowManager.LayoutParams.FLAG_FULLSCREEN, myFullScreenFlag
-		);
+		);*/
 		if (myPanel == null) {
 			myPanel = new TextSearchButtonPanel();
 			ZLApplication.Instance().registerButtonPanel(myPanel);
@@ -84,14 +83,14 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 
+		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		final int fullScreenFlag =
 			application.ShowStatusBarOption.getValue() ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		if (fullScreenFlag != myFullScreenFlag) {
 			finish();
 			startActivity(new Intent(this, this.getClass()));
-		}
+		}*/
 
 		if (myPanel.ControlPanel == null) {
 			myPanel.ControlPanel = new ControlPanel(this);
