@@ -30,7 +30,6 @@ import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidViewWidget;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -121,7 +120,8 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 	}
 
 	public boolean canRotate() {
-		return !ZLAndroidApplication.Instance().AutoOrientationOption.getValue();
+		//return !ZLAndroidApplication.Instance().AutoOrientationOption.getValue();
+		return true;
 	}
 
 	public void close() {

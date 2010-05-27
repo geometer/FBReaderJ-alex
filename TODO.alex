@@ -2,7 +2,11 @@ DONE Можно не прятать status-bar
 DONE Сделать на LCD надпись "FBReader prototype"
 
 DONE Убрать scroll-bar
-** Убрать из настроек ненужные пункты (Ex: про scroll-bar)
+DONE Убрать из настроек ненужные пункты
+	DONE про scroll-bar
+	DONE про Automatic rotation
+	DONE про Flick scrolling
+	DONE про Horizontal Scrolling
 
 ** Во время чтения показывать на экранчике прогресс, как:
 	Track-widget + Text-поле с процентами + refresh по отпускании.

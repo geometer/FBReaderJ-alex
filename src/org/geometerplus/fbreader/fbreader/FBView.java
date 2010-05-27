@@ -69,7 +69,7 @@ public final class FBView extends ZLTextView {
 	}
 
 	private int myStartX;
-	private int myStartY;
+	//private int myStartY;
 	private boolean myIsManualScrollingActive;
 
 	public boolean onStylusPress(int x, int y) {
@@ -89,27 +89,27 @@ public final class FBView extends ZLTextView {
 			return true;
 		}
 
-		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
-		if (preferences.FlickOption.getValue()) {
+//		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
+//		if (preferences.FlickOption.getValue()) {
 			myStartX = x;
-			myStartY = y;
+			//myStartY = y;
 			setScrollingActive(true);
 			myIsManualScrollingActive = true;
-		} else {
-			if (preferences.HorizontalOption.getValue()) {
-				if (x <= Context.getWidth() / 3) {
-					doScrollPage(false);
-				} else if (x >= Context.getWidth() * 2 / 3) {
-					doScrollPage(true);
-				}
-			} else {
-				if (y <= Context.getHeight() / 3) {
-					doScrollPage(false);
-				} else if (y >= Context.getHeight() * 2 / 3) {
-					doScrollPage(true);
-				}
-			}
-		}
+//		} else {
+//			if (preferences.HorizontalOption.getValue()) {
+//				if (x <= Context.getWidth() / 3) {
+//					doScrollPage(false);
+//				} else if (x >= Context.getWidth() * 2 / 3) {
+//					doScrollPage(true);
+//				}
+//			} else {
+//				if (y <= Context.getHeight() / 3) {
+//					doScrollPage(false);
+//				} else if (y >= Context.getHeight() * 2 / 3) {
+//					doScrollPage(true);
+//				}
+//			}
+//		}
 
 		//activateSelection(x, y);
 		return true;
@@ -122,8 +122,9 @@ public final class FBView extends ZLTextView {
 
 		synchronized (this) {
 			if (isScrollingActive() && myIsManualScrollingActive) {
-				final boolean horizontal = ScrollingPreferences.Instance().HorizontalOption.getValue();
-				final int diff = horizontal ? x - myStartX : y - myStartY;
+				//final boolean horizontal = ScrollingPreferences.Instance().HorizontalOption.getValue();
+				//final int diff = horizontal ? x - myStartX : y - myStartY;
+				final int diff = x - myStartX;
 				if (diff > 0) {
 					ZLTextWordCursor cursor = getStartCursor();
 					if (cursor == null || cursor.isNull()) {
@@ -151,8 +152,9 @@ public final class FBView extends ZLTextView {
 			if (isScrollingActive() && myIsManualScrollingActive) {
 				setScrollingActive(false);
 				myIsManualScrollingActive = false;
-				final boolean horizontal = ScrollingPreferences.Instance().HorizontalOption.getValue();
-				final int diff = horizontal ? x - myStartX : y - myStartY;
+				//final boolean horizontal = ScrollingPreferences.Instance().HorizontalOption.getValue();
+				//final int diff = horizontal ? x - myStartX : y - myStartY;
+				final int diff = x - myStartX;
 				boolean doScroll = false;
 				if (diff > 0) {
 					ZLTextWordCursor cursor = getStartCursor();
@@ -168,14 +170,13 @@ public final class FBView extends ZLTextView {
 				if (doScroll) {
 					final int h = Context.getHeight();
 					final int w = Context.getWidth();
-					final int minDiff = horizontal ?
-						((w > h) ? w / 4 : w / 3) :
-						((h > w) ? h / 4 : h / 3);
+//					final int minDiff = horizontal ?
+//						((w > h) ? w / 4 : w / 3) :
+//						((h > w) ? h / 4 : h / 3);
+					final int minDiff = (w > h) ? w / 4 : w / 3;
 					int viewPage = PAGE_CENTRAL;
 					if (Math.abs(diff) > minDiff) {
-						viewPage = horizontal ?
-							((diff < 0) ? PAGE_RIGHT : PAGE_LEFT) :
-							((diff < 0) ? PAGE_BOTTOM : PAGE_TOP);
+						viewPage = (diff < 0) ? PAGE_RIGHT : PAGE_LEFT;
 					}
 					startAutoScrolling(viewPage);
 				}

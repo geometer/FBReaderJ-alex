@@ -88,9 +88,9 @@ public abstract class ZLAndroidActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 
-		if (ZLAndroidApplication.Instance().AutoOrientationOption.getValue()) {
-			setAutoRotationMode();
-		} else {
+//		if (ZLAndroidApplication.Instance().AutoOrientationOption.getValue()) {
+//			setAutoRotationMode();
+//		} else {
 			switch (myOrientation) {
 				case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
 				case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
@@ -103,7 +103,7 @@ public abstract class ZLAndroidActivity extends Activity {
 					setAutoRotationMode();
 					break;
 			}
-		}
+//		}
 	}
 
 	@Override
@@ -159,9 +159,10 @@ public abstract class ZLAndroidActivity extends Activity {
 	private int myChangeCounter;
 	private int myOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 	private void setAutoRotationMode() {
-		final ZLAndroidApplication application = ZLAndroidApplication.Instance();
+		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		myOrientation = application.AutoOrientationOption.getValue() ?
-			ActivityInfo.SCREEN_ORIENTATION_SENSOR : ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+			ActivityInfo.SCREEN_ORIENTATION_SENSOR : ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;*/
+		myOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
 		setRequestedOrientation(myOrientation);
 		myChangeCounter = 0;
 	}
