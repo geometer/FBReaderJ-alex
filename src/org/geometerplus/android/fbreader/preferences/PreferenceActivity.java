@@ -19,10 +19,6 @@
 
 package org.geometerplus.android.fbreader.preferences;
 
-import android.content.Context;
-
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.fbreader.fbreader.*;
@@ -83,7 +79,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().ShowStatusBarOption, "showStatusBar");
 		lookNFeelCategory.addOption(ZLAndroidApplication.Instance().DontTurnScreenOffOption, "dontTurnScreenOff");
-		lookNFeelCategory.addPreference(new ScrollbarTypePreference(this, lookNFeelCategory.Resource, "scrollbarType"));
+		//lookNFeelCategory.addPreference(new ScrollbarTypePreference(this, lookNFeelCategory.Resource, "scrollbarType"));
 
 		/*
 		final FBReader fbreader = (FBReader)FBReader.Instance();
@@ -106,7 +102,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	}
 }
 
-class ScrollbarTypePreference extends ZLStringListPreference {
+/*class ScrollbarTypePreference extends ZLStringListPreference {
 	private static final String[] ourCodes = { "hide", "show", "showAsProgress" };
 
 	private FBReader myReader;
@@ -136,4 +132,4 @@ class ScrollbarTypePreference extends ZLStringListPreference {
 		}
 		myReader.ScrollbarTypeOption.setValue(intValue);
 	}
-}
+}*/

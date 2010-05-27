@@ -34,8 +34,7 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
 			android:focusable="true"
-			android:scrollbars="vertical"
-			android:scrollbarAlwaysDrawVerticalTrack="true"
+			android:scrollbars="none"
 		/>
 	</LinearLayout>
 </LinearLayout>

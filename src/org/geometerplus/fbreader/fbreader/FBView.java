@@ -258,6 +258,6 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public int scrollbarType() {
-		return myReader.ScrollbarTypeOption.getValue();
+		return SCROLLBAR_HIDE;
 	}
 }

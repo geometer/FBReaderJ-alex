@@ -1,7 +1,7 @@
 DONE Можно не прятать status-bar
 DONE Сделать на LCD надпись "FBReader prototype"
 
-** Убрать scroll-bar
+DONE Убрать scroll-bar
 ** Убрать из настроек ненужные пункты (Ex: про scroll-bar)
 
 ** Во время чтения показывать на экранчике прогресс, как:
