@@ -46,5 +46,7 @@ abstract public class ZLApplicationWindow {
 
 	abstract protected void close();
 
-	abstract protected void updateEpdView(int delay);
+	abstract protected void notifyApplicationChanges(boolean singleChange);
+
+	abstract protected void onEpdRepaintFinished();
 }

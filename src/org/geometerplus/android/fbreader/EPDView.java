@@ -19,12 +19,10 @@
 
 package org.geometerplus.android.fbreader;
 
-
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
 import android.widget.EpdRender;
-
 
 
 class EPDView extends EpdRender {
@@ -46,7 +44,7 @@ class EPDView extends EpdRender {
 	public boolean onPageUp(int arg1, int arg2) {
 		System.err.println("EPD -- onPageUp -- updateEpdViewDelay(100);");
 		ZLApplication.Instance().startViewAutoScrolling(ZLView.PAGE_TOP);
-		updateEpdViewDelay(100);
+		ZLApplication.Instance().repaintView();
 		return true;
 	}
 
@@ -54,7 +52,7 @@ class EPDView extends EpdRender {
 	public boolean onPageDown(int arg1, int arg2) {
 		System.err.println("EPD -- onPageDown -- updateEpdViewDelay(100);");
 		ZLApplication.Instance().startViewAutoScrolling(ZLView.PAGE_BOTTOM);
-		updateEpdViewDelay(100);
+		ZLApplication.Instance().repaintView();
 		return true;
 	}
 }

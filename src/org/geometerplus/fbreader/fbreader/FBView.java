@@ -35,6 +35,7 @@ public final class FBView extends ZLTextView {
 		myReader = reader;
 	}
 
+	@Override
 	public void setModel(ZLTextModel model) {
 		myIsManualScrollingActive = false;
 		super.setModel(model);
@@ -48,6 +49,7 @@ public final class FBView extends ZLTextView {
 		ZLApplication.Instance().repaintView();
 	}
 
+	@Override
 	public void onScrollingFinished(int viewPage) {
 		super.onScrollingFinished(viewPage);
 	}
@@ -72,6 +74,7 @@ public final class FBView extends ZLTextView {
 	//private int myStartY;
 	private boolean myIsManualScrollingActive;
 
+	@Override
 	public boolean onStylusPress(int x, int y) {
 		if (super.onStylusPress(x, y)) {
 			return true;
@@ -115,6 +118,7 @@ public final class FBView extends ZLTextView {
 		return true;
 	}
 
+	@Override
 	public boolean onStylusMovePressed(int x, int y) {
 		if (super.onStylusMovePressed(x, y)) {
 			return true;
@@ -143,6 +147,7 @@ public final class FBView extends ZLTextView {
 		return false;
 	}
 
+	@Override
 	public boolean onStylusRelease(int x, int y) {
 		if (super.onStylusRelease(x, y)) {
 			return true;
@@ -186,6 +191,7 @@ public final class FBView extends ZLTextView {
 		return false;
 	}
 
+	@Override
 	public boolean onTrackballRotated(int diffX, int diffY) {
 		if (diffY > 0) {
 			ZLApplication.Instance().doAction(ActionCode.TRACKBALL_SCROLL_FORWARD);

@@ -20,6 +20,26 @@
 			android:gravity="center_horizontal"
 			android:paddingTop="8dp"
 			android:paddingBottom="8dp"
+			android:layout_alignParentTop="true"
+		/>
+		<TextView
+			android:id="@+id/book_position_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:paddingLeft="8dp"
+			android:layout_below="@id/fbreader_prototype_text"
+			android:layout_alignParentRight="true"
+			android:minEms="6"
+		/>
+		<SeekBar
+			android:id="@+id/book_position_slider"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/fbreader_prototype_text"
+			android:layout_toLeftOf="@id/book_position_text"
+			android:layout_alignParentLeft="true"
+			android:max="1000"
 		/>
 	</RelativeLayout>
 	<LinearLayout

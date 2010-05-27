@@ -154,7 +154,15 @@ public abstract class ZLAndroidActivity extends Activity {
 		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 
-	public abstract void updateEpdView(int delay);
+	/*
+	 * singleChange parameter must be <code>true</code> if there will 
+	 * be no changes in near future;
+	 * 
+	 * singleChange parameter must be <code>false</code> if there can be
+	 * another changes in near future.  
+	 */
+	public abstract void notifyApplicationChanges(boolean singleChange);
+	public abstract void onEpdRepaintFinished();
 
 	private int myChangeCounter;
 	private int myOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;

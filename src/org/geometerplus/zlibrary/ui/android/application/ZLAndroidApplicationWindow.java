@@ -119,6 +119,10 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotateScreen();
 	}
 
+	public void onEpdRepaintFinished() {
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).onEpdRepaintFinished();
+	}
+
 	public boolean canRotate() {
 		//return !ZLAndroidApplication.Instance().AutoOrientationOption.getValue();
 		return true;
@@ -128,7 +132,7 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).finish();
 	}
 
-	public void updateEpdView(int delay) {
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).updateEpdView(delay);
+	public void notifyApplicationChanges(boolean singleChange) {
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).notifyApplicationChanges(singleChange);
 	}
 }

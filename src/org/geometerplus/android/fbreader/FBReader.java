@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
@@ -34,6 +36,7 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.fbreader.FBView;
 
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
@@ -78,8 +81,49 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel = new TextSearchButtonPanel();
 			ZLApplication.Instance().registerButtonPanel(myPanel);
 		}
+
+		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
+		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
+		bookPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			private boolean myInTouch;
+
+			private void gotoProgress(int progress) {
+				final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
+				if (view != null && view.getModel() != null) {
+					final int paragraphsNumber = view.getModel().getParagraphsNumber();
+					final int paragraphIndex = paragraphsNumber * progress / 1000;
+					view.gotoPosition(paragraphIndex, 0, 0);
+				}
+			}
+			
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				gotoProgress(bookPositionSlider.getProgress());
+				updateEpdView(0);
+				myInTouch = false;
+			}
+
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				myInTouch = true;
+			}
+
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				gotoProgress(progress);
+				bookPositionText.setText(makePercentsString(progress));
+				if (!myInTouch && fromUser) {
+					updateEpdView(250);
+				}
+				if (!fromUser) {
+					System.err.println("onProgressChanged -- Not from user");
+				}
+			}
+		});
 	}
 
+	private String makePercentsString(int progress) {
+		final int divBy = 10;
+		return (progress / divBy) + "." + (progress % divBy) + "%";
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -155,12 +199,31 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	@Override
+	public void notifyApplicationChanges(boolean singleChange) {
+		updateEpdView(singleChange ? 0 : 200);
+	}
+
+	public void onEpdRepaintFinished() {
+		final int progress;
+		final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
+		if (view != null && view.getModel() != null) {
+			final int paragraph = view.getStartCursor().getParagraphIndex();
+			final int paragraphsNumber = view.getModel().getParagraphsNumber();
+			progress = paragraph * 1000 / paragraphsNumber;
+			System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
+		} else {
+			progress = 0;
+			System.err.println("OUCH!!! view or model is null!!!");
+		}
+		((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
+	}
+
 	public void updateEpdView(int delay) {
 		System.err.println("EPD -- updateEpdView(delay = " + delay + ")");
 		if (delay <= 0) {
 			EPDView.Instance().updateEpdView();
 		} else {
-			EPDView.Instance().updateEpdViewDelay(200);
+			EPDView.Instance().updateEpdViewDelay(delay);
 		}
 	}
 
