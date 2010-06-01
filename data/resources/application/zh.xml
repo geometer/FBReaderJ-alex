@@ -60,6 +60,8 @@
 			<node name="signOut" value="退出 (%s)"/>
 			<node name="refillAccount" toBeTranslated="true" value="Refill account"/>
 		</node>
+		<node name="browser" toBeTranslated="true" value="Browser" />
+		<node name="browserSummary" toBeTranslated="true" value="Open built-in browser" />
 	</node>
 	<node name="networkBookView">
 		<node name="bookInfo" value="书籍信息" />

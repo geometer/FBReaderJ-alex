@@ -60,6 +60,8 @@
 			<node name="signOut" value="Kijelentkezés (%s)"/>
 			<node name="refillAccount" value="Számla feltöltése"/>
 		</node>
+		<node name="browser" toBeTranslated="true" value="Browser" />
+		<node name="browserSummary" toBeTranslated="true" value="Open built-in browser" />
 	</node>
 	<node name="networkBookView">
 		<node name="bookInfo" value="Könyv adatai" />

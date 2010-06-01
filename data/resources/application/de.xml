@@ -60,6 +60,8 @@
 			<node name="signOut" value="Ausloggen (%s)"/>
 			<node name="refillAccount" value="Account aufladen"/>
 		</node>
+		<node name="browser" toBeTranslated="true" value="Browser" />
+		<node name="browserSummary" toBeTranslated="true" value="Open built-in browser" />
 	</node>
 	<node name="networkBookView">
 		<node name="bookInfo" value="Buch Info" />
