@@ -22,6 +22,7 @@ package org.geometerplus.android.fbreader;
 import android.app.SearchManager;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,19 +204,35 @@ public final class FBReader extends ZLAndroidActivity {
 		updateEpdView(singleChange ? 0 : 200);
 	}
 
-	public void onEpdRepaintFinished() {
-		final int progress;
-		final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
-		if (view != null && view.getModel() != null) {
-			final int paragraph = view.getStartCursor().getParagraphIndex();
-			final int paragraphsNumber = view.getModel().getParagraphsNumber();
-			progress = paragraph * 1000 / paragraphsNumber;
-			System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
-		} else {
-			progress = 0;
-			System.err.println("OUCH!!! view or model is null!!!");
+	private final Handler myEpdRepaintHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			final org.geometerplus.fbreader.fbreader.FBReader fbreader =
+				(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
+			TextView bookTitle = (TextView) findViewById(R.id.book_title);
+			if (fbreader.Model != null && fbreader.Model.Book != null) {
+				bookTitle.setText(fbreader.Model.Book.getTitle());
+			} else {
+				bookTitle.setText("");
+			}
+
+			final int progress;
+			final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
+			if (view != null && view.getModel() != null) {
+				final int paragraph = view.getStartCursor().getParagraphIndex();
+				final int paragraphsNumber = view.getModel().getParagraphsNumber();
+				progress = paragraph * 1000 / paragraphsNumber;
+				System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
+			} else {
+				progress = 0;
+				System.err.println("OUCH!!! view or model is null!!!");
+			}
+			((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
 		}
-		((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
+	};
+	
+	public void onEpdRepaintFinished() {
+		myEpdRepaintHandler.sendEmptyMessage(0);
 	}
 
 	public void updateEpdView(int delay) {
