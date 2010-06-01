@@ -100,7 +100,7 @@ class SearchItemActions extends NetworkTreeActions {
 	}
 
 
-	public void doExpandCatalog(final NetworkBaseActivity activity, final SearchItemTree tree) {
+	private void doExpandCatalog(final NetworkBaseActivity activity, final SearchItemTree tree) {
 		if (!NetworkView.Instance().isInitialized()) {
 			return;
 		}

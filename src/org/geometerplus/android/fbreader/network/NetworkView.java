@@ -64,6 +64,7 @@ class NetworkView {
 		myActions.add(new NetworkCatalogActions());
 		myActions.add(new SearchItemActions());
 		myActions.add(new RefillAccountActions());
+		myActions.add(new BrowserItemActions());
 		myActions.trimToSize();
 
 		myInitialized = true;
@@ -347,18 +348,15 @@ class NetworkView {
 	 * Special view items item
 	 */
 
-	private LinkedList<NetworkTree> mySpecialItems = new LinkedList<NetworkTree>();
+	private ArrayList<NetworkTree> mySpecialItems = new ArrayList<NetworkTree>();
 	{
 		mySpecialItems.add(new SearchItemTree());
 		mySpecialItems.add(new BrowserItemTree());
+		mySpecialItems.trimToSize();
 	}
 
-	public LinkedList<NetworkTree> getSpecialItems() {
+	public ArrayList<NetworkTree> getSpecialItems() {
 		return mySpecialItems;
 	}
-	
-	/*public SearchItemTree getSearchItemTree() {
-		return mySearchItem;
-	}*/
 
 }

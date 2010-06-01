@@ -19,7 +19,7 @@
 
 package org.geometerplus.android.fbreader.network;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +40,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	private boolean myInitialized;
 
 	private NetworkTree myTree;
-	private LinkedList<NetworkTree> mySpecialItems;
+	private List<NetworkTree> mySpecialItems;
 
 	@Override
 	public void onCreate(Bundle icicle) {
