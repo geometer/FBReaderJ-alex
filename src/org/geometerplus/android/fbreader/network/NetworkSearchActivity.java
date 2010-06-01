@@ -140,7 +140,7 @@ public class NetworkSearchActivity extends Activity {
 		}
 	}
 
-	protected void runSearch(final String pattern) {
+	private void runSearch(final String pattern) {
 		final NetworkLibrary library = NetworkLibrary.Instance();
 		library.NetworkSearchPatternOption.setValue(pattern);
 

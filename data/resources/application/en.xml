@@ -16,6 +16,12 @@
 		<node name="openBook" value="Open book"/>
 		<node name="deleteBook" value="Delete book"/>
 	</node>
+	<node name="browser">
+		<node name="menu">
+			<node name="go" value="Go"/>
+			<node name="stop" value="Stop"/>
+		</node>
+	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="Open catalog"/>
 		<node name="showResults" value="Show results"/>

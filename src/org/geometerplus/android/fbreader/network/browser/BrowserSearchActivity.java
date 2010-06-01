@@ -17,39 +17,40 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader.network;
+package org.geometerplus.android.fbreader.network.browser;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-public class BrowserActivity extends Activity {
+
+public class BrowserSearchActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Thread.setDefaultUncaughtExceptionHandler(new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this));
 
-		WebView view = new WebView(getApplicationContext());
-		
-		view.setWebChromeClient(new ChromeClient());
-		view.setWebViewClient(new ViewClient());
-		
-		setContentView(view);
+		final Intent intent = getIntent();
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			final String pattern = intent.getStringExtra(SearchManager.QUERY);
+			runSearch(pattern);
+		}
+		finish();
 	}
 
-	private class ChromeClient extends WebChromeClient {
-		@Override
-		public void onReceivedTitle(WebView view, String title) {
-			BrowserActivity.this.setTitle(title);
+	private void runSearch(final String pattern) {
+		Uri uri = Uri.parse(pattern);
+		if (uri.getScheme() == null) {
+			uri = Uri.parse("http://" + pattern);
 		}
-	}
-
-	private class ViewClient extends WebViewClient {
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			return false;
-		}
+		startActivity(
+				new Intent(getApplicationContext(), BrowserActivity.class)
+				.setData(uri)
+				.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+		);
 	}
 }

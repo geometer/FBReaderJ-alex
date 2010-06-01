@@ -26,6 +26,8 @@ import android.view.ContextMenu;
 
 import org.geometerplus.fbreader.network.NetworkTree;
 
+import org.geometerplus.android.fbreader.network.browser.BrowserActivity;
+
 
 class BrowserItemActions extends NetworkTreeActions {
 
