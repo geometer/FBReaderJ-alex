@@ -59,6 +59,8 @@
 			<node name="signOut" value="Sign out (%s)"/>
 			<node name="refillAccount" value="Refill account"/>
 		</node>
+		<node name="browser" value="Browser" />
+		<node name="browserSummary" value="Open built-in browser" />
 	</node>
 	<node name="networkBookView">
 		<node name="bookInfo" value="Book Info" />

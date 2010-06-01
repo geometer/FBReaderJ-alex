@@ -19,6 +19,8 @@
 
 package org.geometerplus.android.fbreader.network;
 
+import java.util.LinkedList;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +40,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	private boolean myInitialized;
 
 	private NetworkTree myTree;
-	private SearchItemTree mySearchItem;
+	private LinkedList<NetworkTree> mySpecialItems;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -52,7 +54,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 		if (!myInitialized) {
 			myInitialized = true;
 			myTree = NetworkLibrary.Instance().getTree();
-			mySearchItem = NetworkView.Instance().getSearchItemTree();
+			mySpecialItems = NetworkView.Instance().getSpecialItems();
 			setListAdapter(new LibraryAdapter());
 			getListView().invalidateViews();
 		}
@@ -83,15 +85,21 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	private final class LibraryAdapter extends BaseAdapter {
 
 		public final int getCount() {
-			return myTree.subTrees().size() + 1; // subtrees + <search item>
+			return myTree.subTrees().size()
+				+ (mySpecialItems == null ? 0 : mySpecialItems.size());
 		}
 
 		public final NetworkTree getItem(int position) {
+			if (mySpecialItems != null) {
+				final int size = mySpecialItems.size();
+				if (position < size) {
+					return mySpecialItems.get(position);
+				}
+				position -= size;
+			}
 			final int size = myTree.subTrees().size();
-			if (position == 0) {
-				return mySearchItem;
-			} else if (position > 0 && position <= size) {
-				return (NetworkTree) myTree.subTrees().get(position - 1);
+			if (position <= size) {
+				return (NetworkTree) myTree.subTrees().get(position);
 			}
 			return null;
 		}

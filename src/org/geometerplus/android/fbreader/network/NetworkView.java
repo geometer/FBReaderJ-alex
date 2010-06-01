@@ -347,9 +347,18 @@ class NetworkView {
 	 * Special view items item
 	 */
 
-	private final SearchItemTree mySearchItem = new SearchItemTree();
-
-	public SearchItemTree getSearchItemTree() {
-		return mySearchItem;
+	private LinkedList<NetworkTree> mySpecialItems = new LinkedList<NetworkTree>();
+	{
+		mySpecialItems.add(new SearchItemTree());
+		mySpecialItems.add(new BrowserItemTree());
 	}
+
+	public LinkedList<NetworkTree> getSpecialItems() {
+		return mySpecialItems;
+	}
+	
+	/*public SearchItemTree getSearchItemTree() {
+		return mySearchItem;
+	}*/
+
 }

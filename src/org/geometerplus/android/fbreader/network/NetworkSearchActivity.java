@@ -151,7 +151,12 @@ public class NetworkSearchActivity extends Activity {
 		final String summary = ZLResource.resource("networkView").getResource("searchResults").getValue().replace("%s", pattern);
 		final SearchResult result = new SearchResult(summary);
 
-		final SearchItemTree tree = NetworkView.Instance().getSearchItemTree();
+		SearchItemTree tree = null;
+		for (NetworkTree it: NetworkView.Instance().getSpecialItems()) {
+			if (it instanceof SearchItemTree) {
+				tree = (SearchItemTree) it;
+			}
+		}
 
 		tree.setSearchResult(result);
 		NetworkView.Instance().fireModelChanged();
