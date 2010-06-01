@@ -22,7 +22,6 @@ package org.geometerplus.android.fbreader;
 import android.app.SearchManager;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,12 +92,14 @@ public final class FBReader extends ZLAndroidActivity {
 				if (view != null && view.getModel() != null) {
 					final int paragraphsNumber = view.getModel().getParagraphsNumber();
 					final int paragraphIndex = paragraphsNumber * progress / 1000;
-					view.gotoPosition(paragraphIndex, 0, 0);
+					if (view.getStartCursor().getParagraphIndex() != paragraphIndex) { 
+						view.gotoPosition(paragraphIndex, 0, 0);
+					}
 				}
 			}
-			
+
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				gotoProgress(bookPositionSlider.getProgress());
+				gotoProgress(seekBar.getProgress());
 				updateEpdView(0);
 				myInTouch = false;
 			}
@@ -108,9 +109,9 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				gotoProgress(progress);
 				bookPositionText.setText(makePercentsString(progress));
 				if (!myInTouch && fromUser) {
+					gotoProgress(progress);
 					updateEpdView(250);
 				}
 				if (!fromUser) {
@@ -118,13 +119,14 @@ public final class FBReader extends ZLAndroidActivity {
 				}
 			}
 		});
+		bookPositionText.setText(makePercentsString(bookPositionSlider.getProgress()));
 	}
 
-	private String makePercentsString(int progress) {
+	private static String makePercentsString(int progress) {
 		final int divBy = 10;
 		return (progress / divBy) + "." + (progress % divBy) + "%";
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -204,35 +206,28 @@ public final class FBReader extends ZLAndroidActivity {
 		updateEpdView(singleChange ? 0 : 200);
 	}
 
-	private final Handler myEpdRepaintHandler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			final org.geometerplus.fbreader.fbreader.FBReader fbreader =
-				(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
-			TextView bookTitle = (TextView) findViewById(R.id.book_title);
-			if (fbreader.Model != null && fbreader.Model.Book != null) {
-				bookTitle.setText(fbreader.Model.Book.getTitle());
-			} else {
-				bookTitle.setText("");
-			}
-
-			final int progress;
-			final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
-			if (view != null && view.getModel() != null) {
-				final int paragraph = view.getStartCursor().getParagraphIndex();
-				final int paragraphsNumber = view.getModel().getParagraphsNumber();
-				progress = paragraph * 1000 / paragraphsNumber;
-				System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
-			} else {
-				progress = 0;
-				System.err.println("OUCH!!! view or model is null!!!");
-			}
-			((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
-		}
-	};
-	
 	public void onEpdRepaintFinished() {
-		myEpdRepaintHandler.sendEmptyMessage(0);
+		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
+			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
+		TextView bookTitle = (TextView) findViewById(R.id.book_title);
+		if (fbreader.Model != null && fbreader.Model.Book != null) {
+			bookTitle.setText(fbreader.Model.Book.getTitle());
+		} else {
+			bookTitle.setText("");
+		}
+
+		final int progress;
+		final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
+		if (view != null && view.getModel() != null) {
+			final int paragraph = view.getStartCursor().getParagraphIndex();
+			final int paragraphsNumber = view.getModel().getParagraphsNumber();
+			progress = paragraph * 1000 / paragraphsNumber;
+			System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
+		} else {
+			progress = 0;
+			System.err.println("OUCH!!! view or model is null!!!");
+		}
+		((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
 	}
 
 	public void updateEpdView(int delay) {

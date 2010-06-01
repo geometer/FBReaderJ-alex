@@ -22,6 +22,8 @@ package org.geometerplus.zlibrary.ui.android.view;
 import android.content.Context;
 import android.graphics.*;
 import android.view.*;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 
 import org.geometerplus.zlibrary.core.view.ZLView;
@@ -57,6 +59,13 @@ public class ZLAndroidWidget extends View {
 		return ZLAndroidPaintContext.Instance();
 	}
 
+	private final Handler myRepaintFinishedHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			ZLApplication.Instance().onRepaintFinished();
+		}
+	};
+
 	@Override
 	protected void onDraw(final Canvas canvas) {
 		super.onDraw(canvas);
@@ -84,7 +93,7 @@ public class ZLAndroidWidget extends View {
 		} else {
 			System.err.println("EPD -- ZLAndroidWidget.onDraw -- onDrawStatic");
 			onDrawStatic(canvas);
-			ZLApplication.Instance().onRepaintFinished();
+			myRepaintFinishedHandler.sendEmptyMessage(0);
 		}
 	}
 
@@ -99,7 +108,7 @@ public class ZLAndroidWidget extends View {
 			mySecondaryBitmap = swap;
 			mySecondaryBitmapIsUpToDate = false;
 			view.onScrollingFinished(myViewPageToScroll);
-			ZLApplication.Instance().onRepaintFinished();
+			myRepaintFinishedHandler.sendEmptyMessage(0);
 		} else {
 			view.onScrollingFinished(ZLView.PAGE_CENTRAL);
 		}

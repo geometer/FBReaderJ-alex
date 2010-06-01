@@ -36,7 +36,7 @@
 			android:id="@+id/book_position_text"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:minEms="6"
 			android:gravity="center_horizontal"
 			android:paddingBottom="8dp"
