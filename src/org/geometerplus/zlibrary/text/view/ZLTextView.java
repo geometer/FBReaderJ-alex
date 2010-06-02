@@ -398,6 +398,27 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return sizeOfText;
 	}
 
+	public final synchronized boolean setScrollbarThumbEndPosition(int position) {
+		if (myModel == null || myModel.getParagraphsNumber() == 0) {
+			return false;
+		}
+		final int paragraphIndex = myModel.findParagraphByTextLength(position);
+		final int sizeOfTextBefore = myModel.getTextLength(paragraphIndex - 1);
+		final int paragraphLength = myModel.getTextLength(paragraphIndex) - sizeOfTextBefore;
+		preparePaintInfo(myCurrentPage);
+		final int wordIndex;
+		if (paragraphLength == 0) {
+			wordIndex = 0;
+		} else {
+			final ZLTextWordCursor cursor = new ZLTextWordCursor(myCurrentPage.EndCursor);
+			cursor.moveToParagraph(paragraphIndex);
+			wordIndex = (position - sizeOfTextBefore)
+				* cursor.getParagraphCursor().getParagraphLength() / paragraphLength; 
+		}
+		gotoPositionByEnd(paragraphIndex, wordIndex, 0);
+		return true;
+	}
+
 	private static final char[] SPACE = new char[] { ' ' };
 	private void drawTextLine(ZLTextPage page, ZLTextLineInfo info, int from, int to, int y) {
 		final ZLTextParagraphCursor paragraph = info.ParagraphCursor;
@@ -841,6 +862,18 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		}
 	}
 
+	private final synchronized void gotoPositionByEnd(int paragraphIndex, int wordIndex, int charIndex) {
+		if (myModel != null && myModel.getParagraphsNumber() > 0) {
+			myCurrentPage.moveEndCursor(paragraphIndex, wordIndex, charIndex);
+			myPreviousPage.reset();
+			myNextPage.reset();
+			preparePaintInfo(myCurrentPage);
+			if (myCurrentPage.isEmptyPage()) {
+				scrollPage(true, ScrollingMode.NO_OVERLAPPING, 0);
+			}
+		}
+	}
+	
 	protected synchronized void preparePaintInfo() {
 		myPreviousPage.reset();
 		myNextPage.reset();

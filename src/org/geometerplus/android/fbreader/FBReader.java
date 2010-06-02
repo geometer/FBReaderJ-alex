@@ -31,12 +31,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
-import org.geometerplus.fbreader.fbreader.FBView;
 
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
@@ -88,13 +88,10 @@ public final class FBReader extends ZLAndroidActivity {
 			private boolean myInTouch;
 
 			private void gotoProgress(int progress) {
-				final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
-				if (view != null && view.getModel() != null) {
-					final int paragraphsNumber = view.getModel().getParagraphsNumber();
-					final int paragraphIndex = paragraphsNumber * progress / 1000;
-					if (view.getStartCursor().getParagraphIndex() != paragraphIndex) { 
-						view.gotoPosition(paragraphIndex, 0, 0);
-					}
+				final ZLView view = ZLApplication.Instance().getCurrentView();
+				if (view != null) {
+					final int position = progress * view.getScrollbarFullSize() / 1000;
+					view.setScrollbarThumbEndPosition(position);
 				}
 			}
 
@@ -216,16 +213,14 @@ public final class FBReader extends ZLAndroidActivity {
 			bookTitle.setText("");
 		}
 
+		final ZLView view = fbreader.getCurrentView();
 		final int progress;
-		final FBView view = (FBView) ZLApplication.Instance().getCurrentView();
-		if (view != null && view.getModel() != null) {
-			final int paragraph = view.getStartCursor().getParagraphIndex();
-			final int paragraphsNumber = view.getModel().getParagraphsNumber();
-			progress = paragraph * 1000 / paragraphsNumber;
-			System.err.println("FBREADER -- " + paragraph + " / " + paragraphsNumber + " = " + makePercentsString(progress));
+		if (view != null) {
+			final int position = view.getScrollbarThumbPosition(ZLView.PAGE_CENTRAL) 
+				+ view.getScrollbarThumbLength(ZLView.PAGE_CENTRAL);
+			progress = position * 1000 / view.getScrollbarFullSize();
 		} else {
 			progress = 0;
-			System.err.println("OUCH!!! view or model is null!!!");
 		}
 		((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
 	}

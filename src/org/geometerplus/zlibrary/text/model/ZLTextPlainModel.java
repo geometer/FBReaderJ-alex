@@ -305,4 +305,12 @@ public class ZLTextPlainModel implements ZLTextModel {
 	public final int getTextLength(int index) {
 		return myTextSizes[Math.max(Math.min(index, myParagraphsNumber - 1), 0)];
 	}
+
+	public final int findParagraphByTextLength(int length) {
+		int index = Arrays.binarySearch(myTextSizes, length);
+		if (index >= 0) {
+			return index;
+		}
+		return Math.min(-index - 1, myParagraphsNumber - 1);
+	}
 }
