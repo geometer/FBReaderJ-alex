@@ -111,9 +111,6 @@ public final class FBReader extends ZLAndroidActivity {
 					gotoProgress(progress);
 					updateEpdView(250);
 				}
-				if (!fromUser) {
-					System.err.println("onProgressChanged -- Not from user");
-				}
 			}
 		});
 		bookPositionText.setText(makePercentsString(bookPositionSlider.getProgress()));
@@ -152,7 +149,6 @@ public final class FBReader extends ZLAndroidActivity {
 			root.addView(myPanel.ControlPanel, p);
 		}
 
-		System.err.println("EPD -- bindLayout & updateEpdViewDelay(200)");
 		final LinearLayout view = (LinearLayout) findViewById(R.id.epd_layout);
 		EPDView.Instance().bindLayout((ViewGroup) view);
 		EPDView.Instance().setVdsActive(true);
@@ -226,7 +222,6 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	public void updateEpdView(int delay) {
-		System.err.println("EPD -- updateEpdView(delay = " + delay + ")");
 		if (delay <= 0) {
 			EPDView.Instance().updateEpdView();
 		} else {

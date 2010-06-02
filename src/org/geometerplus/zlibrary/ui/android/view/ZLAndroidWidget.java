@@ -88,10 +88,8 @@ public class ZLAndroidWidget extends View {
 		}
 
 		if (myScrollingInProgress) {
-			System.err.println("EPD -- ZLAndroidWidget.onDraw -- onDrawInScrolling");
 			onDrawInScrolling(canvas);
 		} else {
-			System.err.println("EPD -- ZLAndroidWidget.onDraw -- onDrawStatic");
 			onDrawStatic(canvas);
 			myRepaintFinishedHandler.sendEmptyMessage(0);
 		}
