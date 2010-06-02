@@ -402,27 +402,20 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		if (myModel == null || myModel.getParagraphsNumber() == 0) {
 			return false;
 		}
-		System.err.println("SET POSITION: position = " + position);
 		final int paragraphIndex = myModel.findParagraphByTextLength(position);
-		System.err.println("SET POSITION: paragraph = " + paragraphIndex);
-		System.err.println("SET POSITION: paragraphsNumber = " + myModel.getParagraphsNumber());
 		final int sizeOfTextBefore = myModel.getTextLength(paragraphIndex - 1);
 		final int paragraphLength = myModel.getTextLength(paragraphIndex) - sizeOfTextBefore;
 		preparePaintInfo(myCurrentPage);
 		final int wordIndex;
 		if (paragraphLength == 0) {
-			System.err.println("SET POSITION: zero-length paragraph, index = " + paragraphIndex);
 			wordIndex = 0;
 		} else {
 			final ZLTextWordCursor cursor = new ZLTextWordCursor(myCurrentPage.EndCursor);
 			cursor.moveToParagraph(paragraphIndex);
-			System.err.println("SET POSITION: paragraph = " + cursor.getParagraphCursor());
 			wordIndex = (position - sizeOfTextBefore)
 				* cursor.getParagraphCursor().getParagraphLength() / paragraphLength; 
 		}
-		System.err.println("SET POSITION: wordIndex = " + wordIndex);
 		gotoPositionByEnd(paragraphIndex, wordIndex, 0);
-		System.err.println("SET POSITION: confirmed cursor: " + getEndCursor());
 		return true;
 	}
 

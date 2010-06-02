@@ -90,7 +90,6 @@ public final class FBReader extends ZLAndroidActivity {
 			private void gotoProgress(int progress) {
 				final ZLView view = ZLApplication.Instance().getCurrentView();
 				if (view != null) {
-					System.err.println("PROGRESS -- " + progress);
 					final int position = progress * view.getScrollbarFullSize() / 1000;
 					view.setScrollbarThumbEndPosition(position);
 				}
