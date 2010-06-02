@@ -306,8 +306,27 @@ public class ZLTextPlainModel implements ZLTextModel {
 		return myTextSizes[Math.max(Math.min(index, myParagraphsNumber - 1), 0)];
 	}
 
+	// method is copied from JavaSE 6 Arrays class
+	private static int binarySearch(int[] a, int fromIndexInclusive, int toIndexExclusive, int key) {
+		int low = fromIndexInclusive;
+		int high = toIndexExclusive - 1;
+
+		while (low <= high) {
+			int mid = (low + high) >>> 1;
+			int midVal = a[mid];
+
+			if (midVal < key)
+				low = mid + 1;
+			else if (midVal > key)
+				high = mid - 1;
+			else
+				return mid; // key found
+		}
+		return -(low + 1); // key not found.
+	}
+
 	public final int findParagraphByTextLength(int length) {
-		int index = Arrays.binarySearch(myTextSizes, length);
+		int index = binarySearch(myTextSizes, 0, myParagraphsNumber, length);
 		if (index >= 0) {
 			return index;
 		}
