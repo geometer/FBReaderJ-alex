@@ -48,7 +48,7 @@
 		android:id="@+id/epd_layout"
 		android:orientation="vertical"
 		android:layout_width="600px"
-		android:layout_height="800px"
+		android:layout_height="770px"
 		android:visibility="invisible"
 	>
 		<org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget
@@ -58,5 +58,10 @@
 			android:focusable="true"
 			android:scrollbars="none"
 		/>
+		<!-- <TextView
+			android:background="#000000"
+			android:layout_width="fill_parent"
+			android:layout_height="30px"
+		/> -->
 	</LinearLayout>
 </LinearLayout>
