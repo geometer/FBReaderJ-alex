@@ -17,6 +17,13 @@
 		<node name="openBook" value="Könyv megnyitása"/>
 		<node name="deleteBook" value="Könyv törlése"/>
 	</node>
+	<node name="browser">
+		<node name="menu">
+			<node name="go" toBeTranslated="true" value="Go"/>
+			<node name="stop" toBeTranslated="true" value="Stop"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+		</node>
+	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="Katalógus megnyitása"/>
 		<node name="showResults" value="Eredmények"/>

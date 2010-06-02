@@ -83,14 +83,15 @@ public class BrowserActivity extends Activity {
 
 	private MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
 		final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
-		return menu.add(0, index, Menu.NONE, label).setIcon(iconId);
+		return menu.add(0, index, Menu.NONE, label)/*.setIcon(iconId)*/;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		addMenuItem(menu, 1, "go", R.drawable.ic_menu_networksearch);
-		addMenuItem(menu, 2, "stop", R.drawable.ic_menu_networksearch);
+		addMenuItem(menu, 1, "go", 0);
+		addMenuItem(menu, 2, "stop", 0);
+		addMenuItem(menu, 3, "reload", 0);
 		return true;
 	}
 
@@ -99,8 +100,9 @@ public class BrowserActivity extends Activity {
 		super.onPrepareOptionsMenu(menu);
 		WebView view = (WebView) findViewById(R.id.webview);
 		final boolean loading = view.getUrl() != null && view.getProgress() < 100;
-		menu.findItem(1).setEnabled(!loading);
-		menu.findItem(2).setEnabled(loading);
+		menu.findItem(1).setEnabled(!loading).setVisible(!loading);
+		menu.findItem(2).setEnabled(loading).setVisible(loading);
+		menu.findItem(3).setEnabled(!loading && view.getUrl() != null);
 		return true;
 	}
 
@@ -108,12 +110,15 @@ public class BrowserActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		WebView view = (WebView) findViewById(R.id.webview);
 		switch (item.getItemId()) {
+			default:
+				return true;
 			case 1:
 				return onSearchRequested();
 			case 2:
 				view.stopLoading();
 				return true;
-			default:
+			case 3:
+				view.reload();
 				return true;
 		}
 	}

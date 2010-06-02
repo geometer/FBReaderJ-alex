@@ -17,6 +17,13 @@
 		<node name="openBook" value="打开图书" />
 		<node name="deleteBook" value="删除图书" />
 	</node>
+	<node name="browser">
+		<node name="menu">
+			<node name="go" toBeTranslated="true" value="Go"/>
+			<node name="stop" toBeTranslated="true" value="Stop"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+		</node>
+	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="打开书库目录" />
 		<node name="showResults" value="显示结果"/>

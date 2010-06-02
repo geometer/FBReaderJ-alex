@@ -16,6 +16,13 @@
 		<node name="openBook" value="Читать книгу"/>
 		<node name="deleteBook" value="Удалить книгу"/>
 	</node>
+	<node name="browser">
+		<node name="menu">
+			<node name="go" value="Перейти"/>
+			<node name="stop" value="Остановить"/>
+			<node name="reload" value="Обновить"/>
+		</node>
+	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="Открыть каталог"/>
 		<node name="showResults" value="Показать результаты"/>
