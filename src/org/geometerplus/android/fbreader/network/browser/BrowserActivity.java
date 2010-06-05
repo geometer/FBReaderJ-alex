@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,6 +41,9 @@ public class BrowserActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 
 		setContentView(R.layout.browser);
 		setTitle(ZLResource.resource("networkView").getResource("browser").getValue());
@@ -70,6 +74,16 @@ public class BrowserActivity extends Activity {
 		@Override
 		public void onReceivedTitle(WebView view, String title) {
 			BrowserActivity.this.setTitle(title);
+		}
+		
+		@Override
+		public void onProgressChanged(WebView view, int newProgress) {
+			final boolean inProgress = newProgress < 100;
+			setProgressBarIndeterminateVisibility(inProgress);
+			setProgressBarVisibility(inProgress);
+			if (inProgress) {
+				setProgress(newProgress);
+			}
 		}
 	}
 
