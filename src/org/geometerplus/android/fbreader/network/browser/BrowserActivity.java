@@ -30,6 +30,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.geometerplus.fbreader.network.NetworkLibrary;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -54,9 +55,16 @@ public class BrowserActivity extends Activity {
 
 		final Intent intent = getIntent();
 		final Uri uri = intent.getData();
+
+		final NetworkLibrary library = NetworkLibrary.Instance();
+		final String url;
 		if (uri != null) {
-			view.loadUrl(uri.toString());
+			url = uri.toString();
+		} else {
+			url = library.NetworkBrowserPageOption.getValue();
 		}
+		view.loadUrl(url);
+		library.NetworkBrowserPageOption.setValue(url);
 	}
 
 	@Override
@@ -66,10 +74,12 @@ public class BrowserActivity extends Activity {
 		final Uri uri = intent.getData();
 		if (uri != null) {
 			WebView view = (WebView) findViewById(R.id.webview);
-			view.loadUrl(uri.toString());
+			final String url = uri.toString();
+			view.loadUrl(url);
+			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
 		}
 	}
-	
+
 	private class ChromeClient extends WebChromeClient {
 		@Override
 		public void onReceivedTitle(WebView view, String title) {

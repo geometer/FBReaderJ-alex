@@ -43,6 +43,7 @@ public class NetworkLibrary {
 	}
 
 	public final ZLStringOption NetworkSearchPatternOption = new ZLStringOption("NetworkSearch", "Pattern", "");
+	public final ZLStringOption NetworkBrowserPageOption = new ZLStringOption("NetworkBrowser", "Page", "www.litres.ru");
 
 
 	private final ArrayList<NetworkLink> myLinks = new ArrayList<NetworkLink>();
