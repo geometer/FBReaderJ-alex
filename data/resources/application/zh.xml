@@ -114,6 +114,7 @@
 		<node name="day" value="白低黑字" />
 		<node name="night" value="黑底白字" />
 		<node name="networkLibrary" value="在线书库" />
+		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
 		<node name="navigate" value="导航">
 			<node name="toc" value="内容目录" />
 			<node name="gotoHome" value="翻到图书开始" />

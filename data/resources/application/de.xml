@@ -114,6 +114,7 @@
 		<node name="day" value="Tag"/>
 		<node name="night" value="Nacht"/>
 		<node name="networkLibrary" value="Netzwerk Bibliothek"/>
+		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
 		<node name="navigate" value="Navigieren">
 			<node name="toc" value="Inhaltsverzeichnis zeigen"/>
 			<node name="gotoHome" value="Zum Anfang gehen"/>
