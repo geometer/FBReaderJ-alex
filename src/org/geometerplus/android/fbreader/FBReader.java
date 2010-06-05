@@ -213,7 +213,7 @@ public final class FBReader extends ZLAndroidActivity {
 		final int progress;
 		if (view != null) {
 			final int position = view.getScrollbarThumbPosition(ZLView.PAGE_CENTRAL) 
-				+ view.getScrollbarThumbLength(ZLView.PAGE_CENTRAL);
+				+ view.getScrollbarThumbLength(ZLView.PAGE_CENTRAL) + 1;
 			progress = position * 1000 / view.getScrollbarFullSize();
 		} else {
 			progress = 0;
