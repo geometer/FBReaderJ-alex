@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.R;
@@ -84,19 +85,24 @@ public final class FBReader extends ZLAndroidActivity {
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
+		bookPositionText.setText("");
+		bookPositionSlider.setProgress(0);
+		bookPositionSlider.setMax(1);
+		bookPositionSlider.setVisibility(View.INVISIBLE);
+
 		bookPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			private boolean myInTouch;
 
-			private void gotoProgress(int progress) {
+			private void gotoPage(int page) {
 				final ZLView view = ZLApplication.Instance().getCurrentView();
-				if (view != null) {
-					final int position = progress * view.getScrollbarFullSize() / 1000;
-					view.setScrollbarThumbEndPosition(position);
+				if (view instanceof ZLTextView) {
+					//ZLTextView textView = (ZLTextView) view;
+					//textView.set
 				}
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				gotoProgress(seekBar.getProgress());
+				gotoPage(seekBar.getProgress() + 1);
 				updateEpdView(0);
 				myInTouch = false;
 			}
@@ -106,19 +112,21 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				bookPositionText.setText(makePercentsString(progress));
-				if (!myInTouch && fromUser) {
-					gotoProgress(progress);
-					updateEpdView(250);
+				if (fromUser) {
+					final int page = progress + 1;
+					final int pagesNumber = seekBar.getMax() + 1; 
+					bookPositionText.setText(makePositionText(page, pagesNumber));
+					if (!myInTouch) {
+						gotoPage(page);
+						updateEpdView(250);
+					}
 				}
 			}
 		});
-		bookPositionText.setText(makePercentsString(bookPositionSlider.getProgress()));
 	}
 
-	private static String makePercentsString(int progress) {
-		final int divBy = 10;
-		return (progress / divBy) + "." + (progress % divBy) + "%";
+	private static String makePositionText(int page, int pagesNumber) {
+		return "" + page + " / " + pagesNumber;
 	}
 
 	@Override
@@ -202,23 +210,33 @@ public final class FBReader extends ZLAndroidActivity {
 	public void onEpdRepaintFinished() {
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
-		TextView bookTitle = (TextView) findViewById(R.id.book_title);
+		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			bookTitle.setText(fbreader.Model.Book.getTitle());
 		} else {
 			bookTitle.setText("");
 		}
 
+		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
+		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
+
 		final ZLView view = fbreader.getCurrentView();
-		final int progress;
-		if (view != null) {
-			final int position = view.getScrollbarThumbPosition(ZLView.PAGE_CENTRAL) 
-				+ view.getScrollbarThumbLength(ZLView.PAGE_CENTRAL) + 1;
-			progress = position * 1000 / view.getScrollbarFullSize();
+		if (view instanceof ZLTextView) {
+			ZLTextView textView = (ZLTextView) view;
+
+			final int page = textView.computeCurrentPage();
+			final int pagesNumber = textView.computePageNumber();
+
+			bookPositionText.setText(makePositionText(page, pagesNumber));
+			bookPositionSlider.setVisibility(View.VISIBLE);
+			bookPositionSlider.setMax(pagesNumber - 1);
+			bookPositionSlider.setProgress(page - 1);
 		} else {
-			progress = 0;
+			bookPositionText.setText("");
+			bookPositionSlider.setProgress(0);
+			bookPositionSlider.setMax(1);
+			bookPositionSlider.setVisibility(View.INVISIBLE);
 		}
-		((SeekBar) findViewById(R.id.book_position_slider)).setProgress(progress);
 	}
 
 	public void updateEpdView(int delay) {

@@ -398,7 +398,80 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return sizeOfText;
 	}
 
-	public final synchronized boolean setScrollbarThumbEndPosition(int position) {
+	private static char[] ourEm = "M".toCharArray();
+	//private static char[] ourLetters = "System developers have used modeling languages for decades to specify, visualize, construct, and document systems. The Unified Modeling Language (UML) is one of those languages. UML makes it possible for team members to collaborate by providing a common language that applies to a multitude of different systems. Essentially, it enables you to communicate solutions in a consistent, tool-supported language.".toCharArray();
+	private synchronized int computeTextPageNumber(int textSize) {
+		if (myModel == null || myModel.getParagraphsNumber() == 0) {
+			return 1;
+		}
+
+		setTextStyle(ZLTextStyleCollection.Instance().getBaseStyle());
+
+		final int textWidth = getTextAreaWidth();
+		final int textHeight = getTextAreaHeight();
+
+// text specific values:
+
+		//final float paragraphFactor = 0.02f;
+		final int num = myModel.getParagraphsNumber();
+		final int totalTextSize = myModel.getTextLength(num - 1);
+		final float charsPerParagraph = ((float) totalTextSize) / num;
+
+		/*final int lettersWidth = Context.getStringWidth(ourLetters, 0, ourLetters.length);
+		final float charWidthFactor = (1.0f * lettersWidth) / ourLetters.length / emWidth;*/
+		final float charWidthFactor = 0.544587f;
+
+// page units computations:
+		final int indentWidth = getElementWidth(ZLTextElement.IndentElement, 0);
+		final int emWidth = Context.getStringWidth(ourEm, 0, ourEm.length);
+		final float effectiveWidth = textWidth - (indentWidth + 0.5f * textWidth) / charsPerParagraph;
+		float charsPerLine = Math.min(effectiveWidth / (emWidth * charWidthFactor),
+				charsPerParagraph * 1.2f);
+
+		final int strHeight = getWordHeight() + Context.getDescent();
+		final int effectiveHeight = (int) (textHeight - (getTextStyle().getSpaceBefore() 
+				+ getTextStyle().getSpaceAfter()) / charsPerParagraph);
+		final int linesPerPage = effectiveHeight / strHeight;
+
+// result computation
+		final float factor = 1.0f / charsPerLine / linesPerPage;
+		final float pages = textSize * factor;
+
+		int result = Math.max((int) (pages + 1.0f - 0.5f * factor), 1);
+
+		if (textSize != getScrollbarFullSize()) {
+			System.err.println(">------------------------------------------->");
+			System.err.println("textWidth = " + textWidth);
+			System.err.println("textHeight = " + textHeight);
+			System.err.println("indentWidth = " + indentWidth);
+			System.err.println("strHeight = " + strHeight);
+			System.err.println("emWidth = " + emWidth);
+			System.err.println("effectiveWidth = " + effectiveWidth);
+			System.err.println("effectiveHeight = " + effectiveHeight);
+			System.err.println("linesPerPage = " + linesPerPage);
+			System.err.println("charsPerParagraph = " + charsPerParagraph + " (factor = " + 1.0f / charsPerParagraph + ")");
+			System.err.println("charsPerLine = " + charsPerLine);
+			System.err.println("textSize = " + textSize);
+			System.err.println("factor = " + factor);
+			System.err.println("pages = " + pages);
+			System.err.println("result = " + result);
+			System.err.println("<-------------------------------------------<");
+		}
+		return result;
+	}
+
+	public final synchronized int computePageNumber() {
+		return computeTextPageNumber(getScrollbarFullSize());
+	}
+
+	public final synchronized int computeCurrentPage() {
+		return computeTextPageNumber(
+			getScrollbarThumbPosition(PAGE_CENTRAL) 
+			+ getScrollbarThumbLength(PAGE_CENTRAL)
+		);
+	}
+
+	/*public final synchronized boolean setScrollbarThumbEndPosition(int position) {
 		if (myModel == null || myModel.getParagraphsNumber() == 0) {
 			return false;
 		}
@@ -417,7 +490,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		}
 		gotoPositionByEnd(paragraphIndex, wordIndex, 0);
 		return true;
-	}
+	}*/
 
 	private static final char[] SPACE = new char[] { ' ' };
 	private void drawTextLine(ZLTextPage page, ZLTextLineInfo info, int from, int to, int y) {
