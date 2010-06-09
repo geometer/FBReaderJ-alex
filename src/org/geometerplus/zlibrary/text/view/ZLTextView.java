@@ -398,8 +398,15 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return sizeOfText;
 	}
 
-	private static char[] ourEm = "M".toCharArray();
-	//private static char[] ourLetters = "System developers have used modeling languages for decades to specify, visualize, construct, and document systems. The Unified Modeling Language (UML) is one of those languages. UML makes it possible for team members to collaborate by providing a common language that applies to a multitude of different systems. Essentially, it enables you to communicate solutions in a consistent, tool-supported language.".toCharArray();
+	protected abstract String getLanguage();
+
+	private static char[] ourEnLetters = "System developers have used modeling languages for decades to specify, visualize, construct, and document systems. The Unified Modeling Language (UML) is one of those languages. UML makes it possible for team members to collaborate by providing a common language that applies to a multitude of different systems. Essentially, it enables you to communicate solutions in a consistent, tool-supported language.".toCharArray();
+	private static char[] ourRuLetters = "Ходили, правда, шепотки о том, будто бы сэр Джеффри особенно успешно проявляет себя в делах тайных, находящихся в ведении полиции и контрразведки, но о каком дипломате не ходят такие слухи? Полноте! Люди выполняют свои профессиональные обязанности, а их начальство в Лондоне, Париже, Берлине или Петербурге интересуется только качеством их работы, вовсе не приплетая сюда столь неуместное в данном случае понятие морали.".toCharArray();
+
+	private float getCharWidth(char[] pattern) {
+		return Context.getStringWidth(pattern, 0, pattern.length) / ((float) pattern.length);
+	}
+
 	private synchronized int computeTextPageNumber(int textSize) {
 		if (myModel == null || myModel.getParagraphsNumber() == 0) {
 			return 1;
@@ -411,21 +418,25 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		final int textHeight = getTextAreaHeight();
 
 // text specific values:
-
-		//final float paragraphFactor = 0.02f;
 		final int num = myModel.getParagraphsNumber();
 		final int totalTextSize = myModel.getTextLength(num - 1);
 		final float charsPerParagraph = ((float) totalTextSize) / num;
 
-		/*final int lettersWidth = Context.getStringWidth(ourLetters, 0, ourLetters.length);
-		final float charWidthFactor = (1.0f * lettersWidth) / ourLetters.length / emWidth;*/
-		final float charWidthFactor = 0.544587f;
+		final char[] textPattern;
+		final String lang = getLanguage();
+		if (lang == null) {
+			textPattern = ourEnLetters;
+		} else if (lang.equalsIgnoreCase("ru")) {
+			textPattern = ourRuLetters;
+		} else {
+			textPattern = ourEnLetters;
+		}
+		final float charWidth = getCharWidth(textPattern);
 
 // page units computations:
 		final int indentWidth = getElementWidth(ZLTextElement.IndentElement, 0);
-		final int emWidth = Context.getStringWidth(ourEm, 0, ourEm.length);
 		final float effectiveWidth = textWidth - (indentWidth + 0.5f * textWidth) / charsPerParagraph;
-		float charsPerLine = Math.min(effectiveWidth / (emWidth * charWidthFactor),
+		float charsPerLine = Math.min(effectiveWidth / charWidth,
 				charsPerParagraph * 1.2f);
 
 		final int strHeight = getWordHeight() + Context.getDescent();
@@ -436,7 +447,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 // result computation
 		final float factor = 1.0f / charsPerLine / linesPerPage;
 		final float pages = textSize * factor;
-
 		int result = Math.max((int) (pages + 1.0f - 0.5f * factor), 1);
 
 		if (textSize != getScrollbarFullSize()) {
@@ -445,7 +455,11 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			System.err.println("textHeight = " + textHeight);
 			System.err.println("indentWidth = " + indentWidth);
 			System.err.println("strHeight = " + strHeight);
-			System.err.println("emWidth = " + emWidth);
+			System.err.println("textPatternLength = " + textPattern.length);
+			System.err.println("lang = " + lang);
+			System.err.println("charWidth = " + charWidth);
+			System.err.println("EN char width = " + getCharWidth(ourEnLetters));
+			System.err.println("RU char width = " + getCharWidth(ourRuLetters));
 			System.err.println("effectiveWidth = " + effectiveWidth);
 			System.err.println("effectiveHeight = " + effectiveHeight);
 			System.err.println("linesPerPage = " + linesPerPage);
