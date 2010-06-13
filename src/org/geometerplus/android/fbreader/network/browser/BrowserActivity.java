@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -38,6 +39,8 @@ import org.geometerplus.zlibrary.ui.android.R;
 public class BrowserActivity extends Activity {
 
 	protected final ZLResource myResource = ZLResource.resource("browser");
+
+	private String myStoreInRecentUrls;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class BrowserActivity extends Activity {
 		final String url;
 		if (uri != null) {
 			url = uri.toString();
+			myStoreInRecentUrls = url;
 		} else {
 			url = library.NetworkBrowserPageOption.getValue();
 		}
@@ -75,9 +79,22 @@ public class BrowserActivity extends Activity {
 		if (uri != null) {
 			WebView view = (WebView) findViewById(R.id.webview);
 			final String url = uri.toString();
+			myStoreInRecentUrls = url;
 			view.loadUrl(url);
 			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
 		}
+	}
+
+	private void storeUrlInRecents() {
+		if (myStoreInRecentUrls != null) {
+			System.err.println("STORE IN RECENTS: " + myStoreInRecentUrls);
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					getApplicationContext(),
+					RecentUrlsProvider.AUTHORITY,
+					RecentUrlsProvider.MODE);
+	        suggestions.saveRecentQuery(myStoreInRecentUrls, null);
+		}
+		myStoreInRecentUrls = null;
 	}
 
 	private class ChromeClient extends WebChromeClient {
@@ -93,6 +110,8 @@ public class BrowserActivity extends Activity {
 			setProgressBarVisibility(inProgress);
 			if (inProgress) {
 				setProgress(newProgress);
+			} else {
+				storeUrlInRecents();
 			}
 		}
 	}
@@ -100,6 +119,7 @@ public class BrowserActivity extends Activity {
 	private class ViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			storeUrlInRecents();
 			return false;
 		}
 	}
