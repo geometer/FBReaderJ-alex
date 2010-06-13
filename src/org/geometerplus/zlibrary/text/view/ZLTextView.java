@@ -19,9 +19,14 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.text.model.*;
 import org.geometerplus.zlibrary.text.hyphenation.*;
@@ -398,15 +403,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return sizeOfText;
 	}
 
-	protected abstract String getLanguage();
-
-	private static char[] ourEnLetters = "System developers have used modeling languages for decades to specify, visualize, construct, and document systems. The Unified Modeling Language (UML) is one of those languages. UML makes it possible for team members to collaborate by providing a common language that applies to a multitude of different systems. Essentially, it enables you to communicate solutions in a consistent, tool-supported language.".toCharArray();
-	private static char[] ourRuLetters = "Ходили, правда, шепотки о том, будто бы сэр Джеффри особенно успешно проявляет себя в делах тайных, находящихся в ведении полиции и контрразведки, но о каком дипломате не ходят такие слухи? Полноте! Люди выполняют свои профессиональные обязанности, а их начальство в Лондоне, Париже, Берлине или Петербурге интересуется только качеством их работы, вовсе не приплетая сюда столь неуместное в данном случае понятие морали.".toCharArray();
-
-	private float getCharWidth(char[] pattern) {
-		return Context.getStringWidth(pattern, 0, pattern.length) / ((float) pattern.length);
-	}
-
 	private synchronized int computeTextPageNumber(int textSize) {
 		if (myModel == null || myModel.getParagraphsNumber() == 0) {
 			return 1;
@@ -422,16 +418,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		final int totalTextSize = myModel.getTextLength(num - 1);
 		final float charsPerParagraph = ((float) totalTextSize) / num;
 
-		final char[] textPattern;
-		final String lang = getLanguage();
-		if (lang == null) {
-			textPattern = ourEnLetters;
-		} else if (lang.equalsIgnoreCase("ru")) {
-			textPattern = ourRuLetters;
-		} else {
-			textPattern = ourEnLetters;
-		}
-		final float charWidth = getCharWidth(textPattern);
+		final float charWidth = computeCharWidth();
 
 // page units computations:
 		final int indentWidth = getElementWidth(ZLTextElement.IndentElement, 0);
@@ -455,11 +442,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			System.err.println("textHeight = " + textHeight);
 			System.err.println("indentWidth = " + indentWidth);
 			System.err.println("strHeight = " + strHeight);
-			System.err.println("textPatternLength = " + textPattern.length);
-			System.err.println("lang = " + lang);
+			System.err.println("lang = " + getLanguage());
 			System.err.println("charWidth = " + charWidth);
-			System.err.println("EN char width = " + getCharWidth(ourEnLetters));
-			System.err.println("RU char width = " + getCharWidth(ourRuLetters));
 			System.err.println("effectiveWidth = " + effectiveWidth);
 			System.err.println("effectiveHeight = " + effectiveHeight);
 			System.err.println("linesPerPage = " + linesPerPage);
@@ -472,6 +456,42 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			System.err.println("<-------------------------------------------<");
 		}
 		return result;
+	}
+
+	protected abstract String getLanguage();
+
+	private static char[] ourLettersBuffer = new char[512];
+	private static char[] ourDefaultLetters = "System developers have used modeling languages for decades to specify, visualize, construct, and document systems. The Unified Modeling Language (UML) is one of those languages. UML makes it possible for team members to collaborate by providing a common language that applies to a multitude of different systems. Essentially, it enables you to communicate solutions in a consistent, tool-supported language.".toCharArray();
+
+	private final float computeCharWidth() {
+		char[] textPattern = ourDefaultLetters;
+		int textPatternLength = textPattern.length;
+
+		final String lang = getLanguage();
+		if (lang != null) {
+			ZLFile file = ZLResourceFile.createResourceFile("data/commonTextPatterns/" + lang + ".pattern");
+			System.err.println("computeCharWidth: try using file " + file.getName(false));
+			if (file.exists()) {
+				try {
+					final char[] buffer = ourLettersBuffer;
+					InputStream inputStream = file.getInputStream();
+					final int charsRead = new InputStreamReader(inputStream).read(buffer);
+					if (charsRead > 0) {
+						System.err.println("... file usage: size = " + file.size() + "; read = " + charsRead);
+						textPattern = buffer;
+						textPatternLength = charsRead;
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		final float charWidth = computeCharWidth(textPattern, textPatternLength);
+		return charWidth;
+	}
+
+	private final float computeCharWidth(char[] pattern, int length) {
+		return Context.getStringWidth(pattern, 0, length) / ((float) length);
 	}
 
 	public final synchronized int computePageNumber() {
