@@ -31,9 +31,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.geometerplus.fbreader.network.NetworkLibrary;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
+
+import org.geometerplus.fbreader.network.NetworkLibrary;
+
+import org.geometerplus.android.fbreader.network.BookDownloaderService;
 
 
 public class BrowserActivity extends Activity {
@@ -41,6 +44,39 @@ public class BrowserActivity extends Activity {
 	protected final ZLResource myResource = ZLResource.resource("browser");
 
 	private String myStoreInRecentUrls;
+	private Object myStoreInRecentUrlsLock = new Object();
+
+	private void setStoreInRecentUrls(String url) {
+		synchronized (myStoreInRecentUrlsLock) {
+			myStoreInRecentUrls = url;
+		}
+	}
+
+	private void storeUrlInRecents() {
+		synchronized (myStoreInRecentUrlsLock) {
+			if (myStoreInRecentUrls != null) {
+				System.err.println("STORE IN RECENTS: " + myStoreInRecentUrls);
+				SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+						getApplicationContext(),
+						RecentUrlsProvider.AUTHORITY,
+						RecentUrlsProvider.MODE);
+		        suggestions.saveRecentQuery(myStoreInRecentUrls, null);
+			}
+			myStoreInRecentUrls = null;
+		}
+	}
+
+	private void downloadBook(String url) {
+		startService(
+			new Intent(Intent.ACTION_VIEW, Uri.parse(url),
+					getApplicationContext(), BookDownloaderService.class)
+				//.putExtra(BookDownloaderService.BOOK_FORMAT_KEY, ref.BookFormat)
+				//.putExtra(BookDownloaderService.REFERENCE_TYPE_KEY, resolvedType)
+				//.putExtra(BookDownloaderService.CLEAN_URL_KEY, ref.cleanURL())
+				//.putExtra(BookDownloaderService.TITLE_KEY, book.Title)
+				//.putExtra(BookDownloaderService.SSL_CERTIFICATE_KEY, sslCertificate)
+		);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +99,7 @@ public class BrowserActivity extends Activity {
 		final String url;
 		if (uri != null) {
 			url = uri.toString();
-			myStoreInRecentUrls = url;
+			setStoreInRecentUrls(url);
 		} else {
 			url = library.NetworkBrowserPageOption.getValue();
 		}
@@ -79,22 +115,10 @@ public class BrowserActivity extends Activity {
 		if (uri != null) {
 			WebView view = (WebView) findViewById(R.id.webview);
 			final String url = uri.toString();
-			myStoreInRecentUrls = url;
+			setStoreInRecentUrls(url);
 			view.loadUrl(url);
 			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
 		}
-	}
-
-	private void storeUrlInRecents() {
-		if (myStoreInRecentUrls != null) {
-			System.err.println("STORE IN RECENTS: " + myStoreInRecentUrls);
-			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-					getApplicationContext(),
-					RecentUrlsProvider.AUTHORITY,
-					RecentUrlsProvider.MODE);
-	        suggestions.saveRecentQuery(myStoreInRecentUrls, null);
-		}
-		myStoreInRecentUrls = null;
 	}
 
 	private class ChromeClient extends WebChromeClient {
@@ -117,6 +141,31 @@ public class BrowserActivity extends Activity {
 	}
 
 	private class ViewClient extends WebViewClient {
+
+		private String[] mySupportedBooksExtensions = {".epub", ".fb2", ".fb2.zip"};
+
+		@Override
+		public void onLoadResource(final WebView view, final String url) {
+			final Uri uri = Uri.parse(url);
+			String path = uri.getPath();
+			if (path != null) {
+				path = path.toLowerCase();
+				for (String ext: mySupportedBooksExtensions) {
+					if (path.endsWith(ext)) {
+						view.stopLoading();
+						downloadBook(url);
+						break;
+					}
+				}
+			}
+		}
+
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			System.err.println("ON RECIEVED ERROR (" + errorCode + "): " + description);
+			System.err.println("... ON: " + failingUrl);
+		}
+
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			storeUrlInRecents();
