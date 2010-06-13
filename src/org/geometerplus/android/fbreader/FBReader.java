@@ -96,8 +96,8 @@ public final class FBReader extends ZLAndroidActivity {
 			private void gotoPage(int page) {
 				final ZLView view = ZLApplication.Instance().getCurrentView();
 				if (view instanceof ZLTextView) {
-					//ZLTextView textView = (ZLTextView) view;
-					//textView.set
+					ZLTextView textView = (ZLTextView) view;
+					textView.gotoPage(page);
 				}
 			}
 
