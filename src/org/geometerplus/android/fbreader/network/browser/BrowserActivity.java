@@ -27,11 +27,14 @@ import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.util.ZLNetworkUtil;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.network.NetworkLibrary;
@@ -91,6 +94,11 @@ public class BrowserActivity extends Activity {
 		WebView view = (WebView) findViewById(R.id.webview);
 		view.setWebChromeClient(new ChromeClient());
 		view.setWebViewClient(new ViewClient());
+
+		view.getSettings().setJavaScriptEnabled(true);
+		view.getSettings().setUserAgentString(ZLNetworkUtil.getUserAgent());
+		view.getSettings().setBuiltInZoomControls(true);
+		view.getSettings().setUseWideViewPort(true);
 
 		final Intent intent = getIntent();
 		final Uri uri = intent.getData();
