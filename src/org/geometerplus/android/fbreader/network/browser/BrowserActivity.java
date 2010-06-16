@@ -30,6 +30,7 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.util.ZLNetworkUtil;
@@ -168,8 +169,8 @@ public class BrowserActivity extends Activity {
 
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			System.err.println("ON RECIEVED ERROR (" + errorCode + "): " + description);
-			System.err.println("... ON: " + failingUrl);
+			final String errorText = myResource.getResource("errorText").getValue().replace("%s", description);
+			Toast.makeText(BrowserActivity.this, errorText, Toast.LENGTH_LONG).show();
 		}
 
 		@Override
