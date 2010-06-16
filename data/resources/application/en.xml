@@ -17,6 +17,7 @@
 		<node name="deleteBook" value="Delete book"/>
 	</node>
 	<node name="browser">
+		<node name="errorText" value="Error: %s"/>
 		<node name="menu">
 			<node name="go" value="Go"/>
 			<node name="stop" value="Stop"/>

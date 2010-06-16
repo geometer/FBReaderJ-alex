@@ -18,6 +18,7 @@
 		<node name="deleteBook" value="删除图书" />
 	</node>
 	<node name="browser">
+		<node name="errorText" toBeTranslated="true" value="Error: %s"/>
 		<node name="menu">
 			<node name="go" toBeTranslated="true" value="Go"/>
 			<node name="stop" toBeTranslated="true" value="Stop"/>

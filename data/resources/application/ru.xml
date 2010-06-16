@@ -17,6 +17,7 @@
 		<node name="deleteBook" value="Удалить книгу"/>
 	</node>
 	<node name="browser">
+		<node name="errorText" value="Ошибка: %s"/>
 		<node name="menu">
 			<node name="go" value="Перейти"/>
 			<node name="stop" value="Остановить"/>
