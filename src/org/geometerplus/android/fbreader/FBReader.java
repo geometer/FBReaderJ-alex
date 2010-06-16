@@ -221,7 +221,9 @@ public final class FBReader extends ZLAndroidActivity {
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
 
 		final ZLView view = fbreader.getCurrentView();
-		if (view instanceof ZLTextView) {
+		if (view instanceof ZLTextView
+				&& ((ZLTextView) view).getModel() != null
+				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
 			ZLTextView textView = (ZLTextView) view;
 
 			final int page = textView.computeCurrentPage();
