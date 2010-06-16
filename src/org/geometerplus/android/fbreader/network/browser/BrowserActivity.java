@@ -27,8 +27,6 @@ import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -141,7 +139,7 @@ public class BrowserActivity extends Activity {
 			setProgressBarIndeterminateVisibility(inProgress);
 			setProgressBarVisibility(inProgress);
 			if (inProgress) {
-				setProgress(newProgress);
+				setProgress(100 * newProgress); // title progress is in range 0..10000
 			} else {
 				storeUrlInRecents();
 			}
@@ -187,12 +185,21 @@ public class BrowserActivity extends Activity {
 		return menu.add(0, index, Menu.NONE, label)/*.setIcon(iconId)*/;
 	}
 
+	
+	private static final int OPTION_GO = 1; 
+	private static final int OPTION_STOP = 2;
+	private static final int OPTION_RELOAD = 3;
+	private static final int OPTION_BACK = 4;
+	private static final int OPTION_FORWARD = 5;
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		addMenuItem(menu, 1, "go", 0);
-		addMenuItem(menu, 2, "stop", 0);
-		addMenuItem(menu, 3, "reload", 0);
+		addMenuItem(menu, OPTION_GO, "go", 0);
+		addMenuItem(menu, OPTION_STOP, "stop", 0);
+		addMenuItem(menu, OPTION_RELOAD, "reload", 0);
+		addMenuItem(menu, OPTION_BACK, "back", 0);
+		addMenuItem(menu, OPTION_FORWARD, "forward", 0);
 		return true;
 	}
 
@@ -201,9 +208,11 @@ public class BrowserActivity extends Activity {
 		super.onPrepareOptionsMenu(menu);
 		WebView view = (WebView) findViewById(R.id.webview);
 		final boolean loading = view.getUrl() != null && view.getProgress() < 100;
-		menu.findItem(1).setEnabled(!loading).setVisible(!loading);
-		menu.findItem(2).setEnabled(loading).setVisible(loading);
-		menu.findItem(3).setEnabled(!loading && view.getUrl() != null);
+		menu.findItem(OPTION_GO).setEnabled(!loading).setVisible(!loading);
+		menu.findItem(OPTION_STOP).setEnabled(loading).setVisible(loading);
+		menu.findItem(OPTION_RELOAD).setEnabled(!loading && view.getUrl() != null);
+		menu.findItem(OPTION_BACK).setEnabled(!loading && view.canGoBack());
+		menu.findItem(OPTION_FORWARD).setEnabled(!loading && view.canGoForward());
 		return true;
 	}
 
@@ -213,13 +222,19 @@ public class BrowserActivity extends Activity {
 		switch (item.getItemId()) {
 			default:
 				return true;
-			case 1:
+			case OPTION_GO:
 				return onSearchRequested();
-			case 2:
+			case OPTION_STOP:
 				view.stopLoading();
 				return true;
-			case 3:
+			case OPTION_RELOAD:
 				view.reload();
+				return true;
+			case OPTION_BACK:
+				view.goBack();
+				return true;
+			case OPTION_FORWARD:
+				view.goForward();
 				return true;
 		}
 	}

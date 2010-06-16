@@ -28,7 +28,7 @@ DONE не делать скролл за границу текста
 	DONE сохранение набранных страниц + выпадающий список
 	DONE обработка ссылок на книги (сразу загрузка файлов с "нашими" расширениями: .epub, .fb2, .fb2.zip)
 		DONE книга про mouse должна загружаться
-	** кнопки Back/Forward
+	DONE кнопки Back/Forward
 	** cookies (см. описание android.webkit.WebView)
 	** обработка событий WebChromeClient
 	** обработка событий WebViewClient

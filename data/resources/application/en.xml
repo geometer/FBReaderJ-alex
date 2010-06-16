@@ -21,6 +21,8 @@
 			<node name="go" value="Go"/>
 			<node name="stop" value="Stop"/>
 			<node name="reload" value="Reload"/>
+			<node name="forward" value="Forward"/>
+			<node name="back" value="Back"/>
 		</node>
 	</node>
 	<node name="networkView">
