@@ -18,6 +18,8 @@
 	</node>
 	<node name="browser">
 		<node name="errorText" value="Error: %s"/>
+		<node name="confirmation" value="Confirmation"/>
+		<node name="resubmitForm" value="To display this page, browser must send information that will repeat any action (such as a search or order confirmation) that was performed earlier."/>
 		<node name="menu">
 			<node name="go" value="Go"/>
 			<node name="stop" value="Stop"/>

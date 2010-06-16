@@ -20,9 +20,12 @@
 package org.geometerplus.android.fbreader.network.browser;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -177,6 +180,31 @@ public class BrowserActivity extends Activity {
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			storeUrlInRecents();
 			return false;
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
+		}
+		
+		@Override
+		public void onFormResubmission(WebView view, final Message dontResend, final Message resend) {
+			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == DialogInterface.BUTTON_POSITIVE) {
+						resend.sendToTarget();
+					} else {
+						dontResend.sendToTarget();
+					}
+				}
+			};
+			final ZLResource buttonResource = ZLResource.resource("dialog").getResource("button");
+			new AlertDialog.Builder(BrowserActivity.this)
+				.setTitle(myResource.getResource("confirmation").getValue())
+				.setMessage(myResource.getResource("resubmitForm").getValue())
+				.setPositiveButton(buttonResource.getResource("ok").getValue(), listener)
+				.setNegativeButton(buttonResource.getResource("cancel").getValue(), listener)
+				.create().show();
 		}
 	}
 
