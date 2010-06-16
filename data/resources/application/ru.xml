@@ -20,6 +20,9 @@
 		<node name="errorText" value="Ошибка: %s"/>
 		<node name="confirmation" value="Подтверждение"/>
 		<node name="resubmitForm" value="Чтобы отобразить эту страницу, браузер должен отправить информацию, которая повторит любое ранее произведённое действие (например, запрос на поиск или онлайн-покупку)."/>
+		<node name="authenticationRequired" value="Вход в %s1 &quot;%s2&quot;"/>
+		<node name="login" value="Имя пользователя" />
+		<node name="password" value="Пароль" />
 		<node name="menu">
 			<node name="go" value="Перейти"/>
 			<node name="stop" value="Остановить"/>

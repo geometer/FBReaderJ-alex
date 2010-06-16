@@ -20,6 +20,9 @@
 		<node name="errorText" value="Error: %s"/>
 		<node name="confirmation" value="Confirmation"/>
 		<node name="resubmitForm" value="To display this page, browser must send information that will repeat any action (such as a search or order confirmation) that was performed earlier."/>
+		<node name="authenticationRequired" value="Sign in to %s1 &quot;%s2&quot;"/>
+		<node name="login" value="User Name" />
+		<node name="password" value="Password" />
 		<node name="menu">
 			<node name="go" value="Go"/>
 			<node name="stop" value="Stop"/>

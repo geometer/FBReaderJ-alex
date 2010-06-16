@@ -29,10 +29,14 @@ import android.os.Message;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
@@ -172,7 +176,7 @@ public class BrowserActivity extends Activity {
 
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			final String errorText = myResource.getResource("errorText").getValue().replace("%s", description);
+			final String errorText = myResource.getResource("errorText").getValue().replaceAll("%s", description);
 			Toast.makeText(BrowserActivity.this, errorText, Toast.LENGTH_LONG).show();
 		}
 
@@ -204,10 +208,54 @@ public class BrowserActivity extends Activity {
 				.setMessage(myResource.getResource("resubmitForm").getValue())
 				.setPositiveButton(buttonResource.getResource("ok").getValue(), listener)
 				.setNegativeButton(buttonResource.getResource("cancel").getValue(), listener)
-				.create().show();
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						listener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+					}
+				}).create().show();
+		}
+
+		@Override
+		public void onReceivedHttpAuthRequest(WebView view, 
+				final HttpAuthHandler handler, String host, String realm) {
+			final View layout = getLayoutInflater().inflate(R.layout.browser_authentication_dialog, null);
+			setupLabel(layout, R.id.login_text, "login", R.id.login);
+			setupLabel(layout, R.id.password_text, "password", R.id.password);
+			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == DialogInterface.BUTTON_POSITIVE) {
+						TextView loginView = (TextView) layout.findViewById(R.id.login);
+						TextView passwordView = (TextView) layout.findViewById(R.id.password);
+						handler.proceed(loginView.getText().toString(), passwordView.getText().toString());
+					} else {
+						handler.cancel();
+					}
+				}
+			};
+			final ZLResource buttonResource = ZLResource.resource("dialog").getResource("button");
+			new AlertDialog.Builder(BrowserActivity.this)
+				.setView(layout)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(myResource.getResource("authenticationRequired")
+						.getValue().replaceAll("%s1", host).replaceAll("%s2", realm))
+				.setPositiveButton(buttonResource.getResource("ok").getValue(), listener)
+				.setNegativeButton(buttonResource.getResource("cancel").getValue(), listener)
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						listener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+					}
+				}).create().show();
 		}
 	}
 
+	private void setupLabel(View layout, int labelId, String key, int labelForId) {
+		final View viewFor = layout.findViewById(labelForId);
+		viewFor.measure(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+		final TextView label = (TextView) layout.findViewById(labelId);
+		label.setText(myResource.getResource(key).getValue());
+		label.getLayoutParams().height = viewFor.getMeasuredHeight();
+	}
 
 	private MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
 		final String label = myResource.getResource("menu").getResource(resourceKey).getValue();

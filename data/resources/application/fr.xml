@@ -21,6 +21,9 @@
 		<node name="errorText" toBeTranslated="true" value="Error: %s"/>
 		<node name="confirmation" toBeTranslated="true" value="Confirmation"/>
 		<node name="resubmitForm" toBeTranslated="true" value="To display this page, browser must send information that will repeat any action (such as a search or order confirmation) that was performed earlier."/>
+		<node name="authenticationRequired" toBeTranslated="true" value="Sign in to %s1 &quot;%s2&quot;"/>
+		<node name="login" value="Identifiant"/>
+		<node name="password" value="Mot de passe"/>
 		<node name="menu">
 			<node name="go" toBeTranslated="true" value="Go"/>
 			<node name="stop" toBeTranslated="true" value="Stop"/>
