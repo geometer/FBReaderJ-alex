@@ -267,12 +267,4 @@ public final class FBView extends ZLTextView {
 	public int scrollbarType() {
 		return SCROLLBAR_HIDE;
 	}
-
-	@Override
-	protected String getLanguage() {
-		 if (myReader == null || myReader.Model == null || myReader.Model.Book == null) {
-			 return null;
-		 }
-		 return myReader.Model.Book.getLanguage();
-	}
 }
