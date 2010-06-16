@@ -22,6 +22,8 @@
 			<node name="go" toBeTranslated="true" value="Go"/>
 			<node name="stop" toBeTranslated="true" value="Stop"/>
 			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="forward" toBeTranslated="true" value="Forward"/>
+			<node name="back" toBeTranslated="true" value="Back"/>
 		</node>
 	</node>
 	<node name="networkView">
