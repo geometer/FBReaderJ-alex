@@ -64,7 +64,6 @@ public class BrowserActivity extends Activity {
 	private void storeUrlInRecents() {
 		synchronized (myStoreInRecentUrlsLock) {
 			if (myStoreInRecentUrls != null) {
-				System.err.println("STORE IN RECENTS: " + myStoreInRecentUrls);
 				SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
 						getApplicationContext(),
 						RecentUrlsProvider.AUTHORITY,
@@ -102,7 +101,7 @@ public class BrowserActivity extends Activity {
 		view.setWebViewClient(new ViewClient());
 
 		view.getSettings().setJavaScriptEnabled(true);
-		view.getSettings().setUserAgentString(ZLNetworkUtil.getUserAgent());
+		view.getSettings().setUserAgentString(ZLNetworkUtil.getUserAgent() + " Mobile Browser");
 		view.getSettings().setBuiltInZoomControls(true);
 		view.getSettings().setUseWideViewPort(true);
 
@@ -140,17 +139,12 @@ public class BrowserActivity extends Activity {
 		public void onReceivedTitle(WebView view, String title) {
 			BrowserActivity.this.setTitle(title);
 		}
-		
+
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
 			final boolean inProgress = newProgress < 100;
 			setProgressBarIndeterminateVisibility(inProgress);
-			setProgressBarVisibility(inProgress);
-			if (inProgress) {
-				setProgress(100 * newProgress); // title progress is in range 0..10000
-			} else {
-				storeUrlInRecents();
-			}
+			setProgress(100 * newProgress); // title progress is in range 0..10000
 		}
 	}
 
@@ -158,20 +152,18 @@ public class BrowserActivity extends Activity {
 
 		private String[] mySupportedBooksExtensions = {".epub", ".fb2", ".fb2.zip"};
 
-		@Override
-		public void onLoadResource(final WebView view, final String url) {
+		private boolean shouldLoadBook(String url) {
 			final Uri uri = Uri.parse(url);
 			String path = uri.getPath();
 			if (path != null) {
 				path = path.toLowerCase();
 				for (String ext: mySupportedBooksExtensions) {
 					if (path.endsWith(ext)) {
-						view.stopLoading();
-						downloadBook(url);
-						break;
+						return true;
 					}
 				}
 			}
+			return false;
 		}
 
 		@Override
@@ -182,15 +174,20 @@ public class BrowserActivity extends Activity {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			storeUrlInRecents();
+			if (shouldLoadBook(url)) {
+				downloadBook(url);
+				setStoreInRecentUrls(null);
+				return true;
+			}
 			return false;
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
+			storeUrlInRecents();
+			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(view.getUrl()); // using current URL (not every loaded URL opens new page)
 		}
-		
+
 		@Override
 		public void onFormResubmission(WebView view, final Message dontResend, final Message resend) {
 			final DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -284,7 +281,7 @@ public class BrowserActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		WebView view = (WebView) findViewById(R.id.webview);
-		final boolean loading = view.getUrl() != null && view.getProgress() < 100;
+		final boolean loading = view.getOriginalUrl() != null && view.getProgress() < 100;
 		menu.findItem(OPTION_GO).setEnabled(!loading).setVisible(!loading);
 		menu.findItem(OPTION_STOP).setEnabled(loading).setVisible(loading);
 		menu.findItem(OPTION_RELOAD).setEnabled(!loading && view.getUrl() != null);
