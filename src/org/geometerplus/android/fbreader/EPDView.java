@@ -19,12 +19,12 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.widget.EpdRender;
-
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
-
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextView.ScrollingMode;
+
+import android.widget.EpdRender;
 
 
 class EPDView extends EpdRender {
@@ -46,7 +46,7 @@ class EPDView extends EpdRender {
 	public boolean onPageUp(int arg1, int arg2) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
-			((ZLTextView) view).scrollPage(false, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
+			((ZLTextView) view).scrollPage(false, ScrollingMode.NO_OVERLAPPING, 0);
 		}
 		ZLApplication.Instance().repaintView();
 		return true;
@@ -56,15 +56,9 @@ class EPDView extends EpdRender {
 	public boolean onPageDown(int arg1, int arg2) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
-			((ZLTextView) view).scrollPage(true, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
+			((ZLTextView) view).scrollPage(true, ScrollingMode.NO_OVERLAPPING, 0);
 		}
 		ZLApplication.Instance().repaintView();
-		return true;
-	}
-
-	@Override
-	public boolean onTogglePressed(int arg1, int arg2) {
-		
 		return true;
 	}
 }
