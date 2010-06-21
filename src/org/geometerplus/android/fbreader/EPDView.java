@@ -69,16 +69,27 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onTogglePressed(int arg1, int arg2) {
+		if (!FBReader.Instance.isReadMode()) {
+			changeFont();
+		} else {
+			synchronizeLCD();
+		}
+		return true;
+	}
+
+	private void changeFont() {
 		final List<String> families = ZLibrary.Instance().getPaintContext().fontFamilies();
 		if (families.size() == 0) {
-			return true;
+			return;
 		}
 		final ZLStringOption option = ZLTextStyleCollection.Instance().getBaseStyle().FontFamilyOption;
 		final int index = (families.indexOf(option.getValue()) + 1) % families.size();
-		System.err.println("family: " + index + "(" + families.size() + ") -- " + families.get(index));
 		option.setValue(families.get(index));
 		((org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance()).clearTextCaches();
 		ZLApplication.Instance().repaintView();
-		return true;
+	}
+
+	private void synchronizeLCD() {
+		// TODO: implement synchronizing
 	}
 }

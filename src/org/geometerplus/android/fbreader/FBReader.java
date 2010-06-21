@@ -43,6 +43,11 @@ public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
 
 	//private int myFullScreenFlag;
+	private boolean myReadMode;
+
+	boolean isReadMode() {
+		return myReadMode;
+	}
 
 	private static class TextSearchButtonPanel implements ZLApplication.ButtonPanel {
 		boolean Visible;
@@ -179,6 +184,7 @@ public final class FBReader extends ZLAndroidActivity {
 		} else {
 			myWakeLock = null;
 		}
+		myReadMode = true;
 	}
 
 	@Override
@@ -189,6 +195,7 @@ public final class FBReader extends ZLAndroidActivity {
 		if (myPanel.ControlPanel != null) {
 			myPanel.Visible = myPanel.ControlPanel.getVisibility() == View.VISIBLE;
 		}
+		myReadMode = false;
 		super.onPause();
 	}
 
