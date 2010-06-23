@@ -4,18 +4,14 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 >
-	<ScrollView
-		android:id="@+id/synchronous_scroll"
+	<org.geometerplus.android.fbreader.SynchronousView
+		android:id="@+id/synchronous_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:scrollbarStyle="insideInset"
+		android:scrollbars="vertical|horizontal"
 		android:fadingEdge="none"
-	>
-		<ImageView
-			android:id="@+id/synchronous_image"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:adjustViewBounds="true"
-		/>
-	</ScrollView>
+		android:scrollbarStyle="outsideOverlay"
+		android:paddingRight="?android:attr/scrollbarSize"
+		android:paddingBottom="?android:attr/scrollbarSize"
+	/>
 </RelativeLayout>

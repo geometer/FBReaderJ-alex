@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,10 @@ package org.geometerplus.android.fbreader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.ScrollView;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
+
 
 public class SynchronousActivity extends Activity {
 	static SynchronousActivity Instance;
@@ -37,6 +36,9 @@ public class SynchronousActivity extends Activity {
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
+
+		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
+		((SynchronousView) findViewById(R.id.synchronous_view)).setWidget(widget);
 	}
 
 	@Override
@@ -53,12 +55,9 @@ public class SynchronousActivity extends Activity {
 	}
 
 	void updateImage() {
-		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
-		final ImageView image = (ImageView) findViewById(R.id.synchronous_image);
-		image.setImageBitmap(widget.getBitmap());
-
-		final ScrollView scroll = (ScrollView) findViewById(R.id.synchronous_scroll);
-		scroll.fullScroll(ScrollView.FOCUS_UP);
+		SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
+		view.setScroll(0, 0);
+		view.invalidate();
 	}
 
 }
