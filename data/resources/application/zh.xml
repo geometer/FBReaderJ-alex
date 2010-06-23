@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- Chinese FBReaderJ resources, by http://shucang.com/ -->
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" toBeTranslated="true" value="Page change"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="佚名" />
 		<node name="booksWithNoTags" value="未归类" />

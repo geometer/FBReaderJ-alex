@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" value="Page change"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Unknown author"/>
 		<node name="booksWithNoTags" value="Books with no tags"/>

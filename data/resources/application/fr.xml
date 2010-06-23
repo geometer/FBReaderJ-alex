@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- French FBReaderJ resources, by Sébastien Rodriguez -->
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" toBeTranslated="true" value="Page change"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Auteur inconnu"/>
 		<node name="booksWithNoTags" value="Livres sans étiquettes"/>

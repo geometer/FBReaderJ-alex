@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- German FBReader resources, by Victor Massini -->
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" toBeTranslated="true" value="Page change"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Unbekannter Autor"/>
 		<node name="booksWithNoTags" value="Bücher ohne Tags"/>

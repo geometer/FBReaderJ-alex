@@ -20,25 +20,39 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Window;
 
 import org.geometerplus.zlibrary.ui.android.R;
+
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 
 public class SynchronousActivity extends Activity {
 	static SynchronousActivity Instance;
 
+	private ProgressDialog myProgressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		if (FBReader.Instance == null) {
+			finish();
+			return;
+		}
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
 		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
 		((SynchronousView) findViewById(R.id.synchronous_view)).setWidget(widget);
+
+		myProgressDialog = new ProgressDialog(this);
+		myProgressDialog.setIndeterminate(true);
 	}
 
 	@Override
@@ -50,6 +64,7 @@ public class SynchronousActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		myProgressDialog.cancel();
 		Instance = null;
 		super.onPause();
 	}
@@ -58,6 +73,17 @@ public class SynchronousActivity extends Activity {
 		SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
 		view.setScroll(0, 0);
 		view.invalidate();
+		myProgressDialog.cancel();
 	}
 
+	void showPageProgress() {
+		showProgress(ZLResource.resource("fbreader").getResource("pageChange").getValue());
+	}
+
+	private void showProgress(String message) {
+		myProgressDialog.setMessage(message);
+		if (!myProgressDialog.isShowing()) {
+			myProgressDialog.show();
+		}
+	}
 }

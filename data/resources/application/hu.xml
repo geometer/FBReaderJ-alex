@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Hungarian FBReaderJ resources, by L. B. Szabó. Based on FBReader translation by Sándor Gábor -->
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" toBeTranslated="true" value="Page change"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Ismeretlen szerző"/>
 		<node name="booksWithNoTags" value="Címke nélküli könyvek"/>

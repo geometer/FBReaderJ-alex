@@ -52,6 +52,10 @@ public class SynchronousView extends View {
 	private int myScrollX;
 	private int myScrollY;
 
+	private int myScrollPage;
+	private int myStartScrollX;
+	private int myStartScrollY;
+
 	public SynchronousView(Context context) {
 		super(context);
 		init();
@@ -141,8 +145,16 @@ public class SynchronousView extends View {
 			if (!myScroller.isFinished()) {
 				myScroller.abortAnimation();
 			}
+			myStartScrollX = (int) x;
+			myStartScrollY = (int) y;
 			myLastScrollY = y;
 			myLastScrollX = x;
+			myScrollPage = 0;
+			if (myScrollY == 0) {
+				myScrollPage = -1;
+			} else if (myScrollY == myWidget.getHeight() - getClientHeight()) {
+				myScrollPage = 1;
+			}
 			break;
 			
 		case MotionEvent.ACTION_MOVE:
@@ -165,10 +177,16 @@ public class SynchronousView extends View {
 				velocityY = 0;
 			}
 			if (myWidget != null) {
-				final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
-				final int maxY = Math.max(0, myWidget.getHeight() - getClientHeight());
-				myScroller.fling(myScrollX, myScrollY, -velocityX, -velocityY,
-						0, maxX, 0, maxY);
+				if (myScrollPage * velocityY < 0
+						&& Math.abs(myStartScrollX - x) < getWidth() / 4
+						&& Math.abs(myStartScrollY - y) > getHeight() / 3 ) {
+					EPDView.Instance().scrollPage(myScrollPage > 0);
+				} else {
+					final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
+					final int maxY = Math.max(0, myWidget.getHeight() - getClientHeight());
+					myScroller.fling(myScrollX, myScrollY, -velocityX, -velocityY,
+							0, maxX, 0, maxY);
+				}
 			}
 			if (myVelocityTracker != null) {
 				myVelocityTracker.recycle();

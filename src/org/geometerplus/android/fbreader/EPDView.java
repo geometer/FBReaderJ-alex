@@ -50,22 +50,25 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (view instanceof ZLTextView) {
-			((ZLTextView) view).scrollPage(false, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
-		}
-		ZLApplication.Instance().repaintView();
+		scrollPage(false);
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
+		scrollPage(true);
+		return true;
+	}
+
+	final void scrollPage(boolean forward) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
-			((ZLTextView) view).scrollPage(true, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
+			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
+			if (SynchronousActivity.Instance != null) {
+				SynchronousActivity.Instance.showPageProgress();
+			}
+			ZLApplication.Instance().repaintView();
 		}
-		ZLApplication.Instance().repaintView();
-		return true;
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" value="Смена страницы"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>
 		<node name="booksWithNoTags" value="Книги вне категорий"/>
