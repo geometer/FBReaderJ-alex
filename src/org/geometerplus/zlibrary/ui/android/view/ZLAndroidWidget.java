@@ -165,7 +165,10 @@ public class ZLAndroidWidget extends View {
 		canvas.drawBitmap(myMainBitmap, 0, 0, myPaint);
 	}
 
-	
+	public final Bitmap getBitmap() {
+		return myMainBitmap;
+	}
+
 	@Override
 	public boolean onTrackballEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {

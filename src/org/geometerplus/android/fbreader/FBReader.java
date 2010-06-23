@@ -246,6 +246,10 @@ public final class FBReader extends ZLAndroidActivity {
 			bookPositionSlider.setMax(1);
 			bookPositionSlider.setVisibility(View.INVISIBLE);
 		}
+
+		if (SynchronousActivity.Instance != null) {
+			SynchronousActivity.Instance.updateImage();
+		}
 	}
 
 	public void updateEpdView(int delay) {

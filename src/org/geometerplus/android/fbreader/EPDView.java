@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.widget.EpdRender;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -69,7 +70,8 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onTogglePressed(int arg1, int arg2) {
-		if (!FBReader.Instance.isReadMode()) {
+		if (!FBReader.Instance.isReadMode()
+				&& SynchronousActivity.Instance == null) {
 			changeFont();
 		} else {
 			synchronizeLCD();
@@ -90,6 +92,12 @@ class EPDView extends EpdRender {
 	}
 
 	private void synchronizeLCD() {
-		// TODO: implement synchronizing
+		if (SynchronousActivity.Instance == null) {
+			FBReader.Instance.startActivity(
+				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
+			);
+		} else {
+			SynchronousActivity.Instance.finish();
+		}
 	}
 }
