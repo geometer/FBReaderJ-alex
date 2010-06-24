@@ -1298,6 +1298,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return leftIndex;
 	}*/
 
+	@Override
 	public boolean onStylusMovePressed(int x, int y) {
 		if (mySelectionModel.extendTo(x, y)) {
 			ZLApplication.Instance().repaintView();
@@ -1306,6 +1307,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return false;
 	}
 
+	@Override
 	public boolean onStylusRelease(int x, int y) {
 		mySelectionModel.deactivate();
 		return false;
@@ -1360,7 +1362,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	protected boolean moveHyperlinkPointer(boolean forward) {
 		final ArrayList<ZLTextHyperlinkArea> hyperlinkAreas = myCurrentPage.TextElementMap.HyperlinkAreas;
-		//boolean hyperlinkIsChanged = false;
 		if (!hyperlinkAreas.isEmpty()) {
 			final int index = hyperlinkAreas.indexOf(myCurrentHyperlink);
 			if (index == -1) {

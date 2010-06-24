@@ -36,6 +36,7 @@ public class ZLTextFontFamilyWithBaseOptionEntry extends ZLFontFamilyOptionEntry
 		myResource = resource;
 	}
 
+	@Override
 	public ArrayList<String> getValues() {
 		if (ourAllFamilies.size() == 0) {
 			final ArrayList<String> families = super.getValues();
@@ -45,11 +46,13 @@ public class ZLTextFontFamilyWithBaseOptionEntry extends ZLFontFamilyOptionEntry
 		return ourAllFamilies;
 	}
 
+	@Override
 	public String initialValue() {
 		final String value = super.initialValue();
-		return ((value == null) || (value.length() == 0)) ? (String)(getValues().get(0)) : value;
+		return ((value == null) || (value.length() == 0)) ? getValues().get(0) : value;
 	}
 
+	@Override
 	public void onAccept(String value) {
 		super.onAccept((value.equals(getValues().get(0))) ? "" : value);
 	}

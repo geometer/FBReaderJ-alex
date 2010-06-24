@@ -108,7 +108,6 @@ final class ZLTextSelectionModel {
 	private final Bound myFirstBound = new Bound();
 	private final Bound mySecondBound = new Bound();
 
-	//private final HashSet myCursors = new HashSet();
 	private final StringBuilder myText = new StringBuilder();
 
 	ZLTextSelectionModel(ZLTextView view) {
@@ -124,7 +123,6 @@ final class ZLTextSelectionModel {
 		myIsEmpty = false;
 		setBound(myFirstBound, x, y);
 		mySecondBound.copyFrom(myFirstBound);
-		//myCursors.clear();
 		myText.delete(0, myText.length());
 		//myTextIsUpToDate = true;
 	}
@@ -179,7 +177,6 @@ final class ZLTextSelectionModel {
 		myIsEmpty = true;
 		myIsActive = false;
 		myDoUpdate = false;
-		//myCursors.clear();
 		myText.delete(0, myText.length());
 		//myTextIsUpToDate = true;
 	}

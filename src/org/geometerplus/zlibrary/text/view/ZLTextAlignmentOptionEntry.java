@@ -35,14 +35,12 @@ public class ZLTextAlignmentOptionEntry extends ZLComboOptionEntry {
 	private static final ArrayList<String> ourValues4 = new ArrayList<String>();
 	private static final ArrayList<String> ourValues5 = new ArrayList<String>();
 
-	//private final ZLResource myResource;
-	private final ZLIntegerOption myOption;
-	private final boolean myAllowUndefined;
+	private	final ZLIntegerOption myOption;
+	private	final boolean myAllowUndefined;
 		
 	public ZLTextAlignmentOptionEntry(ZLIntegerOption option, final ZLResource resource, boolean allowUndefined) {
 		myAllowUndefined = allowUndefined;
 		myOption = option;
-		//myResource = resource;
 		if (ourValues5.isEmpty()) {
 			ourValues5.add(resource.getResource(KEY_UNCHANGED).getValue());
 			String value = resource.getResource(KEY_LEFT).getValue();
@@ -59,7 +57,7 @@ public class ZLTextAlignmentOptionEntry extends ZLComboOptionEntry {
 			ourValues4.add(value);
 		}
 	}	
-
+		
 	public ArrayList<String> getValues() {
 		return myAllowUndefined ? ourValues5 : ourValues4;
 	}

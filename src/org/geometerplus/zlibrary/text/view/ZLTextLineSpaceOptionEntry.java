@@ -47,7 +47,7 @@ public class ZLTextLineSpaceOptionEntry extends ZLComboOptionEntry {
 			ourAllValuesPlusBase.addAll(ourAllValues);
 		}
 	}
-		
+
 	public ArrayList<String> getValues() {
 		return myAllowBase ? ourAllValuesPlusBase : ourAllValues;
 	}
@@ -55,10 +55,10 @@ public class ZLTextLineSpaceOptionEntry extends ZLComboOptionEntry {
 	public String initialValue() {
 		final int value = myOption.getValue();
 		if (value == -1) {
-			return (String) ourAllValuesPlusBase.get(0);
+			return ourAllValuesPlusBase.get(0);
 		}
 		final int index = Math.max(0, Math.min(15, (value + 5) / 10 - 5));
-		return (String) ourAllValues.get(index);
+		return ourAllValues.get(index);
 	}
 
 	public void onAccept(String value) {

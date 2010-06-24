@@ -24,6 +24,7 @@ import org.geometerplus.zlibrary.core.options.*;
 import org.geometerplus.zlibrary.text.view.ZLTextStyle;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
 
+
 public class ZLTextFullStyleDecoration extends ZLTextStyleDecoration {
 	public final ZLIntegerRangeOption SpaceBeforeOption;
 	public final ZLIntegerRangeOption SpaceAfterOption;
