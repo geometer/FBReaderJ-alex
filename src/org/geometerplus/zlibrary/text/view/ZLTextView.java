@@ -19,14 +19,9 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.text.model.*;
 import org.geometerplus.zlibrary.text.hyphenation.*;
@@ -1025,7 +1020,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			}
 		}
 	}
-	
+
 	protected synchronized void preparePaintInfo() {
 		myPreviousPage.reset();
 		myNextPage.reset();
