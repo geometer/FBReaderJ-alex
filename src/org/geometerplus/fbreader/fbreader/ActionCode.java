@@ -42,7 +42,6 @@ public interface ActionCode {
 	String TRACKBALL_SCROLL_FORWARD = "trackballScrollForward";
 	String TRACKBALL_SCROLL_BACKWARD = "trackballScrollBackward";
 	String CANCEL = "cancel";
-	String ROTATE = "rotate";
 	String INCREASE_FONT = "increaseFont";
 	String DECREASE_FONT = "decreaseFont";
 	String TOGGLE_FULLSCREEN = "toggleFullscreen";
