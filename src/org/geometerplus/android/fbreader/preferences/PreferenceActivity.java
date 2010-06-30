@@ -86,7 +86,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		appearanceScreen.setSummary( appearanceScreen.Resource.getResource("summary").getValue() );
 		appearanceScreen.setOnPreferenceClickListener(
 				new PreferenceScreen.OnPreferenceClickListener() {
-					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						((FBReader) FBReader.Instance()).showOptionsDialog();
 						return true;
