@@ -33,6 +33,6 @@ class ScrollToHomeAction extends FBAction {
 	}
 
 	public void run() {
-		Reader.BookTextView.scrollToHome();
+		Reader.BookTextView.gotoHome();
 	}
 }

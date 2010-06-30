@@ -252,16 +252,6 @@ public final class FBView extends ZLTextView {
 	protected boolean isSelectionEnabled() {
 		return myReader.SelectionEnabledOption.getValue();
 	}
-	
-	void scrollToHome() {
-		final ZLTextWordCursor cursor = getStartCursor();
-		if (!cursor.isNull() && cursor.isStartOfParagraph() && cursor.getParagraphIndex() == 0) {
-			return;
-		}
-		gotoPosition(0, 0, 0);
-		preparePaintInfo();
-		ZLApplication.Instance().repaintView();
-	}
 
 	@Override
 	public int scrollbarType() {
