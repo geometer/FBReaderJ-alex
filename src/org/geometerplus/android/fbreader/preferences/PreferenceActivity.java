@@ -88,7 +88,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 				new PreferenceScreen.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						((FBReader) FBReader.Instance()).showOptionsDialogAction();
+						((FBReader) FBReader.Instance()).showOptionsDialog();
 						return true;
 					}
 				}
