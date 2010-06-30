@@ -207,7 +207,7 @@ public class NetworkLibrary {
 	}
 
 
-	public final ZLStringOption NetworkBrowserPageOption = new ZLStringOption("NetworkBrowser", "Page", "http://www.litres.ru");
+	public final ZLStringOption NetworkBrowserPageOption = new ZLStringOption("NetworkBrowser", "Page", "http://highscreen.litres.ru");
 	public final ZLStringOption NetworkSearchPatternOption = new ZLStringOption("NetworkSearch", "Pattern", "");
 
 	private final ArrayList<INetworkLink> myLoadedLinks = new ArrayList<INetworkLink>();

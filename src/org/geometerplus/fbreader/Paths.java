@@ -24,7 +24,7 @@ import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import android.os.Environment;
 
 public abstract class Paths {
-	public static final ZLStringOption BooksDirectoryOption = new ZLStringOption("Files", "BooksDirectory", Environment.getExternalStorageDirectory() + "/Books");
+	public static final ZLStringOption BooksDirectoryOption = new ZLStringOption("Files", "BooksDirectory", Environment.getExternalStorageDirectory() + "/ebooks");
 
 	public static String cacheDirectory() {
 		return BooksDirectoryOption.getValue() + "/.FBReader";
