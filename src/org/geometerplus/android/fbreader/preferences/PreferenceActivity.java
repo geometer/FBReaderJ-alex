@@ -20,6 +20,10 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import org.geometerplus.fbreader.Paths;
+import org.geometerplus.fbreader.fbreader.FBReader;
+
+import android.preference.Preference;
+import android.preference.PreferenceScreen;
 
 public class PreferenceActivity extends ZLPreferenceActivity {
 	public PreferenceActivity() {
@@ -72,11 +76,23 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			libraryCategory.Resource,
 			"path")
 		);
-		//final Category lookNFeelCategory = createCategory("LookNFeel");
+		final Category lookNFeelCategory = createCategory("LookNFeel");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().ShowStatusBarOption, "showStatusBar");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().DontTurnScreenOffOption, "dontTurnScreenOff");
 		//lookNFeelCategory.addPreference(new ScrollbarTypePreference(this, lookNFeelCategory.Resource, "scrollbarType"));
+
+		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
+		appearanceScreen.setSummary( appearanceScreen.Resource.getResource("summary").getValue() );
+		appearanceScreen.setOnPreferenceClickListener(
+				new PreferenceScreen.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						((FBReader) FBReader.Instance()).showOptionsDialogAction();
+						return true;
+					}
+				}
+		);
 
 		/*
 		final FBReader fbreader = (FBReader)FBReader.Instance();

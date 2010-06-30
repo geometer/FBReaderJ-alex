@@ -30,6 +30,7 @@ import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.library.Library;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Bookmark;
+import org.geometerplus.fbreader.optionsDialog.OptionsDialog;
 
 public final class FBReader extends ZLApplication {
 	public final ZLStringOption BookSearchPatternOption =
@@ -77,7 +78,6 @@ public final class FBReader extends ZLApplication {
 		addAction(ActionCode.DECREASE_FONT, new ChangeFontSizeAction(this, -2));
 
 		addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this));
-		addAction(ActionCode.SHOW_OPTIONS, new ShowOptionsDialogAction(this));
 		addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this));
 		addAction(ActionCode.SHOW_BOOK_INFO, new BookInfoAction(this));
 		addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this));
@@ -256,5 +256,9 @@ public final class FBReader extends ZLApplication {
 		if ((Model != null) && (BookTextView != null)) {
 			Model.Book.storePosition(BookTextView.getStartCursor());
 		}
+	}
+
+	public void showOptionsDialogAction() {
+		new OptionsDialog(this).getDialog().run();
 	}
 }
