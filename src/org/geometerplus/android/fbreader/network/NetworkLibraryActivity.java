@@ -40,7 +40,6 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	private boolean myInitialized;
 
 	private NetworkTree myTree;
-	private List<NetworkTree> mySpecialItems;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -54,7 +53,6 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 		if (!myInitialized) {
 			myInitialized = true;
 			myTree = NetworkLibrary.Instance().getTree();
-			mySpecialItems = NetworkView.Instance().getSpecialItems();
 			setListAdapter(new LibraryAdapter());
 			getListView().invalidateViews();
 		}
@@ -86,20 +84,23 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 
 		public final int getCount() {
 			return myTree.subTrees().size()
-				+ (mySpecialItems == null ? 0 : mySpecialItems.size());
+				+ NetworkView.Instance().getSpecialItems().size() + 1;
 		}
 
 		public final NetworkTree getItem(int position) {
-			if (mySpecialItems != null) {
-				final int size = mySpecialItems.size();
-				if (position < size) {
-					return mySpecialItems.get(position);
-				}
-				position -= size;
+			List<NetworkTree> specialItems = NetworkView.Instance().getSpecialItems();
+			int size = specialItems.size();
+			if (position < size) {
+				return specialItems.get(position);
 			}
-			final int size = myTree.subTrees().size();
-			if (position <= size) {
+			position -= size;
+			size = myTree.subTrees().size();
+			if (position < size) {
 				return (NetworkTree) myTree.subTrees().get(position);
+			}
+			position -= size;
+			if (position == 0) {
+				return NetworkView.Instance().getAddCustomCatalogItemTree();
 			}
 			return null;
 		}
@@ -124,6 +125,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		addMenuItem(menu, 1, "networkSearch", R.drawable.ic_menu_networksearch);
+		addMenuItem(menu, 2, "addCustomCatalog", 0);
 		return true;
 	}
 
@@ -140,6 +142,9 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 		switch (item.getItemId()) {
 			case 1:
 				return onSearchRequested();
+			case 2:
+				AddCustomCatalogItemActions.addCustomCatalog(this);
+				return true;
 			default:
 				return true;
 		}

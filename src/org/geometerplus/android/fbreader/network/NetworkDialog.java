@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
-import org.geometerplus.fbreader.network.NetworkLink;
+import org.geometerplus.fbreader.network.INetworkLink;
 
 
 abstract class NetworkDialog {
@@ -37,6 +37,7 @@ abstract class NetworkDialog {
 	// dialog identifiers
 	public static final int DIALOG_AUTHENTICATION = 0;
 	public static final int DIALOG_REGISTER_USER = 1;
+	public static final int DIALOG_CUSTOM_CATALOG = 2;
 
 	private static final TreeMap<Integer, NetworkDialog> ourInstances = new TreeMap<Integer, NetworkDialog>();
 
@@ -50,6 +51,9 @@ abstract class NetworkDialog {
 			case DIALOG_REGISTER_USER:
 				dlg = new RegisterUserDialog();
 				break;
+			case DIALOG_CUSTOM_CATALOG:
+				dlg = new CustomCatalogDialog();
+				break;
 			}
 			if (dlg != null) {
 				ourInstances.put(Integer.valueOf(id), dlg);
@@ -60,7 +64,7 @@ abstract class NetworkDialog {
 
 	protected final ZLResource myResource;
 
-	protected NetworkLink myLink;
+	protected INetworkLink myLink;
 	protected String myErrorMessage;
 	protected Runnable myOnSuccessRunnable;
 
@@ -68,11 +72,11 @@ abstract class NetworkDialog {
 		myResource = ZLResource.resource("dialog").getResource(key);
 	}
 
-	public static void show(Activity activity, int id, NetworkLink link, Runnable onSuccessRunnable) {
+	public static void show(Activity activity, int id, INetworkLink link, Runnable onSuccessRunnable) {
 		getDialog(id).showInternal(activity, id, link, onSuccessRunnable);
 	}
 
-	private void showInternal(Activity activity, int id, NetworkLink link, Runnable onSuccessRunnable) {
+	private void showInternal(Activity activity, int id, INetworkLink link, Runnable onSuccessRunnable) {
 		myLink = link;
 		myErrorMessage = null;
 		myOnSuccessRunnable = onSuccessRunnable;

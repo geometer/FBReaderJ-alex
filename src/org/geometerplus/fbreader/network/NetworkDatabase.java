@@ -17,13 +17,29 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.network.tree;
+package org.geometerplus.fbreader.network;
 
-import org.geometerplus.fbreader.network.*;
+import java.util.List;
+import java.util.Map;
 
-public class NetworkCatalogRootTree extends NetworkCatalogTree {
+public abstract class NetworkDatabase {
+	private static NetworkDatabase ourInstance;
 
-	public NetworkCatalogRootTree(RootTree parent, INetworkLink link, int position) {
-		super(parent, (NetworkCatalogItem) link.libraryItem(), position);
+	public static NetworkDatabase Instance() {
+		return ourInstance;
 	}
+
+	protected NetworkDatabase() {
+		ourInstance = this;
+	}
+
+	protected abstract void executeAsATransaction(Runnable actions);
+
+	public interface ICustomLinksFactory {
+		ICustomNetworkLink createCustomLink(int id, String siteName, String title, String summary, String icon, Map<String, String> links);
+	}
+
+	protected abstract void loadCustomLinks(List<ICustomNetworkLink> links, ICustomLinksFactory factory);
+	protected abstract void saveCustomLink(ICustomNetworkLink link);
+	protected abstract void deleteCustomLink(ICustomNetworkLink link);
 }

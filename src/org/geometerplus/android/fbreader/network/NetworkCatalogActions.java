@@ -48,6 +48,8 @@ class NetworkCatalogActions extends NetworkTreeActions {
 	public static final int SIGNOUT_ITEM_ID = 5;
 	public static final int REFILL_ACCOUNT_ITEM_ID = 6;
 
+	public static final int CUSTOM_CATALOG_EDIT = 7;
+	public static final int CUSTOM_CATALOG_REMOVE = 8;
 
 	@Override
 	public boolean canHandleTree(NetworkTree tree) {
@@ -59,7 +61,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		if (tree instanceof NetworkCatalogRootTree) {
 			return tree.getName();
 		}
-		return tree.getName() + " - " + ((NetworkCatalogTree) tree).Item.Link.SiteName;
+		return tree.getName() + " - " + ((NetworkCatalogTree) tree).Item.Link.getSiteName();
 	}
 
 	@Override
@@ -98,6 +100,11 @@ class NetworkCatalogActions extends NetworkTreeActions {
 					}
 				}
 			}
+			INetworkLink link = catalogTree.Item.Link; 
+			if (link instanceof ICustomNetworkLink) {
+				addMenuItem(menu, CUSTOM_CATALOG_EDIT, "editCustomCatalog");
+				addMenuItem(menu, CUSTOM_CATALOG_REMOVE, "removeCustomCatalog");
+			}
 		} else {
 			if (item.URLByType.get(NetworkCatalogItem.URL_HTML_PAGE) != null) {
 				addMenuItem(menu, OPEN_IN_BROWSER_ITEM_ID, "openInBrowser");
@@ -113,7 +120,6 @@ class NetworkCatalogActions extends NetworkTreeActions {
 				}
 				break;
 			}
-			return;
 		}
 	}
 
@@ -247,6 +253,12 @@ class NetworkCatalogActions extends NetworkTreeActions {
 					((NetworkCatalogTree)tree).Item.Link.authenticationManager().refillAccountLink()
 				);
 				return true;
+			case CUSTOM_CATALOG_EDIT:
+				NetworkDialog.show(activity, NetworkDialog.DIALOG_CUSTOM_CATALOG, ((NetworkCatalogTree)tree).Item.Link, null);
+				return true;
+			case CUSTOM_CATALOG_REMOVE:
+				removeCustomLink((ICustomNetworkLink)((NetworkCatalogTree)tree).Item.Link);
+				return true;
 		}
 		return false;
 	}
@@ -339,7 +351,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 			/*if (!NetworkOperationRunnable::tryConnect()) {
 				return;
 			}*/
-			final NetworkLink link = myTree.Item.Link;
+			final INetworkLink link = myTree.Item.Link;
 			if (myCheckAuthentication && link.authenticationManager() != null) {
 				NetworkAuthenticationManager mgr = link.authenticationManager();
 				AuthenticationStatus auth = mgr.isAuthorised(true);
@@ -429,5 +441,13 @@ class NetworkCatalogActions extends NetworkTreeActions {
 			}
 		};
 		((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).wait("signOut", runnable, activity);
+	}
+
+	private void removeCustomLink(ICustomNetworkLink link) {
+		final NetworkLibrary library = NetworkLibrary.Instance();
+		library.removeCustomLink(link);
+		library.invalidate();
+		library.synchronize();
+		NetworkView.Instance().fireModelChanged();
 	}
 }
