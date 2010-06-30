@@ -22,7 +22,6 @@ package org.geometerplus.android.fbreader;
 import android.app.SearchManager;
 
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -34,7 +33,6 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
@@ -172,7 +170,7 @@ public final class FBReader extends ZLAndroidActivity {
 		EPDView.Instance().updateEpdViewDelay(200);
 	}
 
-	private PowerManager.WakeLock myWakeLock;
+	//private PowerManager.WakeLock myWakeLock;
 
 	@Override
 	public void onResume() {
@@ -180,22 +178,22 @@ public final class FBReader extends ZLAndroidActivity {
 		if (myPanel.ControlPanel != null) {
 			myPanel.ControlPanel.setVisibility(myPanel.Visible ? View.VISIBLE : View.GONE);
 		}
-		if (ZLAndroidApplication.Instance().DontTurnScreenOffOption.getValue()) {
+		/*if (ZLAndroidApplication.Instance().DontTurnScreenOffOption.getValue()) {
 			myWakeLock =
 				((PowerManager)getSystemService(POWER_SERVICE)).
 					newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "FBReader");
 			myWakeLock.acquire();
 		} else {
 			myWakeLock = null;
-		}
+		}*/
 		myReadMode = true;
 	}
 
 	@Override
 	public void onPause() {
-		if (myWakeLock != null) {
+		/*if (myWakeLock != null) {
 			myWakeLock.release();
-		}
+		}*/
 		if (myPanel.ControlPanel != null) {
 			myPanel.Visible = myPanel.ControlPanel.getVisibility() == View.VISIBLE;
 		}

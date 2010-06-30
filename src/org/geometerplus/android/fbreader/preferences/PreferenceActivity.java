@@ -19,9 +19,6 @@
 
 package org.geometerplus.android.fbreader.preferences;
 
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
-
-import org.geometerplus.fbreader.fbreader.*;
 import org.geometerplus.fbreader.Paths;
 
 public class PreferenceActivity extends ZLPreferenceActivity {
@@ -75,10 +72,10 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			libraryCategory.Resource,
 			"path")
 		);
-		final Category lookNFeelCategory = createCategory("LookNFeel");
+		//final Category lookNFeelCategory = createCategory("LookNFeel");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().ShowStatusBarOption, "showStatusBar");
-		lookNFeelCategory.addOption(ZLAndroidApplication.Instance().DontTurnScreenOffOption, "dontTurnScreenOff");
+		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().DontTurnScreenOffOption, "dontTurnScreenOff");
 		//lookNFeelCategory.addPreference(new ScrollbarTypePreference(this, lookNFeelCategory.Resource, "scrollbarType"));
 
 		/*
@@ -94,11 +91,11 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		}
 		*/
 
-		final Category scrollingCategory = createCategory("Scrolling");
+		/*final Category scrollingCategory = createCategory("Scrolling");
 		final ScrollingPreferences scrollingPreferences = ScrollingPreferences.Instance();
-		//scrollingCategory.addOption(scrollingPreferences.FlickOption, "flick");
+		scrollingCategory.addOption(scrollingPreferences.FlickOption, "flick");
 		scrollingCategory.addOption(scrollingPreferences.VolumeKeysOption, "volumeKeys");
-		//scrollingCategory.addOption(scrollingPreferences.HorizontalOption, "horizontal");
+		scrollingCategory.addOption(scrollingPreferences.HorizontalOption, "horizontal");*/
 	}
 }
 
