@@ -19,14 +19,11 @@
 
 package org.geometerplus.android.fbreader;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.widget.EpdRender;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
+import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
 import org.geometerplus.zlibrary.text.view.ZLTextView;
@@ -82,14 +79,22 @@ class EPDView extends EpdRender {
 		return true;
 	}
 
+	private final static int FONT_DELTA = 9;
+	private final static int FONT_START = 18;
+	private final static int FONT_END = 63;
 	private void changeFont() {
-		final List<String> families = ZLibrary.Instance().getPaintContext().fontFamilies();
-		if (families.size() == 0) {
-			return;
+		ZLIntegerRangeOption option =
+			ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
+
+		final int newValue = option.getValue() + FONT_DELTA;
+
+		if (newValue > FONT_END) {
+			option.setValue(FONT_START);
+		} else {
+			option.setValue(newValue);
 		}
-		final ZLStringOption option = ZLTextStyleCollection.Instance().getBaseStyle().FontFamilyOption;
-		final int index = (families.indexOf(option.getValue()) + 1) % families.size();
-		option.setValue(families.get(index));
+		//((TextView) FBReader.Instance.findViewById(R.id.statusbar_text)).setText("TEXT SIZE = " + option.getValue());
+
 		((org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance()).clearTextCaches();
 		ZLApplication.Instance().repaintView();
 	}
