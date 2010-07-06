@@ -37,6 +37,7 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.library.Author;
 
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
@@ -231,10 +232,24 @@ public final class FBReader extends ZLAndroidActivity {
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
+		final TextView bookAuthors = (TextView) findViewById(R.id.book_authors);
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			bookTitle.setText(fbreader.Model.Book.getTitle());
+			int count = 0;
+			final StringBuilder authors = new StringBuilder();
+			for (Author a: fbreader.Model.Book.authors()) {
+				if (count++ > 0) {
+					authors.append(",  ");
+				}
+				authors.append(a.DisplayName);
+				if (count == 5) {
+					break;
+				}
+			}
+			bookAuthors.setText(authors.toString());
 		} else {
 			bookTitle.setText("");
+			bookAuthors.setText("");
 		}
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);

@@ -10,6 +10,8 @@
 		android:id="@+id/root_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
 	>
 		<TextView
 			android:id="@+id/book_title"
@@ -17,32 +19,43 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:gravity="center_horizontal"
-			android:paddingTop="8dp"
-			android:paddingBottom="8dp"
+			android:singleLine="true"
+			android:paddingTop="24dp"
 			android:layout_alignParentTop="true"
 		/>
-		<SeekBar
-			android:id="@+id/book_position_slider"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:paddingLeft="16dp"
-			android:paddingRight="16dp"
-			android:focusable="false"
-			android:clickable="false"
-		/>
 		<TextView
-			android:id="@+id/book_position_text"
+			android:id="@+id/book_authors"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:gravity="center_horizontal"
-			android:paddingBottom="8dp"
-			android:layout_above="@id/book_position_slider"
-			android:layout_centerHorizontal="true"
+			android:singleLine="true"
+			android:paddingTop="8dp"
+			android:layout_below="@id/book_title"
 		/>
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_below="@id/book_authors"
+		>
+			<SeekBar
+				android:id="@+id/book_position_slider"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:focusable="false"
+				android:clickable="false"
+			/>
+			<TextView
+				android:id="@+id/book_position_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:gravity="center_horizontal"
+				android:paddingBottom="8dp"
+				android:layout_above="@id/book_position_slider"
+			/>
+		</RelativeLayout>
 	</RelativeLayout>
 	<LinearLayout
 		android:id="@+id/epd_layout"
