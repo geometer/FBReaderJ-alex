@@ -22,6 +22,7 @@ package org.geometerplus.android.fbreader;
 import android.app.SearchManager;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -86,9 +87,11 @@ public final class FBReader extends ZLAndroidActivity {
 			ZLApplication.Instance().registerButtonPanel(myPanel);
 		}
 
+		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
 		bookPositionText.setText("");
+		statusPositionText.setText("");
 		bookPositionSlider.setProgress(0);
 		bookPositionSlider.setMax(1);
 		bookPositionSlider.setVisibility(View.INVISIBLE);
@@ -211,9 +214,17 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onStop();
 	}
 
+	private final Handler myNotifyApplicationHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			final boolean singleChange = msg.what == 1;
+			updateEpdView(singleChange ? 0 : 200);
+		};
+	};
+
 	@Override
 	public void notifyApplicationChanges(boolean singleChange) {
-		updateEpdView(singleChange ? 0 : 200);
+		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
 
 	public void onEpdRepaintFinished() {
@@ -255,6 +266,7 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	public void updateEpdView(int delay) {
+		updateEpdStatusbar();
 		if (delay <= 0) {
 			EPDView.Instance().updateEpdView();
 		} else {
@@ -262,7 +274,22 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 	}
 
-	
+	private void updateEpdStatusbar() {
+		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
+		final ZLView view = ZLApplication.Instance().getCurrentView();
+		if (view instanceof ZLTextView
+				&& ((ZLTextView) view).getModel() != null
+				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
+			ZLTextView textView = (ZLTextView) view;
+			final int page = textView.computeCurrentPage();
+			final int pagesNumber = textView.computePageNumber();
+			statusPositionText.setText(makePositionText(page, pagesNumber));
+		} else {
+			statusPositionText.setText("");
+		}
+	}
+
+
 	void showTextSearchControls(boolean show) {
 		if (myPanel.ControlPanel != null) {
 			if (show) {

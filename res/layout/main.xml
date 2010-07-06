@@ -63,17 +63,17 @@
 			android:layout_height="28px"
 			android:background="@drawable/statusbar"
 			android:orientation="horizontal"
-			android:paddingLeft="6px"
+			android:paddingLeft="12px"
 			android:paddingTop="2px"
 		>
 			<TextView
-				android:id="@+id/statusbar_text"
-				android:layout_width="wrap_content"
+				android:id="@+id/statusbar_position_text"
+				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
 				android:singleLine="true"
 				android:textStyle="bold"
 				android:textColor="#000000"
-				android:textSize="10px"
+				android:textSize="16px"
 			/>
 		</LinearLayout>
 	</LinearLayout>
