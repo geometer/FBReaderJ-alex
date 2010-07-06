@@ -25,6 +25,7 @@ import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.formats.pdb.PdbPlugin;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.image.ZLImage;
 
 public class PluckerPlugin extends PdbPlugin {
 	@Override
@@ -54,5 +55,10 @@ public class PluckerPlugin extends PdbPlugin {
 	public boolean readModel(BookModel model)  {
 		//return new PluckerBookReader(model.Book.File, model, model.Book.getEncoding()).readDocument();
 		return false;
+	}
+
+	@Override
+	public ZLImage readCover(Book book) {
+		return null;
 	}
 }
