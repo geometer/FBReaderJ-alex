@@ -43,6 +43,7 @@ public class FB2Plugin extends FormatPlugin {
 
 	@Override
 	public ZLImage readCover(Book book) {
+		// TODO: implement
 		return null;
 	}
 }

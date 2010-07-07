@@ -205,6 +205,7 @@ public class MobipocketPlugin extends PdbPlugin {
 			final ZLFile file = book.File;
 			final MobipocketStream mpStream = new MobipocketStream(file);
 
+			// TODO: implement
 			/*int index = pbStream.firstImageLocationIndex(file.path());
 			if (index >= 0) {
 				std::pair<int,int> imageLocation = pbStream.imageLocation(pbStream.header(), index + coverIndex);
