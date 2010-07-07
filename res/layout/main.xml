@@ -13,49 +13,72 @@
 		android:paddingLeft="16dp"
 		android:paddingRight="16dp"
 	>
-		<TextView
-			android:id="@+id/book_title"
+		<SeekBar
+			android:id="@+id/book_position_slider"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:gravity="center_horizontal"
-			android:singleLine="true"
-			android:paddingTop="24dp"
-			android:layout_alignParentTop="true"
+			android:focusable="false"
+			android:clickable="false"
+			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="24dp"
 		/>
-		<TextView
-			android:id="@+id/book_authors"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:gravity="center_horizontal"
-			android:singleLine="true"
-			android:paddingTop="8dp"
-			android:layout_below="@id/book_title"
-		/>
-		<RelativeLayout
+		<LinearLayout
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:layout_below="@id/book_authors"
+			android:layout_above="@id/book_position_slider"
+			android:layout_alignParentTop="true"
+			android:orientation="horizontal"
+			android:weightSum="1.0"
 		>
-			<SeekBar
-				android:id="@+id/book_position_slider"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_centerVertical="true"
-				android:focusable="false"
-				android:clickable="false"
+			<ImageView
+				android:id="@+id/book_cover"
+				android:layout_weight="0.3"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:layout_margin="8dp"
+				android:background="#ffffffff"
 			/>
-			<TextView
-				android:id="@+id/book_position_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:gravity="center_horizontal"
-				android:paddingBottom="8dp"
-				android:layout_above="@id/book_position_slider"
-			/>
-		</RelativeLayout>
+			<RelativeLayout
+				android:layout_weight="0.7"
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:paddingLeft="12dp"
+			>
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:orientation="vertical"
+				>
+					<TextView
+						android:id="@+id/book_title"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:gravity="center_horizontal"
+						android:singleLine="true"
+					/>
+					<TextView
+						android:id="@+id/book_authors"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:gravity="center_horizontal"
+						android:singleLine="true"
+						android:paddingTop="8dp"
+					/>
+				</LinearLayout>
+				<TextView
+					android:id="@+id/book_position_text"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:gravity="center_horizontal"
+					android:paddingBottom="8dp"
+					android:layout_alignParentBottom="true"
+				/>
+			</RelativeLayout>
+		</LinearLayout>
 	</RelativeLayout>
 	<LinearLayout
 		android:id="@+id/epd_layout"
