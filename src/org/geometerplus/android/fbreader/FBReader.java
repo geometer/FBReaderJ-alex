@@ -20,30 +20,40 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.formats.FormatPlugin;
+import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.library.Author;
+import org.geometerplus.fbreader.library.Book;
 
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
 
 	//private int myFullScreenFlag;
 	private boolean myReadMode;
+	private Book myViewBook;
 
 	boolean isReadMode() {
 		return myReadMode;
@@ -233,23 +243,58 @@ public final class FBReader extends ZLAndroidActivity {
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
 		final TextView bookAuthors = (TextView) findViewById(R.id.book_authors);
+		final ImageView bookCover = (ImageView) findViewById(R.id.book_cover);
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
-			bookTitle.setText(fbreader.Model.Book.getTitle());
-			int count = 0;
-			final StringBuilder authors = new StringBuilder();
-			for (Author a: fbreader.Model.Book.authors()) {
-				if (count++ > 0) {
-					authors.append(",  ");
+			if (fbreader.Model.Book != myViewBook) {
+				myViewBook = fbreader.Model.Book; 
+				bookTitle.setText(myViewBook.getTitle());
+				int count = 0;
+				final StringBuilder authors = new StringBuilder();
+				for (Author a: myViewBook.authors()) {
+					if (count++ > 0) {
+						authors.append(",  ");
+					}
+					authors.append(a.DisplayName);
+					if (count == 5) {
+						break;
+					}
 				}
-				authors.append(a.DisplayName);
-				if (count == 5) {
-					break;
+				bookAuthors.setText(authors.toString());
+
+				final int w = bookCover.getWidth();
+				final int h = bookCover.getHeight();
+				System.err.println("COVER -- dims: (" + w + ", " + h + ")");
+				bookCover.requestLayout();
+
+				Bitmap coverBitmap = null;
+				final FormatPlugin plugin = PluginCollection.instance().getPlugin(myViewBook.File);
+				if (plugin != null) {
+					final ZLImage image = plugin.readCover(myViewBook);
+					System.err.println("COVER -- image: " + image);
+					if (image != null) {
+						final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
+						ZLAndroidImageData data = mgr.getImageData(image);
+						System.err.println("COVER -- data: " + data);
+						if (data != null) {
+							coverBitmap = data.getBitmap(2*w, 2*h);
+							System.err.println("COVER -- bitmap: " + coverBitmap);
+						}
+					}
+				}
+				if (coverBitmap != null) {
+					bookCover.setImageBitmap(coverBitmap);
+					bookCover.setBackgroundColor(Color.argb(0, 0, 0, 0));
+				} else {
+					bookCover.setImageDrawable(null);
+					bookCover.setBackgroundColor(Color.WHITE);
 				}
 			}
-			bookAuthors.setText(authors.toString());
 		} else {
+			myViewBook = null;
 			bookTitle.setText("");
 			bookAuthors.setText("");
+			bookCover.setImageBitmap(null);
+			bookCover.setBackgroundColor(Color.argb(0, 0, 0, 0));
 		}
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
