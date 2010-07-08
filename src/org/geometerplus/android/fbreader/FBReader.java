@@ -21,20 +21,15 @@ package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.image.ZLImage;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
@@ -54,6 +49,8 @@ public final class FBReader extends ZLAndroidActivity {
 	//private int myFullScreenFlag;
 	private boolean myReadMode;
 	private Book myViewBook;
+
+	public final ZLResource Resource = ZLResource.resource("fbreader"); 
 
 	boolean isReadMode() {
 		return myReadMode;
@@ -144,6 +141,9 @@ public final class FBReader extends ZLAndroidActivity {
 				}
 			}
 		});
+
+		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
+		bookNoCover.setText(Resource.getResource("noCover").getValue());
 	}
 
 	private static String makePositionText(int page, int pagesNumber) {
@@ -238,12 +238,31 @@ public final class FBReader extends ZLAndroidActivity {
 		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
 
+
+	private int myCoverWidth;
+	private int myCoverHeight;
+
 	public void onEpdRepaintFinished() {
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
 		final TextView bookAuthors = (TextView) findViewById(R.id.book_authors);
 		final ImageView bookCover = (ImageView) findViewById(R.id.book_cover);
+		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
+
+		if (myCoverWidth == 0) {
+			myCoverWidth = bookCover.getWidth();
+			myCoverHeight = bookCover.getHeight();
+			final int viewHeight = myCoverWidth * 4 / 3;
+			if (myCoverHeight > viewHeight) {
+				final int margin = (myCoverHeight - viewHeight) / 2;
+				ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) bookNoCover.getLayoutParams();
+				params.topMargin = params.bottomMargin = margin;
+				bookNoCover.invalidate();
+				bookNoCover.requestLayout();
+			}
+		}
+
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			if (fbreader.Model.Book != myViewBook) {
 				myViewBook = fbreader.Model.Book; 
@@ -261,40 +280,35 @@ public final class FBReader extends ZLAndroidActivity {
 				}
 				bookAuthors.setText(authors.toString());
 
-				final int w = bookCover.getWidth();
-				final int h = bookCover.getHeight();
-				System.err.println("COVER -- dims: (" + w + ", " + h + ")");
-				bookCover.requestLayout();
-
 				Bitmap coverBitmap = null;
 				final FormatPlugin plugin = PluginCollection.instance().getPlugin(myViewBook.File);
 				if (plugin != null) {
 					final ZLImage image = plugin.readCover(myViewBook);
-					System.err.println("COVER -- image: " + image);
 					if (image != null) {
 						final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
 						ZLAndroidImageData data = mgr.getImageData(image);
-						System.err.println("COVER -- data: " + data);
 						if (data != null) {
-							coverBitmap = data.getBitmap(2*w, 2*h);
-							System.err.println("COVER -- bitmap: " + coverBitmap);
+							coverBitmap = data.getBitmap(2 * myCoverWidth, 2 * myCoverHeight);
 						}
 					}
 				}
 				if (coverBitmap != null) {
 					bookCover.setImageBitmap(coverBitmap);
-					bookCover.setBackgroundColor(Color.argb(0, 0, 0, 0));
+					bookCover.setVisibility(View.VISIBLE);
+					bookNoCover.setVisibility(View.GONE);
 				} else {
 					bookCover.setImageDrawable(null);
-					bookCover.setBackgroundColor(Color.WHITE);
+					bookCover.setVisibility(View.GONE);
+					bookNoCover.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {
 			myViewBook = null;
 			bookTitle.setText("");
 			bookAuthors.setText("");
-			bookCover.setImageBitmap(null);
-			bookCover.setBackgroundColor(Color.argb(0, 0, 0, 0));
+			bookCover.setImageDrawable(null);
+			bookCover.setVisibility(View.VISIBLE);
+			bookNoCover.setVisibility(View.GONE);
 		}
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);

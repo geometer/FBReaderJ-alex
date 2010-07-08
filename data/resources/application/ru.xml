@@ -2,6 +2,7 @@
 <resources>
 	<node name="fbreader">
 		<node name="pageChange" value="Смена страницы"/>
+		<node name="noCover" value="Обложка недоступна"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>
