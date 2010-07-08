@@ -291,6 +291,7 @@
 			<node name="signOut" value="Déconnexion en cours. Patientez, s'il-vous plait..." />
 			<node name="purchaseBook" value="Achat du livre. Veuillez patienter..."/>
 			<node name="registerUser" value="Inscription en cours. Veuillez patienter..."/>
+			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Erreur interne du serveur"/>

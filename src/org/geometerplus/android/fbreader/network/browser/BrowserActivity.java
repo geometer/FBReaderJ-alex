@@ -27,25 +27,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.SearchRecentSuggestions;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.webkit.HttpAuthHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.*;
+import android.webkit.*;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.util.ZLNetworkUtil;
+
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.network.NetworkLibrary;
 
 import org.geometerplus.android.fbreader.network.BookDownloaderService;
+import org.geometerplus.android.fbreader.network.NetworkLibraryActivity;
 
 
 public class BrowserActivity extends Activity {
@@ -89,6 +84,7 @@ public class BrowserActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Thread.setDefaultUncaughtExceptionHandler(new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this));
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
@@ -96,7 +92,7 @@ public class BrowserActivity extends Activity {
 		setContentView(R.layout.browser);
 		setTitle(ZLResource.resource("networkView").getResource("browser").getValue());
 
-		WebView view = (WebView) findViewById(R.id.webview);
+		final WebView view = (WebView) findViewById(R.id.webview);
 		view.setWebChromeClient(new ChromeClient());
 		view.setWebViewClient(new ViewClient());
 
@@ -104,20 +100,6 @@ public class BrowserActivity extends Activity {
 		view.getSettings().setUserAgentString(ZLNetworkUtil.getUserAgent() + " Mobile Browser");
 		view.getSettings().setBuiltInZoomControls(true);
 		view.getSettings().setUseWideViewPort(true);
-
-		final Intent intent = getIntent();
-		final Uri uri = intent.getData();
-
-		final NetworkLibrary library = NetworkLibrary.Instance();
-		final String url;
-		if (uri != null) {
-			url = uri.toString();
-			setStoreInRecentUrls(url);
-		} else {
-			url = library.NetworkBrowserPageOption.getValue();
-		}
-		view.loadUrl(url);
-		library.NetworkBrowserPageOption.setValue(url);
 	}
 
 	@Override
@@ -132,6 +114,32 @@ public class BrowserActivity extends Activity {
 			view.loadUrl(url);
 			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		NetworkLibraryActivity.initializeNetworkView(this, "loadingBrowser", new Runnable() {
+			public void run() {
+				final WebView view = (WebView) findViewById(R.id.webview);
+				if (view.getUrl() == null) {
+					final Intent intent = getIntent();
+					final Uri uri = intent.getData();
+					intent.setData(null);
+
+					final NetworkLibrary library = NetworkLibrary.Instance();
+					final String url;
+					if (uri != null) {
+						url = uri.toString();
+						setStoreInRecentUrls(url);
+					} else {
+						url = library.NetworkBrowserPageOption.getValue();
+					}
+					view.loadUrl(url);
+					library.NetworkBrowserPageOption.setValue(url);
+				}
+			}
+		});
 	}
 
 	private class ChromeClient extends WebChromeClient {

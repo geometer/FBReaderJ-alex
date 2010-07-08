@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader.network;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,25 +59,36 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 		}
 	}
 
+	public static void initializeNetworkView(Activity activity, String key, final Runnable doAfter) {
+		final NetworkView networkView = NetworkView.Instance();
+		if (!networkView.isInitialized()) {
+			final Handler handler = (doAfter == null) ? null :
+					new Handler() {
+						public void handleMessage(Message message) {
+							doAfter.run();
+						}
+					};
+			((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).wait(key, new Runnable() {
+				public void run() {
+					networkView.initialize();
+					if (handler != null) {
+						handler.sendEmptyMessage(0);
+					}
+				}
+			}, activity);
+		} else if (doAfter != null) {
+			doAfter.run();
+		}
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		final NetworkView networkView = NetworkView.Instance();
-		if (!networkView.isInitialized()) {
-			final Handler handler = new Handler() {
-				public void handleMessage(Message message) {
-					prepareView();
-				}
-			};
-			((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).wait("loadingNetworkLibrary", new Runnable() {
-				public void run() {
-					networkView.initialize();
-					handler.sendEmptyMessage(0);
-				}
-			}, this);
-		} else {
-			prepareView();
-		}
+		initializeNetworkView(this, "loadingNetworkLibrary", new Runnable() {
+			public void run() {
+				prepareView();
+			}
+		});
 	}
 
 

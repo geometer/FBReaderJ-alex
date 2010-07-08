@@ -290,6 +290,7 @@
 			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..." />
 			<node name="purchaseBook" value="Идет покупка книги. Подождите, пожалуйста..." />
 			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста..." />
+			<node name="loadingBrowser" value="Открывается браузер. Подождите, пожалуйста..." />
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Внутренняя ошибка сервера" />

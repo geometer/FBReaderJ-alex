@@ -291,6 +291,7 @@
 			<node name="signOut" value="Kijelentkezés. Kérjük, várjon..." />
 			<node name="purchaseBook" value="Könyv vásárlása. Kérjük, várjon..." />
 			<node name="registerUser" value="Fiók létrehozása. Kérjük, várjon..." />
+			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Belső szerverhiba" />

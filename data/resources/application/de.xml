@@ -291,6 +291,7 @@
 			<node name="signOut" value="Signing out. Bitte warten..." />
 			<node name="purchaseBook" value="Buch wird gekauft. Bitte warten..." />
 			<node name="registerUser" value="Neuer Account wird registriert. Bitte warten..." />
+			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Interner Server-Fehler" />
