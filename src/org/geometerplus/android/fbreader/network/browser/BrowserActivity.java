@@ -108,11 +108,17 @@ public class BrowserActivity extends Activity {
 
 		final Uri uri = intent.getData();
 		if (uri != null) {
-			WebView view = (WebView) findViewById(R.id.webview);
-			final String url = uri.toString();
+			String url = uri.toString(); 
 			setStoreInRecentUrls(url);
+
+			final NetworkLibrary library = NetworkLibrary.Instance();
+			final String newUrl = library.rewriteUrl(url, true);
+			if (newUrl != null) {
+				url = newUrl;
+			}
+			final WebView view = (WebView) findViewById(R.id.webview);
 			view.loadUrl(url);
-			NetworkLibrary.Instance().NetworkBrowserPageOption.setValue(url);
+			library.NetworkBrowserPageOption.setValue(url);
 		}
 	}
 
@@ -128,12 +134,16 @@ public class BrowserActivity extends Activity {
 					intent.setData(null);
 
 					final NetworkLibrary library = NetworkLibrary.Instance();
-					final String url;
+					String url;
 					if (uri != null) {
 						url = uri.toString();
 						setStoreInRecentUrls(url);
 					} else {
 						url = library.NetworkBrowserPageOption.getValue();
+					}
+					final String newUrl = library.rewriteUrl(url, true);
+					if (newUrl != null) {
+						url = newUrl;
 					}
 					view.loadUrl(url);
 					library.NetworkBrowserPageOption.setValue(url);
@@ -185,6 +195,12 @@ public class BrowserActivity extends Activity {
 			if (shouldLoadBook(url)) {
 				downloadBook(url);
 				setStoreInRecentUrls(null);
+				return true;
+			}
+			final NetworkLibrary library = NetworkLibrary.Instance();
+			final String newUrl = library.rewriteUrl(url, true);
+			if (newUrl != null && !newUrl.equals(url)) {
+				view.loadUrl(newUrl);
 				return true;
 			}
 			return false;
