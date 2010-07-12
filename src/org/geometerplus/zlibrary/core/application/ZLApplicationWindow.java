@@ -44,6 +44,8 @@ abstract public class ZLApplicationWindow {
 	abstract protected void rotate();
 	abstract protected boolean canRotate();
 
+	abstract protected boolean isNetworkLibraryEnabled();
+
 	abstract protected void close();
 
 	abstract protected void notifyApplicationChanges(boolean singleChange);

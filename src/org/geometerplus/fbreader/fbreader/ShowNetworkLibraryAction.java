@@ -28,6 +28,11 @@ class ShowNetworkLibraryAction extends FBAction {
 		super(fbreader);
 	}
 
+	@Override
+	public boolean isVisible() {
+		return Reader.isNetworkLibraryEnabled();
+	}
+
 	public void run() {
 		final ZLAndroidDialogManager dialogManager =
 			(ZLAndroidDialogManager)ZLAndroidDialogManager.Instance();

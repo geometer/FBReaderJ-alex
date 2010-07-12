@@ -7,8 +7,8 @@
 	<item id="night"/>
 	<item id="day"/>
 	<item id="search"/>
-	<item id="networkBrowser"/>
 	<item id="preferences"/>
+	<item id="networkBrowser"/>
 	<item id="bookInfo"/>
 	<item id="increaseFont"/>
 	<item id="decreaseFont"/>

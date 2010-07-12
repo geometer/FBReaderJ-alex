@@ -160,6 +160,13 @@ public abstract class ZLApplication {
 		return false;
 	}
 
+	public boolean isNetworkLibraryEnabled() {
+		if (myWindow != null) {
+			return myWindow.isNetworkLibraryEnabled();
+		}
+		return false;
+	}
+
 	public boolean closeWindow() {
 		onWindowClosing();
 		if (myWindow != null) {

@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader.preferences;
 
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.fbreader.FBReader;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -75,6 +76,12 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			Paths.BooksDirectoryOption,
 			libraryCategory.Resource,
 			"path")
+		);
+		libraryCategory.addPreference(new ZLBooleanPreference(
+			this,
+			ZLAndroidApplication.Instance().NetworkLibraryEnabled,
+			libraryCategory.Resource,
+			"networkLibrary")
 		);
 		final Category lookNFeelCategory = createCategory("LookNFeel");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");

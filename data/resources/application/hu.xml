@@ -168,6 +168,10 @@
 		<node name="Preferences">
 			<node name="Library" value="Könyvár">
 				<node name="path" value="Keresés helye"/>
+				<node name="networkLibrary" toBeTranslated="true" value="Network library">
+					<node name="summaryOn" toBeTranslated="true" value="Network library is enabled"/>
+					<node name="summaryOff" toBeTranslated="true" value="Network library is disabled"/>
+				</node>
 			</node>
 			<node name="LookNFeel" value="Megjelenés">
 				<node name="autoOrientation" value="Automatikus elforgatás">
