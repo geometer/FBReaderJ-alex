@@ -3,4 +3,5 @@
 	android:label="@android:string/search_go"
 	android:searchSuggestAuthority="org.geometerplus.android.fbreader.network.browser.RecentUrlsProvider"
 	android:searchSuggestSelection=" ?"
+	android:inputType="textUri"
 />
