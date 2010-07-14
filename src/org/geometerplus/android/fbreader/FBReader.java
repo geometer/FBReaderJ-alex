@@ -77,6 +77,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onCreate(Bundle icicle) {
+		EPDView.Instance().setVdsActive(true);
 		super.onCreate(icicle);
 		/*
 		android.telephony.TelephonyManager tele =
