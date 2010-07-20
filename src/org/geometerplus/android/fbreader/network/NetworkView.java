@@ -154,9 +154,12 @@ class NetworkView {
 		}
 	}
 
-	ItemsLoadingRunnable removeItemsLoadingRunnable(String key) {
+	void removeItemsLoadingRunnable(String key) {
 		synchronized (myItemsLoadingRunnables) {
-			return myItemsLoadingRunnables.remove(key);
+			ItemsLoadingRunnable runnable = myItemsLoadingRunnables.remove(key);
+			if (runnable != null) {
+				runnable.runFinishHandler();
+			}
 		}
 	}
 
@@ -165,8 +168,8 @@ class NetworkView {
 	}
 
 	public void tryResumeLoading(NetworkBaseActivity activity, NetworkTree tree, String key, Runnable expandRunnable) {
-		final ItemsLoadingRunnable runnable = NetworkView.Instance().getItemsLoadingRunnable(key);
-		if (runnable != null && runnable.tryResume()) {
+		final ItemsLoadingRunnable runnable = getItemsLoadingRunnable(key);
+		if (runnable != null && runnable.tryResumeLoading()) {
 			openTree(activity, tree, key);
 			return;
 		}
