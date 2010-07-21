@@ -71,12 +71,14 @@ public class SynchronousActivity extends Activity {
 
 	void updateImage() {
 		SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
-		view.setScroll(0, 0);
+		view.resetScroll();
 		view.invalidate();
 		myProgressDialog.cancel();
 	}
 
 	void showPageProgress() {
+		SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
+		view.invalidateScroll();
 		showProgress(ZLResource.resource("fbreader").getResource("pageChange").getValue());
 	}
 

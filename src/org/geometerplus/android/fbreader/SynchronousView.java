@@ -51,10 +51,13 @@ public class SynchronousView extends View {
 
 	private int myScrollX;
 	private int myScrollY;
+	private boolean myInvalidScroll;
 
 	private int myScrollPage;
-	private int myStartScrollX;
-	private int myStartScrollY;
+	private float myStartScrollX;
+	private float myStartScrollY;
+
+	private boolean myPendingClick;
 
 	public SynchronousView(Context context) {
 		super(context);
@@ -83,12 +86,17 @@ public class SynchronousView extends View {
 		myWidget = widget;
 	}
 
-	public void setScroll(int x, int y) {
-		if (myWidget != null) {
-			myScrollX = Math.max(0, Math.min(x, myWidget.getWidth() - getClientWidth()));
-			myScrollY = Math.max(0, Math.min(y, myWidget.getHeight() - getClientHeight()));
-		}
+	public void invalidateScroll() {
+		myInvalidScroll = true;
 	}
+
+	public void resetScroll() {
+		if (myInvalidScroll) {
+			myScrollX = myScrollY = 0;
+		}
+		myInvalidScroll = false;
+	}
+
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -119,6 +127,17 @@ public class SynchronousView extends View {
 		return getWidth() - getPaddingLeft() - getPaddingRight();
 	}
 
+	private int getWidgetX(float viewX) {
+		final int value = (int) (viewX - getPaddingLeft() + myScrollX);
+		return Math.max(0, Math.min(value, myWidget.getWidth()));
+	}
+
+	private int getWidgetY(float viewY) {
+		final int value = (int) (viewY - getPaddingTop() + myScrollY);
+		return Math.max(0, Math.min(value, myWidget.getHeight()));
+	}
+
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN && event.getEdgeFlags() != 0) {
@@ -145,8 +164,8 @@ public class SynchronousView extends View {
 			if (!myScroller.isFinished()) {
 				myScroller.abortAnimation();
 			}
-			myStartScrollX = (int) x;
-			myStartScrollY = (int) y;
+			myStartScrollX = x;
+			myStartScrollY = y;
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
@@ -155,31 +174,53 @@ public class SynchronousView extends View {
 			} else if (myScrollY == myWidget.getHeight() - getClientHeight()) {
 				myScrollPage = 1;
 			}
+			myPendingClick = true;
 			break;
-			
+
 		case MotionEvent.ACTION_MOVE:
-			final int deltaX = (int) (myLastScrollX - x);
-			final int deltaY = (int) (myLastScrollY - y);
-			myLastScrollX = x;
-			myLastScrollY = y;
-			myScrollX = Math.max(0, Math.min(myScrollX + deltaX, myWidget.getWidth() - getClientWidth()));
-			myScrollY = Math.max(0, Math.min(myScrollY + deltaY, myWidget.getHeight() - getClientHeight()));
+			if (myPendingClick) {
+				final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+				if (Math.abs(myStartScrollX - x) > slop || Math.abs(myStartScrollY - y) > slop) {
+					myPendingClick = false;
+				}
+			}
+			if (!myPendingClick) {
+				final int deltaX = (int) (myLastScrollX - x);
+				final int deltaY = (int) (myLastScrollY - y);
+				myLastScrollX = x;
+				myLastScrollY = y;
+				myScrollX = Math.max(0, Math.min(myScrollX + deltaX, myWidget.getWidth() - getClientWidth()));
+				myScrollY = Math.max(0, Math.min(myScrollY + deltaY, myWidget.getHeight() - getClientHeight()));
+			}
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			myVelocityTracker.computeCurrentVelocity(1000);
-			int velocityX = (int) myVelocityTracker.getXVelocity();
-			int velocityY = (int) myVelocityTracker.getYVelocity();
-			if (Math.abs(velocityX) <= myMinimumVelocity) {
-				velocityX = 0;
-			}
-			if (Math.abs(velocityY) <= myMinimumVelocity) {
-				velocityY = 0;
-			}
-			if (myWidget != null) {
+			if (myPendingClick) {
+				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
+						&& y > getPaddingTop() && y < getHeight() - getPaddingBottom()) {
+					final ZLView view = ZLApplication.Instance().getCurrentView();
+					final int stopX = getWidgetX(x);
+					final int stopY = getWidgetY(y);
+					view.onStylusPress(getWidgetX(myStartScrollX), getWidgetY(myStartScrollY));
+					view.onStylusMovePressed(stopX, stopY);
+					view.onStylusRelease(stopX, stopY);
+					ZLApplication.Instance().repaintView();
+				}
+			} else {
+				myVelocityTracker.computeCurrentVelocity(1000);
+				int velocityX = (int) myVelocityTracker.getXVelocity();
+				int velocityY = (int) myVelocityTracker.getYVelocity();
+				if (Math.abs(velocityX) <= myMinimumVelocity) {
+					velocityX = 0;
+				}
+				if (Math.abs(velocityY) <= myMinimumVelocity) {
+					velocityY = 0;
+				}
+
 				if (myScrollPage * velocityY < 0
 						&& Math.abs(myStartScrollX - x) < getWidth() / 4
 						&& Math.abs(myStartScrollY - y) > getHeight() / 3 ) {
+					myInvalidScroll = true;
 					EPDView.Instance().scrollPage(myScrollPage > 0);
 				} else {
 					final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
