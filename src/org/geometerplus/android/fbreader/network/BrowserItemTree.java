@@ -48,4 +48,8 @@ public class BrowserItemTree extends NetworkTree {
 		return new ZLFileImage("image/png", file);
 	}
 
+	@Override
+	public NetworkLibraryItem getHoldedItem() {
+		return null;
+	}
 }
