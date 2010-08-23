@@ -348,14 +348,14 @@
 			<node name="catalogTitle" value="Titolo" />
 			<node name="catalogUrl" value="URL" />
 			<node name="catalogSummary" value="Sommario" />
-			<node name="catalogTitleExample" toBeTranslated="true" value="Example: My OPDS catalog" />
-			<node name="catalogUrlExample" toBeTranslated="true" value="Example: http://my.library.address/opds" />
-			<node name="catalogSummaryExample" toBeTranslated="true" value="Example: OPDS catalog for my library" />
+			<node name="catalogTitleExample" toBeTranslated="true" value="E.g.: Project Gutenberg catalog" />
+			<node name="catalogUrlExample" toBeTranslated="true" value="E.g.: http://m.gutenberg.org/" />
+			<node name="catalogSummaryExample" toBeTranslated="true" value="E.g.: Public domain books" />
 			<node name="titleIsEmpty" value="Il campo Titolo non può essere lasciato vuoto" />
 			<node name="urlIsEmpty" value="Il campo URL non può essere lasciato vuoto" />
 			<node name="invalidUrl" value="URL non valida" />
-			<node name="titleAlreadyExists" value="Il titolo specificato è già esistente"/>
-			<node name="siteAlreadyExists" toBeTranslated="true" value="Specified site already exists" />
+			<node name="titleAlreadyExists" toBeTranslated="true" value="Specified title is already in use" />
+			<node name="siteAlreadyExists" toBeTranslated="true" value="Specified site is already in use" />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Libro acquistato" />

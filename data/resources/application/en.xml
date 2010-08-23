@@ -347,14 +347,14 @@
 			<node name="catalogTitle" value="Title" />
 			<node name="catalogUrl" value="URL" />
 			<node name="catalogSummary" value="Summary" />
-			<node name="catalogTitleExample" value="Example: My OPDS catalog" />
-			<node name="catalogUrlExample" value="Example: http://my.library.address/opds" />
-			<node name="catalogSummaryExample" value="Example: OPDS catalog for my library" />
+			<node name="catalogTitleExample" value="E.g.: Project Gutenberg catalog" />
+			<node name="catalogUrlExample" value="E.g.: http://m.gutenberg.org/" />
+			<node name="catalogSummaryExample" value="E.g.: Public domain books" />
 			<node name="titleIsEmpty" value="Title should be non-empty" />
 			<node name="urlIsEmpty" value="URL should be non-empty" />
 			<node name="invalidUrl" value="Invalid URL" />
-			<node name="titleAlreadyExists" value="Specified title already exists" />
-			<node name="siteAlreadyExists" value="Specified site already exists" />
+			<node name="titleAlreadyExists" value="Specified title is already in use" />
+			<node name="siteAlreadyExists" value="Specified site is already in use" />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book" />
