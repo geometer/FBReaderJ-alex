@@ -1,4 +1,6 @@
-===== 0.6.7 (??????, 2010) =====
+===== 0.7.1 (??? ??, 2010) =====
+
+===== 0.7.0 (Sep 07, 2010) =====
 
 * Catalog's loading resumption nearly from position when "back" key has been pressed
 * Hyphenation for words containing '-' symbol has been fixed
