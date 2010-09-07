@@ -184,24 +184,20 @@ public class NetworkLibrary {
 	}
 
 	private static class LinksComparator implements Comparator<INetworkLink> {
+		private static String filterLinkTitle(String title) {
+			for (int index = 0; index < title.length(); ++index) {
+				final char ch = title.charAt(index);
+				if (ch < 128 && Character.isLetter(ch)) {
+					return title.substring(index);
+				}
+			}
+			return title;
+		}
+
 		public int compare(INetworkLink link1, INetworkLink link2) {
-			String title1 = link1.getTitle();
-			for (int index = 0; index < title1.length(); ++index) {
-				final char ch = title1.charAt(index);
-				if (ch < 128 && Character.isLetter(ch)) {
-					title1 = title1.substring(index);
-					break;
-				}
-			}
-			String title2 = link2.getTitle();
-			for (int index = 0; index < title2.length(); ++index) {
-				final char ch = title2.charAt(index);
-				if (ch < 128 && Character.isLetter(ch)) {
-					title2 = title2.substring(index);
-					break;
-				}
-			}
-			return title1.compareTo(title2);
+			final String title1 = filterLinkTitle(link1.getTitle());
+			final String title2 = filterLinkTitle(link2.getTitle());
+			return title1.compareToIgnoreCase(title2);
 		}
 	}
 
@@ -221,6 +217,7 @@ public class NetworkLibrary {
 	private final RootTree myRootTree = new RootTree();
 
 	private boolean myUpdateChildren = true;
+	private boolean myInvalidateChildren;
 	private boolean myUpdateVisibility;
 
 	private NetworkLibrary() {
@@ -330,7 +327,7 @@ public class NetworkLibrary {
 			synchronized (myLinks) {
 				myLoadedLinks.clear();
 				myLoadedLinks.addAll(myBackgroundLinks);
-				invalidate();
+				updateChildren();
 			}
 		}
 	}
@@ -348,12 +345,37 @@ public class NetworkLibrary {
 		return url;
 	}
 
-	public void invalidate() {
+	public void invalidateChildren() {
+		myInvalidateChildren = true;
+	}
+
+	public void updateChildren() {
 		myUpdateChildren = true;
 	}
 
 	public void invalidateVisibility() {
 		myUpdateVisibility = true;
+	}
+
+
+	private static boolean linksEqual(INetworkLink l1, INetworkLink l2) {
+		return l1 == l2 || l1.getSiteName().equals(l2.getSiteName());
+	}
+
+	private static boolean linkIsInvalid(INetworkLink link, INetworkLink nodeLink) {
+		if (link instanceof ICustomNetworkLink) {
+			if (link != nodeLink) {
+				throw new RuntimeException("Two equal custom links!!! That's impossible");
+			}
+			return ((ICustomNetworkLink) link).hasChanges();
+		}
+		return !link.equals(nodeLink);
+	}
+
+	private static void makeValid(INetworkLink link) {
+		if (link instanceof ICustomNetworkLink) {
+			((ICustomNetworkLink) link).resetChanges();
+		}
 	}
 
 	private void makeUpToDate() {
@@ -381,8 +403,8 @@ public class NetworkLibrary {
 						continue;
 					}
 					final INetworkLink nodeLink = ((NetworkCatalogTree) currentNode).Item.Link;
-					if (nodeLink == link) {
-						if (link instanceof ICustomNetworkLink) {
+					if (linksEqual(link, nodeLink)) {
+						if (linkIsInvalid(link, nodeLink)) {
 							toRemove.add(currentNode);
 						} else {
 							processed = true;
@@ -391,15 +413,16 @@ public class NetworkLibrary {
 						++nodeCount;
 						break;
 					} else {
-						boolean found = false;
+						INetworkLink newNodeLink = null;
 						ListIterator<INetworkLink> jt = myLinks.listIterator(it);
 						while (jt.hasNext()) {
-							if (nodeLink == jt.next()) {
-								found = true;
+							final INetworkLink jlnk = jt.next();
+							if (linksEqual(nodeLink, jlnk)) {
+								newNodeLink = jlnk;
 								break;
 							}
 						}
-						if (!found) {
+						if (newNodeLink == null || linkIsInvalid(newNodeLink, nodeLink)) {
 							toRemove.add(currentNode);
 							currentNode = null;
 							++nodeCount;
@@ -409,6 +432,7 @@ public class NetworkLibrary {
 					}
 				}
 				if (!processed) {
+					makeValid(link);
 					final int nextIndex = nodeIterator.nextIndex();
 					new NetworkCatalogRootTree(myRootTree, link, nodeCount++).Item.onDisplayItem();
 					nodeIterator = myRootTree.subTrees().listIterator(nextIndex + 1);
@@ -420,7 +444,9 @@ public class NetworkLibrary {
 			if (currentNode == null) {
 				currentNode = nodeIterator.next();
 			}
-			toRemove.add(currentNode);
+			if (currentNode instanceof NetworkCatalogTree) {
+				toRemove.add(currentNode);
+			}
 			currentNode = null;
 		}
 
@@ -439,8 +465,14 @@ public class NetworkLibrary {
 	}
 
 	public void synchronize() {
-		if (myUpdateChildren) {
+		if (myUpdateChildren || myInvalidateChildren) {
+			if (myInvalidateChildren) {
+				final LinksComparator cmp = new LinksComparator();
+				//Collections.sort(myLoadedLinks, cmp); // this collection is always sorted
+				Collections.sort(myCustomLinks, cmp);
+			}
 			myUpdateChildren = false;
+			myInvalidateChildren = false;
 			makeUpToDate();
 		}
 		if (myUpdateVisibility) {
