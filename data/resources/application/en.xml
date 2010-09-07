@@ -82,6 +82,7 @@
 			<node name="signOut" value="Sign out (%s)"/>
 			<node name="refillAccount" value="Refill account"/>
 			<node name="addCustomCatalog" value="Add catalog"/>
+			<node name="refreshCatalogsList" value="Refresh catalogs"/>
 		</node>
 		<node name="browser" value="Browser" />
 		<node name="browserSummary" value="Open built-in browser" />
@@ -300,6 +301,7 @@
 			<node name="registerUser" value="Registering new account. Please, wait..." />
 			<node name="loadingBrowser" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" value="Loading catalog information. Please, wait..." />
+			<node name="updatingCatalogsList" value="Updating catalogs list. Please, wait..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Internal server error" />

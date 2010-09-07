@@ -83,6 +83,7 @@
 			<node name="signOut" value="Déconnexion (%s)"/>
 			<node name="refillAccount" value="Recréditer le compte"/>
 			<node name="addCustomCatalog" toBeTranslated="true" value="Add catalog"/>
+			<node name="refreshCatalogsList" toBeTranslated="true" value="Refresh catalogs"/>
 		</node>
 		<node name="browser" toBeTranslated="true" value="Browser" />
 		<node name="browserSummary" toBeTranslated="true" value="Open built-in browser" />
@@ -301,6 +302,7 @@
 			<node name="registerUser" value="Inscription en cours. Veuillez patienter..."/>
 			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" toBeTranslated="true" value="Loading catalog information. Please, wait..." />
+			<node name="updatingCatalogsList" toBeTranslated="true" value="Updating catalogs list. Please, wait..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Erreur interne du serveur"/>

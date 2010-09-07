@@ -82,6 +82,7 @@
 			<node name="signOut" value="Выйти (%s)"/>
 			<node name="refillAccount" value="Пополнить счёт"/>
 			<node name="addCustomCatalog" value="Добавить каталог"/>
+			<node name="refreshCatalogsList" value="Обновить каталоги"/>
 		</node>
 		<node name="browser" value="Браузер" />
 		<node name="browserSummary" value="Открыть встроенный браузер" />
@@ -300,6 +301,7 @@
 			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста..." />
 			<node name="loadingBrowser" value="Открывается браузер. Подождите, пожалуйста..." />
 			<node name="loadingCatalogInfo" value="Загрузка информации из каталога. Подождите, пожалуйста..." />
+			<node name="updatingCatalogsList" value="Обновляется список каталогов. Подождите, пожалуйста..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Внутренняя ошибка сервера" />
