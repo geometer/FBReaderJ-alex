@@ -125,7 +125,7 @@ public class BrowserActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		NetworkLibraryActivity.initializeNetworkView(this, "loadingBrowser", new Runnable() {
+		NetworkLibraryActivity.tryInitializeNetworkView(this, "loadingBrowser", new Runnable() {
 			public void run() {
 				final WebView view = (WebView) findViewById(R.id.webview);
 				if (view.getUrl() == null) {
@@ -150,6 +150,12 @@ public class BrowserActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		NetworkLibraryActivity.tryStopInitialization();
+		super.onDestroy();
 	}
 
 	private class ChromeClient extends WebChromeClient {

@@ -63,16 +63,22 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		initializeNetworkView(this, "loadingNetworkLibrary", new Runnable() {
+		tryInitializeNetworkView(this, "loadingNetworkLibrary", new Runnable() {
 			public void run() {
 				prepareView();
 			}
 		});
 	}
 
-	static Initializator myInitializator;
+	@Override
+	public void onDestroy() {
+		tryStopInitialization();
+		super.onDestroy();
+	}
 
-	public static void initializeNetworkView(Activity activity, String key, final Runnable doAfter) {
+	private static Initializator myInitializator;
+
+	public static void tryInitializeNetworkView(Activity activity, String key, final Runnable doAfter) {
 		final NetworkView networkView = NetworkView.Instance();
 		if (!networkView.isInitialized()) {
 			if (myInitializator == null) {
@@ -83,6 +89,13 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			}
 		} else if (doAfter != null) {
 			doAfter.run();
+		}
+	}
+
+	public static void tryStopInitialization() {
+		if (!NetworkView.Instance().isInitialized()
+				&& myInitializator != null) {
+			myInitializator.setParameters(null, null);
 		}
 	}
 
@@ -107,12 +120,13 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == DialogInterface.BUTTON_POSITIVE) {
 					Initializator.this.start();
-				} else {
+				} else if (myActivity != null) {
 					myActivity.finish();
 				}
 			}
 		};
 
+		// run this method only is myActivity != null
 		private void runInitialization() {
 			((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).wait(myKey, new Runnable() {
 				public void run() {
@@ -122,6 +136,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			}, myActivity);
 		}
 
+		// run this method only is myActivity != null
 		private void processResults(String error) {
 			final ZLResource dialogResource = ZLResource.resource("dialog");
 			final ZLResource boxResource = dialogResource.getResource("networkError");
@@ -142,7 +157,9 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 
 		@Override
 		public void handleMessage(Message message) {
-			if (message.what == 0) {
+			if (myActivity == null) {
+				return;
+			} else if (message.what == 0) {
 				runInitialization(); // run initialization process
 			} else if (message.obj == null) {
 				myActivity.startService(new Intent(myActivity.getApplicationContext(), LibraryInitializationService.class));
