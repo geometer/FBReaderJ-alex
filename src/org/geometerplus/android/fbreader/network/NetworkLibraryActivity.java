@@ -24,6 +24,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -133,6 +134,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			if (message.what == 0) {
 				runInitialization(); // run initialization process
 			} else if (message.obj == null) {
+				myActivity.startService(new Intent(myActivity.getApplicationContext(), LibraryInitializationService.class));
 				if (myDoAfter != null) {
 					myDoAfter.run(); // initialization is complete successfully
 				}
