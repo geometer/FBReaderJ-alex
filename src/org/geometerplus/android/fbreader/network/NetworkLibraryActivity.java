@@ -70,10 +70,17 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 		});
 	}
 
+	static Initializator myInitializator;
+
 	public static void initializeNetworkView(Activity activity, String key, final Runnable doAfter) {
 		final NetworkView networkView = NetworkView.Instance();
 		if (!networkView.isInitialized()) {
-			new Initializator(activity, key, doAfter).start();
+			if (myInitializator == null) {
+				myInitializator = new Initializator(activity, key, doAfter);
+				myInitializator.start();
+			} else {
+				myInitializator.setParameters(activity, doAfter);
+			}
 		} else if (doAfter != null) {
 			doAfter.run();
 		}
@@ -90,6 +97,10 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			myActivity = activity;
 			myKey = key;
 			myDoAfter = doAfter;
+		}
+
+		public void setParameters(Activity activity, Runnable doAfter) {
+			myActivity = activity;
 		}
 
 		final DialogInterface.OnClickListener myListener = new DialogInterface.OnClickListener() {
