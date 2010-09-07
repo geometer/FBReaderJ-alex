@@ -91,7 +91,7 @@ class NetworkView {
 		NetworkLibrary library = NetworkLibrary.Instance();
 		library.finishBackgroundUpdate();
 		library.synchronize();
-		fireModelChangedInternal();
+		fireModelChanged();
 	}
 
 	/*
@@ -299,7 +299,7 @@ class NetworkView {
 				myEventHandler = new Handler() {
 					@Override
 					public void handleMessage(Message msg) {
-						fireModelChangedInternal();
+						fireModelChanged();
 					}
 				};
 			}
@@ -315,7 +315,7 @@ class NetworkView {
 		}
 	}
 
-	final void fireModelChanged() {
+	final void fireModelChangedAsync() {
 		synchronized (myEventListeners) {
 			if (myEventHandler != null) {
 				myEventHandler.sendEmptyMessage(0);
@@ -323,7 +323,7 @@ class NetworkView {
 		}
 	}
 
-	private final void fireModelChangedInternal() {
+	final void fireModelChanged() {
 		for (EventListener listener: myEventListeners) {
 			listener.onModelChanged();
 		}
