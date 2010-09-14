@@ -173,7 +173,8 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 				menu.setHeaderTitle(tree.getName());
 				final ZLResource resource = ZLResource.resource("libraryView");
 				menu.add(0, OPEN_BOOK_ITEM_ID, 0, resource.getResource("openBook").getValue());
-				if (Library.Instance().canDeleteBook(((BookTree)tree).Book)) {
+				if ((Library.Instance().getRemoveBookMode(((BookTree)tree).Book)
+						& Library.REMOVE_FROM_DISK) != 0) {
 					menu.add(0, DELETE_BOOK_ITEM_ID, 0, resource.getResource("deleteBook").getValue());
 				}
 			}
@@ -262,9 +263,11 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 
 	private class BookDeleter implements DialogInterface.OnClickListener {
 		private final Book myBook;
+		private final int myMode;
 
-		BookDeleter(Book book) {
+		BookDeleter(Book book, int removeMode) {
 			myBook = book;
+			myMode = removeMode;
 		}
 
 		private void invalidateView(View v) {
@@ -275,7 +278,7 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 		}
 
 		public void onClick(DialogInterface dialog, int which) {
-			Library.Instance().deleteBook(myBook);
+			Library.Instance().removeBook(myBook, myMode);
 
 			invalidateView(findViewById(R.id.by_author));
 			invalidateView(findViewById(R.id.by_tag));
@@ -292,7 +295,7 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 			.setTitle(book.getTitle())
 			.setMessage(boxResource.getResource("message").getValue())
 			.setIcon(0)
-			.setPositiveButton(buttonResource.getResource("yes").getValue(), new BookDeleter(book))
+			.setPositiveButton(buttonResource.getResource("yes").getValue(), new BookDeleter(book, Library.REMOVE_FROM_DISK))
 			.setNegativeButton(buttonResource.getResource("no").getValue(), null)
 			.create().show();
 	}
