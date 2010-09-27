@@ -65,7 +65,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		myCurrentPage.reset();
 		myPreviousPage.reset();
 		myNextPage.reset();
-		setScrollingActive(false);
+		//setScrollingActive(false);
 		if (myModel != null) {
 			final int paragraphsNumber = myModel.getParagraphsNumber();
 			if (paragraphsNumber > 0) {
@@ -189,25 +189,25 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return (myModel == null) || myModel.getMarks().isEmpty();
 	}
 
-	private volatile boolean myScrollingIsActive;
+	/*private volatile boolean myScrollingIsActive;
 	protected boolean isScrollingActive() {
 		return myScrollingIsActive;
 	}
 	protected void setScrollingActive(boolean active) {
 		myScrollingIsActive = active;
-	}
+	}*/
 
-	public final synchronized void startAutoScrolling(int viewPage) {
+	/*public final synchronized void startAutoScrolling(int viewPage) {
 		if (isScrollingActive()) {
 			return;
 		}
 
 		setScrollingActive(true);
 		ZLApplication.Instance().startViewAutoScrolling(viewPage);
-	}
+	}*/
 
 	public synchronized void onScrollingFinished(int viewPage) {
-		setScrollingActive(false);
+		//setScrollingActive(false);
 		switch (viewPage) {
 			case PAGE_CENTRAL:
 				break;
@@ -985,9 +985,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 	
 	public synchronized final void scrollPage(boolean forward, int scrollingMode, int value) {
-		if (isScrollingActive()) {
+		/*if (isScrollingActive()) {
 			return;
-		}
+		}*/
 
 		preparePaintInfo(myCurrentPage);
 		myPreviousPage.reset();

@@ -34,11 +34,6 @@ import org.geometerplus.zlibrary.ui.android.util.ZLAndroidKeyUtil;
 public class ZLAndroidWidget extends View {
 	private final Paint myPaint = new Paint();
 	private Bitmap myMainBitmap;
-	private Bitmap mySecondaryBitmap;
-	private boolean mySecondaryBitmapIsUpToDate;
-	private boolean myScrollingInProgress;
-
-	private int myViewPageToScroll = ZLView.PAGE_CENTRAL;
 
 	public ZLAndroidWidget(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -66,6 +61,19 @@ public class ZLAndroidWidget extends View {
 		}
 	};
 
+	private boolean myRotated;
+	private Bitmap myRotatedBitmap;
+	private int[] myRotateBuffer;
+
+	public void setRotated(boolean rotated) {
+		myRotated = rotated;
+		if (myRotatedBitmap != null) {
+			myRotatedBitmap.recycle();
+		}
+		myRotatedBitmap = null;
+		myRotateBuffer = null;
+	}
+
 	@Override
 	protected void onDraw(final Canvas canvas) {
 		super.onDraw(canvas);
@@ -74,95 +82,77 @@ public class ZLAndroidWidget extends View {
 		final int h = getHeight();
 
 		if ((myMainBitmap != null) && ((myMainBitmap.getWidth() != w) || (myMainBitmap.getHeight() != h))) {
+			myMainBitmap.recycle();
 			myMainBitmap = null;
-			mySecondaryBitmap = null;
+			if (myRotatedBitmap != null) {
+				myRotatedBitmap.recycle();
+				myRotatedBitmap = null;
+				myRotateBuffer = null;
+			}
 			System.gc();
 			System.gc();
 			System.gc();
 		}
 		if (myMainBitmap == null) {
 			myMainBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
-			mySecondaryBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
-			mySecondaryBitmapIsUpToDate = false;
-			drawOnBitmap(myMainBitmap);
 		}
 
-		if (myScrollingInProgress) {
-			onDrawInScrolling(canvas);
-		} else {
-			onDrawStatic(canvas);
-			myRepaintFinishedHandler.sendEmptyMessage(0);
-		}
+		drawOnBitmap();
+		canvas.drawBitmap(myMainBitmap, 0, 0, myPaint);
+
+		myRepaintFinishedHandler.sendEmptyMessage(0);
 	}
 
-	private void onDrawInScrolling(Canvas canvas) {
-
-		canvas.drawBitmap(mySecondaryBitmap, 0, 0, myPaint);
-
-		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (myViewPageToScroll != ZLView.PAGE_CENTRAL) {
-			Bitmap swap = myMainBitmap;
-			myMainBitmap = mySecondaryBitmap;
-			mySecondaryBitmap = swap;
-			mySecondaryBitmapIsUpToDate = false;
-			view.onScrollingFinished(myViewPageToScroll);
-			myRepaintFinishedHandler.sendEmptyMessage(0);
-		} else {
-			view.onScrollingFinished(ZLView.PAGE_CENTRAL);
-		}
-
-		setPageToScroll(ZLView.PAGE_CENTRAL);
-		myScrollingInProgress = false;
-	}
-
-	private void setPageToScroll(int viewPage) {
-		if (myViewPageToScroll != viewPage) {
-			myViewPageToScroll = viewPage;
-			mySecondaryBitmapIsUpToDate = false;
-		}
-	}
-
-	void startAutoScrolling(int viewPage) {
-		if (myMainBitmap == null) {
-			return;
-		}
-		myScrollingInProgress = true;
-		if (viewPage != ZLView.PAGE_CENTRAL) {
-			setPageToScroll(viewPage);
-		}
-		drawOnBitmap(mySecondaryBitmap);
-		postInvalidate();
-	}
-
-	private void drawOnBitmap(Bitmap bitmap) {
+	private void drawOnBitmap() {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view == null) {
 			return;
 		}
 
-		if (bitmap == myMainBitmap) {
-			mySecondaryBitmapIsUpToDate = false;
-		} else if (mySecondaryBitmapIsUpToDate) {
-			return;
+		final Bitmap bitmap;
+		if (myRotated) {
+			if (myRotatedBitmap == null) {
+				myRotatedBitmap = Bitmap.createBitmap(myMainBitmap.getHeight(), myMainBitmap.getWidth(), Bitmap.Config.RGB_565);
+			}
+			bitmap = myRotatedBitmap;
 		} else {
-			mySecondaryBitmapIsUpToDate = true;
+			bitmap = myMainBitmap;
 		}
 
-		final int w = getWidth();
-		final int h = getHeight();
 		final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
 
 		Canvas canvas = new Canvas(bitmap);
 		context.beginPaint(canvas);
 		final int scrollbarWidth = view.showScrollbar() ? getVerticalScrollbarWidth() : 0;
-		context.setSize(w, h, scrollbarWidth);
-		view.paint((bitmap == myMainBitmap) ? ZLView.PAGE_CENTRAL : myViewPageToScroll);
+		if (myRotated) {
+			context.setSize(getHeight(), getWidth(), scrollbarWidth);
+		} else {
+			context.setSize(getWidth(), getHeight(), scrollbarWidth);
+		}
+		view.paint(ZLView.PAGE_CENTRAL);
 		context.endPaint();
-	}
 
-	private void onDrawStatic(Canvas canvas) {
-		drawOnBitmap(myMainBitmap);
-		canvas.drawBitmap(myMainBitmap, 0, 0, myPaint);
+		if (myRotated) {
+			canvas = new Canvas(myMainBitmap);
+			/*canvas.save();
+			canvas.rotate(90.0f);
+			canvas.drawBitmap(myRotatedBitmap, 0, 0, myPaint);
+			canvas.restore();*/
+			final int w = myMainBitmap.getWidth();
+			final int h = myMainBitmap.getHeight();
+			final int sz = w * h;
+			if (myRotateBuffer == null) {
+				myRotateBuffer = new int[2 * sz];
+			}
+			myRotatedBitmap.getPixels(myRotateBuffer, sz, h, 0, 0, h, w);
+			for (int i = 0; i < w; ++i) {
+				final int offset = sz + h*(w - 1 - i);
+				for (int j = 0; j < h; ++j) {
+					myRotateBuffer[i + w*j] = myRotateBuffer[j + offset];
+				}
+			}
+			myMainBitmap.setPixels(myRotateBuffer, 0, w, 0, 0, w, h);
+		}
 	}
 
 	public final Bitmap getBitmap() {

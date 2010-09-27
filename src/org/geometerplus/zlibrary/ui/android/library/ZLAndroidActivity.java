@@ -34,6 +34,7 @@ import org.geometerplus.zlibrary.core.filesystem.ZLPhysicalFile;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 public abstract class ZLAndroidActivity extends Activity {
 	protected abstract ZLApplication createApplication(String fileName);
@@ -226,5 +227,13 @@ public abstract class ZLAndroidActivity extends Activity {
 			setRequestedOrientation(myOrientation);
 			myChangeCounter = 0;
 		}
+	}
+
+	@Override
+	public void setRequestedOrientation(int requestedOrientation) {
+		final ZLAndroidWidget widget = (ZLAndroidWidget) findViewById(R.id.main_view_epd);
+		widget.setRotated(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		super.setRequestedOrientation(requestedOrientation);
 	}
 }

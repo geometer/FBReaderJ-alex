@@ -27,7 +27,6 @@ import android.view.MenuItem;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidViewWidget;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
@@ -97,13 +96,13 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		// TODO: implement
 	}
 
-	private ZLAndroidViewWidget myViewWidget;
+	/*private ZLAndroidViewWidget myViewWidget;
 	protected ZLAndroidViewWidget getViewWidget() {
 		if (myViewWidget == null) {
 			myViewWidget = new ZLAndroidViewWidget();
 		}
 		return myViewWidget;
-	}
+	}*/
 
 	protected void repaintView() {
 		final ZLAndroidWidget widget = 
@@ -112,9 +111,9 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		widget.postInvalidate();
 	}
 
-	protected void startViewAutoScrolling(int viewPage) {
+	/*protected void startViewAutoScrolling(int viewPage) {
 		getViewWidget().startAutoScrolling(viewPage);
-	}
+	}*/
 	
 	public void rotate() {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotateScreen();

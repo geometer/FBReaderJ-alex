@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,22 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.zlibrary.ui.android.view;
+package org.geometerplus.fbreader.fbreader;
 
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
+class RotateAction extends FBAction {
 
-public class ZLAndroidViewWidget {
+	RotateAction(FBReader fbreader) {
+		super(fbreader);
+	}
 
-	//@Override
-	public void startAutoScrolling(int viewPage) {
-		final ZLAndroidWidget widget = 
-			((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).getWidget();
-		widget.startAutoScrolling(viewPage);
+	@Override
+	public boolean isVisible() {
+		return Reader.canRotateScreen();
+	}
+
+	@Override
+	protected void run() {
+		Reader.rotateScreen();
+		Reader.repaintView();
 	}
 }

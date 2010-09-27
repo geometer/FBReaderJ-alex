@@ -37,7 +37,7 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public void setModel(ZLTextModel model) {
-		myIsManualScrollingActive = false;
+		//myIsManualScrollingActive = false;
 		super.setModel(model);
 	}
 
@@ -49,10 +49,10 @@ public final class FBView extends ZLTextView {
 		ZLApplication.Instance().repaintView();
 	}
 
-	@Override
+	/*@Override
 	public void onScrollingFinished(int viewPage) {
 		super.onScrollingFinished(viewPage);
-	}
+	}*/
 
 	final void doScrollPage(boolean forward) {
 		scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
@@ -70,9 +70,9 @@ public final class FBView extends ZLTextView {
 		}
 	}
 
-	private int myStartX;
+	//private int myStartX;
 	//private int myStartY;
-	private boolean myIsManualScrollingActive;
+	//private boolean myIsManualScrollingActive;
 
 	@Override
 	public boolean onStylusPress(int x, int y) {
@@ -80,9 +80,9 @@ public final class FBView extends ZLTextView {
 			return true;
 		}
 
-		if (isScrollingActive()) {
+		/*if (isScrollingActive()) {
 			return false;
-		}
+		}*/
 
 		final ZLTextHyperlink hyperlink = findHyperlink(x, y, 10);
 		if (hyperlink != null) {
@@ -94,10 +94,10 @@ public final class FBView extends ZLTextView {
 
 //		final ScrollingPreferences preferences = ScrollingPreferences.Instance();
 //		if (preferences.FlickOption.getValue()) {
-			myStartX = x;
+			//myStartX = x;
 			//myStartY = y;
-			setScrollingActive(true);
-			myIsManualScrollingActive = true;
+			//setScrollingActive(true);
+			//myIsManualScrollingActive = true;
 //		} else {
 //			if (preferences.HorizontalOption.getValue()) {
 //				if (x <= Context.getWidth() / 3) {
@@ -118,7 +118,7 @@ public final class FBView extends ZLTextView {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public boolean onStylusMovePressed(int x, int y) {
 		if (super.onStylusMovePressed(x, y)) {
 			return true;
@@ -145,9 +145,9 @@ public final class FBView extends ZLTextView {
 		}
 
 		return false;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public boolean onStylusRelease(int x, int y) {
 		if (super.onStylusRelease(x, y)) {
 			return true;
@@ -189,7 +189,7 @@ public final class FBView extends ZLTextView {
 			}
 		}
 		return false;
-	}
+	}*/
 
 	@Override
 	public boolean onTrackballRotated(int diffX, int diffY) {

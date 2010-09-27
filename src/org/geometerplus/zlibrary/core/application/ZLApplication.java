@@ -87,11 +87,11 @@ public abstract class ZLApplication {
 		}
 	}
 
-	public final void startViewAutoScrolling(int viewPage) {
+	/*public final void startViewAutoScrolling(int viewPage) {
 		if (myWindow != null) {
 			myWindow.startViewAutoScrolling(viewPage);
 		}
-	}
+	}*/
 
 	public final void onRepaintFinished() {
 		if (myWindow != null) {
