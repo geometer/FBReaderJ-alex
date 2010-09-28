@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.widget.EpdRender;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -101,8 +102,14 @@ class EPDView extends EpdRender {
 
 	private void synchronizeLCD() {
 		if (SynchronousActivity.Instance == null) {
+			boolean rotateFlag = false;
+			final FBReader fbreader = FBReader.Instance;
+			if (fbreader != null) {
+				rotateFlag = fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE; 
+			}
 			FBReader.Instance.startActivity(
 				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
+					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag)
 			);
 		} else {
 			SynchronousActivity.Instance.finish();

@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -34,7 +35,11 @@ import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 public class SynchronousActivity extends Activity {
 	static SynchronousActivity Instance;
 
+	public static final String ROTATE_KEY = "org.geometerplus.android.fbreader.RotateFlag";
+
 	private ProgressDialog myProgressDialog;
+
+	private boolean myRotateFlag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +50,20 @@ public class SynchronousActivity extends Activity {
 			return;
 		}
 
+		if (savedInstanceState != null) {
+			myRotateFlag = savedInstanceState.getBoolean(ROTATE_KEY, false);
+		} else {
+			final Intent intent = getIntent();
+			myRotateFlag = intent.getBooleanExtra(ROTATE_KEY, false);
+		}
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
 		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
-		((SynchronousView) findViewById(R.id.synchronous_view)).setWidget(widget);
+		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
+		view.setWidget(widget);
+		view.setScrollPageAlongX(myRotateFlag);
 
 		myProgressDialog = new ProgressDialog(this);
 		myProgressDialog.setIndeterminate(true);
@@ -67,6 +81,12 @@ public class SynchronousActivity extends Activity {
 		myProgressDialog.cancel();
 		Instance = null;
 		super.onPause();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(ROTATE_KEY, myRotateFlag);
 	}
 
 	void updateImage() {

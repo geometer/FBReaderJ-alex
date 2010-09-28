@@ -59,6 +59,8 @@ public class SynchronousView extends View {
 
 	private boolean myPendingClick;
 
+	private boolean myScrollPageAlongX;
+
 	public SynchronousView(Context context) {
 		super(context);
 		init();
@@ -84,6 +86,10 @@ public class SynchronousView extends View {
 
 	public void setWidget(ZLAndroidWidget widget) {
 		myWidget = widget;
+	}
+
+	public void setScrollPageAlongX(boolean alongXNotY) {
+		myScrollPageAlongX = alongXNotY;
 	}
 
 	public void invalidateScroll() {
@@ -169,9 +175,11 @@ public class SynchronousView extends View {
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
-			if (myScrollY == 0) {
+			if (myScrollPageAlongX ?
+					(myScrollX == myWidget.getWidth() - getClientWidth()) : (myScrollY == 0)) {
 				myScrollPage = -1;
-			} else if (myScrollY == myWidget.getHeight() - getClientHeight()) {
+			} else if (myScrollPageAlongX ?
+					(myScrollX == 0) : (myScrollY == myWidget.getHeight() - getClientHeight())) {
 				myScrollPage = 1;
 			}
 			myPendingClick = true;
@@ -217,9 +225,14 @@ public class SynchronousView extends View {
 					velocityY = 0;
 				}
 
-				if (myScrollPage * velocityY < 0
-						&& Math.abs(myStartScrollX - x) < getWidth() / 4
-						&& Math.abs(myStartScrollY - y) > getHeight() / 3 ) {
+				final boolean tryScrollX = myScrollPage * velocityX > 0
+					&& Math.abs(myStartScrollX - x) > getWidth() / 4
+					&& Math.abs(myStartScrollY - y) < getHeight() / 3; 
+				final boolean tryScrollY = myScrollPage * velocityY < 0
+					&& Math.abs(myStartScrollX - x) < getWidth() / 4
+					&& Math.abs(myStartScrollY - y) > getHeight() / 3; 
+
+				if (myScrollPageAlongX ? tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
 					EPDView.Instance().scrollPage(myScrollPage > 0);
 				} else {
