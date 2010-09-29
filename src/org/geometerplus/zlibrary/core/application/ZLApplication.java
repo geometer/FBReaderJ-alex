@@ -234,11 +234,7 @@ public abstract class ZLApplication {
 		}
 
 		void addItem(String actionId) {
-			myItems.add(new Menubar.PlainItem(myResource.getResource(actionId).getValue(), actionId));
-		}
-		
-		void addSeparator() {
-			myItems.add(new Menubar.Separator());
+			myItems.add(new Menubar.PlainItem(myResource.getResource(actionId)));
 		}
 		
 		Menubar.Submenu addSubmenu(String key) {
@@ -259,12 +255,18 @@ public abstract class ZLApplication {
 	//MenuBar
 	public static final class Menubar extends Menu {
 		public static final class PlainItem implements Item {
-			public final String Name;
-			public final String ActionId;
+			private final ZLResource myResource;
 
-			public PlainItem(String name, String actionId) {
-				Name = name;
-				ActionId = actionId;
+			public PlainItem(ZLResource resource) {
+				myResource = resource;
+			}
+
+            public String getActionId() {
+				return myResource.Name;
+			}
+
+            public String getTitle() {
+				return myResource.getValue();
 			}
 		};
 
@@ -276,9 +278,6 @@ public abstract class ZLApplication {
 			public String getMenuName() {
 				return getResource().getValue();
 			}
-		};
-		
-		public static final class Separator implements Item {
 		};
 			
 		public Menubar() {
@@ -305,8 +304,6 @@ public abstract class ZLApplication {
 					processSubmenuBeforeItems(submenu);
 					processMenu(submenu);
 					processSubmenuAfterItems(submenu);
-				} else if (item instanceof Menubar.Separator) {
-					processSepartor((Menubar.Separator)item);
 				}
 			}
 		}
@@ -314,7 +311,6 @@ public abstract class ZLApplication {
 		protected abstract void processSubmenuBeforeItems(Menubar.Submenu submenu);
 		protected abstract void processSubmenuAfterItems(Menubar.Submenu submenu);
 		protected abstract void processItem(Menubar.PlainItem item);
-		protected abstract void processSepartor(Menubar.Separator separator);
 	}
 	
 	private class MenubarCreator extends ZLXMLReaderAdapter {
