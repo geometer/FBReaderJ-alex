@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.RotateAnimation;
 import android.widget.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -249,7 +250,8 @@ public final class FBReader extends ZLAndroidActivity {
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
 		final TextView bookAuthors = (TextView) findViewById(R.id.book_authors);
 		final ImageView bookCover = (ImageView) findViewById(R.id.book_cover);
-		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
+		final TextView bookNoCoverText = (TextView) findViewById(R.id.book_no_cover_text);
+		final RelativeLayout bookNoCoverLayout = (RelativeLayout) findViewById(R.id.book_no_cover_layout);
 
 		if (myCoverWidth == 0) {
 			myCoverWidth = bookCover.getWidth();
@@ -257,12 +259,15 @@ public final class FBReader extends ZLAndroidActivity {
 			final int viewHeight = myCoverWidth * 4 / 3;
 			if (myCoverHeight > viewHeight) {
 				final int margin = (myCoverHeight - viewHeight) / 2;
-				ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) bookNoCover.getLayoutParams();
+				ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) bookNoCoverLayout.getLayoutParams();
 				params.topMargin = params.bottomMargin = margin;
-				bookNoCover.invalidate();
-				bookNoCover.requestLayout();
+				bookNoCoverLayout.invalidate();
+				bookNoCoverLayout.requestLayout();
 			}
 		}
+
+		bookCover.setAnimation(null);
+		bookNoCoverText.setAnimation(null);
 
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			if (fbreader.Model.Book != myViewBook) {
@@ -296,12 +301,19 @@ public final class FBReader extends ZLAndroidActivity {
 				if (coverBitmap != null) {
 					bookCover.setImageBitmap(coverBitmap);
 					bookCover.setVisibility(View.VISIBLE);
-					bookNoCover.setVisibility(View.GONE);
+					bookNoCoverLayout.setVisibility(View.GONE);
 				} else {
 					bookCover.setImageDrawable(null);
 					bookCover.setVisibility(View.GONE);
-					bookNoCover.setVisibility(View.VISIBLE);
+					bookNoCoverLayout.setVisibility(View.VISIBLE);
 				}
+			}
+			if (EPDView.Instance().rotateFlag()) {
+				final RotateAnimation anim = new RotateAnimation(90.0f, 90.0f, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+				anim.setFillEnabled(true);
+				anim.setFillAfter(true);
+				final View coverView = bookCover.getVisibility() == View.VISIBLE ? bookCover : bookNoCoverText;
+				coverView.startAnimation(anim);
 			}
 		} else {
 			myViewBook = null;
@@ -309,8 +321,12 @@ public final class FBReader extends ZLAndroidActivity {
 			bookAuthors.setText("");
 			bookCover.setImageDrawable(null);
 			bookCover.setVisibility(View.VISIBLE);
-			bookNoCover.setVisibility(View.GONE);
+			bookNoCoverLayout.setVisibility(View.GONE);
 		}
+
+		bookCover.invalidate();
+		bookNoCoverText.invalidate();
+		bookNoCoverLayout.invalidate();
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);

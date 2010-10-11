@@ -111,7 +111,7 @@ class EPDView extends EpdRender {
 		}
 	}
 
-	private boolean rotateFlag() {
+	boolean rotateFlag() {
 		final FBReader fbreader = FBReader.Instance;
 		if (fbreader != null) {
 			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;

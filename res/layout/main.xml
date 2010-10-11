@@ -39,17 +39,24 @@
 				android:scaleType="centerInside"
 				android:adjustViewBounds="false"
 			/>
-			<TextView
-				android:id="@+id/book_no_cover_text"
+			<RelativeLayout
+				android:id="@+id/book_no_cover_layout"
 				android:layout_weight="0.3"
 				android:layout_width="0dp"
 				android:layout_height="fill_parent"
 				android:layout_margin="8dp"
 				android:visibility="gone"
-				android:gravity="center"
-				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:background="@drawable/nocover"
-			/>
+			>
+				<TextView
+					android:id="@+id/book_no_cover_text"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:layout_centerVertical="true"
+				/>
+			</RelativeLayout>
 			<RelativeLayout
 				android:layout_weight="0.7"
 				android:layout_width="0dp"
