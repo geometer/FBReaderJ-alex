@@ -324,9 +324,7 @@ public final class FBReader extends ZLAndroidActivity {
 			bookNoCoverLayout.setVisibility(View.GONE);
 		}
 
-		bookCover.invalidate();
-		bookNoCoverText.invalidate();
-		bookNoCoverLayout.invalidate();
+		findViewById(R.id.root_view).invalidate();
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
