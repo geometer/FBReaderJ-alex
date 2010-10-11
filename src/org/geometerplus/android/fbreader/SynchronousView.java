@@ -51,7 +51,7 @@ public class SynchronousView extends View {
 
 	private int myScrollX;
 	private int myScrollY;
-	private boolean myInvalidScroll;
+	private boolean myInvalidScroll = true;
 
 	private int myScrollPage;
 	private float myStartScrollX;
@@ -98,11 +98,20 @@ public class SynchronousView extends View {
 
 	public void resetScroll() {
 		if (myInvalidScroll) {
-			myScrollX = myScrollY = 0;
+			if (myRotatedFlag) {
+				myScrollX = Integer.MAX_VALUE;
+				myScrollY = 0;
+			} else {
+				myScrollX = myScrollY = 0;
+			}
 		}
 		myInvalidScroll = false;
 	}
 
+	private void normalizeScroll() {
+		myScrollX = Math.max(0, Math.min(myScrollX, myWidget.getWidth() - getClientWidth()));
+		myScrollY = Math.max(0, Math.min(myScrollY, myWidget.getHeight() - getClientHeight()));
+	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -110,6 +119,7 @@ public class SynchronousView extends View {
 		if (myWidget == null) {
 			return;
 		}
+		normalizeScroll();
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
 			final ZLColor color = ((ZLTextView) view).getBackgroundColor();
@@ -156,6 +166,8 @@ public class SynchronousView extends View {
 			return false;
 		}
 
+		normalizeScroll();
+
         if (myVelocityTracker == null) {
         	myVelocityTracker = VelocityTracker.obtain();
         }
@@ -193,15 +205,13 @@ public class SynchronousView extends View {
 				}
 			}
 			if (!myPendingClick) {
-				final int deltaX = (int) (myLastScrollX - x);
-				final int deltaY = (int) (myLastScrollY - y);
+				myScrollX += (int) (myLastScrollX - x);
+				myScrollY += (int) (myLastScrollY - y);
 				myLastScrollX = x;
 				myLastScrollY = y;
-				myScrollX = Math.max(0, Math.min(myScrollX + deltaX, myWidget.getWidth() - getClientWidth()));
-				myScrollY = Math.max(0, Math.min(myScrollY + deltaY, myWidget.getHeight() - getClientHeight()));
 			}
 			break;
-			
+
 		case MotionEvent.ACTION_UP:
 			if (myPendingClick) {
 				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
