@@ -63,7 +63,7 @@ public class SynchronousActivity extends Activity {
 		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
 		view.setWidget(widget);
-		view.setScrollPageAlongX(myRotateFlag);
+		view.setRotated(myRotateFlag);
 
 		myProgressDialog = new ProgressDialog(this);
 		myProgressDialog.setIndeterminate(true);

@@ -59,7 +59,7 @@ public class SynchronousView extends View {
 
 	private boolean myPendingClick;
 
-	private boolean myScrollPageAlongX;
+	private boolean myRotatedFlag;
 
 	public SynchronousView(Context context) {
 		super(context);
@@ -88,8 +88,8 @@ public class SynchronousView extends View {
 		myWidget = widget;
 	}
 
-	public void setScrollPageAlongX(boolean alongXNotY) {
-		myScrollPageAlongX = alongXNotY;
+	public void setRotated(boolean rotated) {
+		myRotatedFlag = rotated;
 	}
 
 	public void invalidateScroll() {
@@ -133,12 +133,12 @@ public class SynchronousView extends View {
 		return getWidth() - getPaddingLeft() - getPaddingRight();
 	}
 
-	private int getWidgetX(float viewX) {
+	private int getBitmapX(float viewX) {
 		final int value = (int) (viewX - getPaddingLeft() + myScrollX);
 		return Math.max(0, Math.min(value, myWidget.getWidth()));
 	}
 
-	private int getWidgetY(float viewY) {
+	private int getBitmapY(float viewY) {
 		final int value = (int) (viewY - getPaddingTop() + myScrollY);
 		return Math.max(0, Math.min(value, myWidget.getHeight()));
 	}
@@ -175,10 +175,10 @@ public class SynchronousView extends View {
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
-			if (myScrollPageAlongX ?
+			if (myRotatedFlag ?
 					(myScrollX == myWidget.getWidth() - getClientWidth()) : (myScrollY == 0)) {
 				myScrollPage = -1;
-			} else if (myScrollPageAlongX ?
+			} else if (myRotatedFlag ?
 					(myScrollX == 0) : (myScrollY == myWidget.getHeight() - getClientHeight())) {
 				myScrollPage = 1;
 			}
@@ -206,10 +206,20 @@ public class SynchronousView extends View {
 			if (myPendingClick) {
 				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
 						&& y > getPaddingTop() && y < getHeight() - getPaddingBottom()) {
+					final int startX, startY, stopX, stopY;
+					if (myRotatedFlag) {
+						stopX = getBitmapY(y);
+						stopY = myWidget.getWidth() - getBitmapX(x);
+						startX = getBitmapY(myStartScrollY);
+						startY = myWidget.getWidth() - getBitmapX(myStartScrollX);
+					} else {
+						stopX = getBitmapX(x);
+						stopY = getBitmapY(y);
+						startX = getBitmapX(myStartScrollX);
+						startY = getBitmapY(myStartScrollY);
+					}
 					final ZLView view = ZLApplication.Instance().getCurrentView();
-					final int stopX = getWidgetX(x);
-					final int stopY = getWidgetY(y);
-					view.onStylusPress(getWidgetX(myStartScrollX), getWidgetY(myStartScrollY));
+					view.onStylusPress(startX, startY);
 					view.onStylusMovePressed(stopX, stopY);
 					view.onStylusRelease(stopX, stopY);
 					ZLApplication.Instance().repaintView();
@@ -232,7 +242,7 @@ public class SynchronousView extends View {
 					&& Math.abs(myStartScrollX - x) < getWidth() / 4
 					&& Math.abs(myStartScrollY - y) > getHeight() / 3; 
 
-				if (myScrollPageAlongX ? tryScrollX : tryScrollY) {
+				if (myRotatedFlag ? tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
 					EPDView.Instance().scrollPage(myScrollPage > 0);
 				} else {
