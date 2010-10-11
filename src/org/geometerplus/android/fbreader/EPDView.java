@@ -48,13 +48,13 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		scrollPage(false);
+		scrollPage(rotateFlag());
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		scrollPage(true);
+		scrollPage(!rotateFlag());
 		return true;
 	}
 
@@ -102,17 +102,20 @@ class EPDView extends EpdRender {
 
 	private void synchronizeLCD() {
 		if (SynchronousActivity.Instance == null) {
-			boolean rotateFlag = false;
-			final FBReader fbreader = FBReader.Instance;
-			if (fbreader != null) {
-				rotateFlag = fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE; 
-			}
 			FBReader.Instance.startActivity(
 				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
-					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag)
+					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag())
 			);
 		} else {
 			SynchronousActivity.Instance.finish();
 		}
+	}
+
+	private boolean rotateFlag() {
+		final FBReader fbreader = FBReader.Instance;
+		if (fbreader != null) {
+			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+		}
+		return false;
 	}
 }
