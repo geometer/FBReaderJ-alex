@@ -72,6 +72,20 @@ public class ZLAndroidWidget extends View {
 		}
 		myRotatedBitmap = null;
 		myRotateBuffer = null;
+		final ZLView view = ZLApplication.Instance().getCurrentView();
+		if (view != null) {
+			final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
+			updatePaintContextSize(view, context);
+		}
+	}
+
+	private void updatePaintContextSize(ZLView view, ZLAndroidPaintContext context) {
+		final int scrollbarWidth = view.showScrollbar() ? getVerticalScrollbarWidth() : 0;
+		if (myRotated) {
+			context.setSize(getHeight(), getWidth(), scrollbarWidth);
+		} else {
+			context.setSize(getWidth(), getHeight(), scrollbarWidth);
+		}
 	}
 
 	@Override
@@ -123,12 +137,7 @@ public class ZLAndroidWidget extends View {
 
 		Canvas canvas = new Canvas(bitmap);
 		context.beginPaint(canvas);
-		final int scrollbarWidth = view.showScrollbar() ? getVerticalScrollbarWidth() : 0;
-		if (myRotated) {
-			context.setSize(getHeight(), getWidth(), scrollbarWidth);
-		} else {
-			context.setSize(getWidth(), getHeight(), scrollbarWidth);
-		}
+		updatePaintContextSize(view, context);
 		view.paint(ZLView.PAGE_CENTRAL);
 		context.endPaint();
 
