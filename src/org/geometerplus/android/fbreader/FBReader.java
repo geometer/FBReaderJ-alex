@@ -267,6 +267,7 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 
 		bookCover.setAnimation(null);
+		bookCover.setPadding(0, 0, 0, 0);
 		bookNoCoverText.setAnimation(null);
 
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
@@ -314,6 +315,10 @@ public final class FBReader extends ZLAndroidActivity {
 				anim.setFillAfter(true);
 				final View coverView = bookCover.getVisibility() == View.VISIBLE ? bookCover : bookNoCoverText;
 				coverView.startAnimation(anim);
+				if (coverView == bookCover) {
+					final int padding = (bookCover.getHeight() - bookCover.getWidth()) / 2;
+					bookCover.setPadding(0, padding, 0, padding);
+				}
 			}
 		} else {
 			myViewBook = null;
