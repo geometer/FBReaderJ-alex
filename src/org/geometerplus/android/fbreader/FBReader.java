@@ -230,8 +230,9 @@ public final class FBReader extends ZLAndroidActivity {
 	private final Handler myNotifyApplicationHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			final boolean singleChange = msg.what == 1;
-			updateEpdView(singleChange ? 0 : 200);
+			/*final boolean singleChange = msg.what == 1;
+			updateEpdView(singleChange ? 0 : 10);*/
+			updateEpdView(0);
 		};
 	};
 

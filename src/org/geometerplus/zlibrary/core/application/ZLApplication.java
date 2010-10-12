@@ -62,7 +62,6 @@ public abstract class ZLApplication {
 	protected final void setView(ZLView view) {
 		if (view != null) {
 			myView = view;
-			repaintView();
 			onViewChanged();
 		}
 	}
