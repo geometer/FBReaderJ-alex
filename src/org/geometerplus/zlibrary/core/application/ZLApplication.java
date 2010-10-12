@@ -28,6 +28,8 @@ import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
 
+import android.util.Log;
+
 public abstract class ZLApplication {
 	public static ZLApplication Instance() {
 		return ourInstance;
@@ -94,6 +96,7 @@ public abstract class ZLApplication {
 	}*/
 
 	public final void onRepaintFinished() {
+		Log.w("FBREADER", "Start ZLApp.onRepaintFinished()");
 		if (myWindow != null) {
 			myWindow.refreshMenu();
 		}
@@ -103,6 +106,7 @@ public abstract class ZLApplication {
 		if (myWindow != null) {
 			myWindow.onEpdRepaintFinished();
 		}
+		Log.w("FBREADER", "End ZLApp.onRepaintFinished()");
 	}
 
 	public final void onViewChanged() {

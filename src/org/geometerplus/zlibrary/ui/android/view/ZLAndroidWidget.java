@@ -25,6 +25,7 @@ import android.view.*;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -62,16 +63,14 @@ public class ZLAndroidWidget extends View {
 	};
 
 	private boolean myRotated;
-	private Bitmap myRotatedBitmap;
-	private int[] myRotateBuffer;
+	private Bitmap myBufferBitmap;
 
 	public void setRotated(boolean rotated) {
 		myRotated = rotated;
-		if (myRotatedBitmap != null) {
-			myRotatedBitmap.recycle();
+		if (myBufferBitmap != null) {
+			myBufferBitmap.recycle();
+			myBufferBitmap = null;
 		}
-		myRotatedBitmap = null;
-		myRotateBuffer = null;
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view != null) {
 			final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
@@ -90,6 +89,7 @@ public class ZLAndroidWidget extends View {
 
 	@Override
 	protected void onDraw(final Canvas canvas) {
+		Log.w("FBREADER", "Start onDraw");
 		super.onDraw(canvas);
 
 		final int w = getWidth();
@@ -98,10 +98,9 @@ public class ZLAndroidWidget extends View {
 		if ((myMainBitmap != null) && ((myMainBitmap.getWidth() != w) || (myMainBitmap.getHeight() != h))) {
 			myMainBitmap.recycle();
 			myMainBitmap = null;
-			if (myRotatedBitmap != null) {
-				myRotatedBitmap.recycle();
-				myRotatedBitmap = null;
-				myRotateBuffer = null;
+			if (myBufferBitmap != null) {
+				myBufferBitmap.recycle();
+				myBufferBitmap = null;
 			}
 			System.gc();
 			System.gc();
@@ -111,10 +110,13 @@ public class ZLAndroidWidget extends View {
 			myMainBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
 		}
 
+		Log.w("FBREADER", "do drawings...");
 		drawOnBitmap();
 		canvas.drawBitmap(myMainBitmap, 0, 0, myPaint);
+		Log.w("FBREADER", "finish drawings");
 
 		myRepaintFinishedHandler.sendEmptyMessage(0);
+		Log.w("FBREADER", "Finish onDraw");
 	}
 
 	private void drawOnBitmap() {
@@ -125,10 +127,11 @@ public class ZLAndroidWidget extends View {
 
 		final Bitmap bitmap;
 		if (myRotated) {
-			if (myRotatedBitmap == null) {
-				myRotatedBitmap = Bitmap.createBitmap(myMainBitmap.getHeight(), myMainBitmap.getWidth(), Bitmap.Config.RGB_565);
+			if (myBufferBitmap == null) {
+				final int size = Math.max(myMainBitmap.getWidth(), myMainBitmap.getHeight());
+				myBufferBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
 			}
-			bitmap = myRotatedBitmap;
+			bitmap = myBufferBitmap;
 		} else {
 			bitmap = myMainBitmap;
 		}
@@ -142,25 +145,19 @@ public class ZLAndroidWidget extends View {
 		context.endPaint();
 
 		if (myRotated) {
-			canvas = new Canvas(myMainBitmap);
-			/*canvas.save();
-			canvas.rotate(90.0f);
-			canvas.drawBitmap(myRotatedBitmap, 0, 0, myPaint);
-			canvas.restore();*/
 			final int w = myMainBitmap.getWidth();
 			final int h = myMainBitmap.getHeight();
-			final int sz = w * h;
-			if (myRotateBuffer == null) {
-				myRotateBuffer = new int[2 * sz];
-			}
-			myRotatedBitmap.getPixels(myRotateBuffer, sz, h, 0, 0, h, w);
-			for (int i = 0; i < w; ++i) {
-				final int offset = sz + h*(w - 1 - i);
-				for (int j = 0; j < h; ++j) {
-					myRotateBuffer[i + w*j] = myRotateBuffer[j + offset];
-				}
-			}
-			myMainBitmap.setPixels(myRotateBuffer, 0, w, 0, 0, w, h);
+			final float anchor = Math.min(w, h) / 2.0f;
+			canvas = new Canvas(myMainBitmap);
+			canvas.save();
+			canvas.rotate(90.0f, anchor, anchor);
+			// FIXME: handle situation (w > h): How to translate (along X or Y)? and when (before rotation, or after)?
+			/*if (w > h) {
+				canvas.translate(0, w - h);
+				canvas.translate(w - h, 0);
+			}*/
+			canvas.drawBitmap(myBufferBitmap, 0, 0, myPaint);
+			canvas.restore();
 		}
 	}
 

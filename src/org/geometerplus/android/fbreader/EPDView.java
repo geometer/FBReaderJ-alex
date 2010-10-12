@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.util.Log;
 import android.widget.EpdRender;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -59,6 +60,7 @@ class EPDView extends EpdRender {
 	}
 
 	final void scrollPage(boolean forward) {
+		Log.w("FBREADER", "Start scrolling -- start scrollPage(bool)");
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
 			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);

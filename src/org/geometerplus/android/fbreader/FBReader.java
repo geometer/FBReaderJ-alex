@@ -23,6 +23,7 @@ import android.app.SearchManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
@@ -245,6 +246,7 @@ public final class FBReader extends ZLAndroidActivity {
 	private int myCoverHeight;
 
 	public void onEpdRepaintFinished() {
+		Log.w("FBREADER", "Start onEpdRepaintFinished()");
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
@@ -357,30 +359,40 @@ public final class FBReader extends ZLAndroidActivity {
 		if (SynchronousActivity.Instance != null) {
 			SynchronousActivity.Instance.updateImage();
 		}
+		Log.w("FBREADER", "End onEpdRepaintFinished()");
 	}
 
 	public void updateEpdView(int delay) {
+		Log.w("FBREADER", "Start updateEpdView(int delay = " + delay + ")");
 		updateEpdStatusbar();
 		if (delay <= 0) {
+			Log.w("FBREADER", "call updateEpdView()");
 			EPDView.Instance().updateEpdView();
 		} else {
+			Log.w("FBREADER", "call updateEpdView(int)");
 			EPDView.Instance().updateEpdViewDelay(delay);
 		}
+		Log.w("FBREADER", "finish updateEpdView()");
 	}
 
 	private void updateEpdStatusbar() {
+		Log.w("FBREADER", "Start updateEpdStatusbar()");
 		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView
 				&& ((ZLTextView) view).getModel() != null
 				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
 			ZLTextView textView = (ZLTextView) view;
+			Log.w("FBREADER", "compute position...");
 			final int page = textView.computeCurrentPage();
 			final int pagesNumber = textView.computePageNumber();
+			Log.w("FBREADER", "end compute => display position...");
 			statusPositionText.setText(makePositionText(page, pagesNumber));
+			Log.w("FBREADER", "end display");
 		} else {
 			statusPositionText.setText("");
 		}
+		Log.w("FBREADER", "Start updateEpdStatusbar()");
 	}
 
 
