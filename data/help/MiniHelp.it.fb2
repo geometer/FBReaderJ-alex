@@ -9,7 +9,7 @@ scorciatoie della tastiera e molte altre proprietà possono essere modificati ne
 <empty-line/>
 <subtitle><p>Come iniziare</p></subtitle>
 <p>Ci sono due modi per aggiungere ebook all'intero della "biblioteca virtuale" di FBReaderJ</p>
-<p>Il primo modo è quello di copiare un file ebook nel vostro device all'interno della cartella <code>/sdcard/Books</code> (o in un eventuale sotto-directory). FBReaderJ sarà in grado di aggiungere automaticamente il libro.</p>
+<p>Il primo modo è quello di copiare un file ebook nel vostro device all'interno della cartella <code>/sdcard/ebooks</code> (o in un eventuale sotto-directory). FBReaderJ sarà in grado di aggiungere automaticamente il libro.</p>
 <p>La seconda modalità prevede, invece, la possibilità di cliccare sul collegamento di un libro (es. sul collegamento di un file con estensioni come <code>.epub</code>, <code>.oeb</code>, <code>.fb2</code> o <code>.fb2.zip</code>) all'interno del Browser standard di Android. Il libro sarà scaricato sul device ed aperto all'interno di FBReaderJ. Qualora venisse scelto lo stesso link nuovamente, il libro non verrà scaricato di nuovo, sarà invece usata la copia scaricata in locale.</p>
 <empty-line/>
 <subtitle><p>Siti correlati</p></subtitle>

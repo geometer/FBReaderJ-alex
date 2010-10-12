@@ -10,7 +10,7 @@
 <empty-line/>
 <subtitle><p>Bắt đầu Như thế nào</p></subtitle>
 <p>Có 2 cách để thêm sách vào thư viện FBReaderJ.</p>
-<p>Cách thứ nhất là chép sách vào thiết bị của bạn ở thư mục <code>/sdcard/Books</code> (hoặc bất kỳ thư mục con của nó). FBReader sẽ tự động thêm cuốn sách đó.</p>
+<p>Cách thứ nhất là chép sách vào thiết bị của bạn ở thư mục <code>/sdcard/ebooks</code> (hoặc bất kỳ thư mục con của nó). FBReader sẽ tự động thêm cuốn sách đó.</p>
 <p>Cách thứ hai là nhấp vào 1 đường dẫn sách (vd vào 1được dẫn tới tập tin có định dạng <code>.epub</code>, <code>.oeb</code>, <code>.fb2</code> or <code>.fb2.zip</code>) trong trình duyệt mặc định của Android. Sách sẽ được tải về máy va mở trong FBReaderJ. Nếu bạn lại nhấp vào liên kết cũ, sách sẽ không được tải về nữa, nhưng bản trong máy sẽ được dùng để đọc .</p>
 <empty-line/>
 <subtitle><p>Các trang liên quan</p></subtitle>

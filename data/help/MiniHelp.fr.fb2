@@ -8,7 +8,7 @@
 <empty-line/>
 <subtitle><p>Comment démarrer</p></subtitle>
 <p>Il y a deux moyens d'ajouter des livres dans la biliothèque de FBReaderJ.</p>
-<p>Le premier moyen est de copier le fichier-livre dans votre périphérique dans le répertoire <code>/sdcard/Books</code> (ou dans un de ses sous-répertoires). FBReaderJ prendra en compte automatiquement le livre.</p>
+<p>Le premier moyen est de copier le fichier-livre dans votre périphérique dans le répertoire <code>/sdcard/ebooks</code> (ou dans un de ses sous-répertoires). FBReaderJ prendra en compte automatiquement le livre.</p>
 <p>Le second moyen est de cliquer sur un lien de livre (i.e. sur un lien vers un fichier d'extension <code>.epub</code>, <code>.oeb</code>, <code>.fb2</code> ou <code>.fb2.zip</code> dans le navigateur Android standard. Le livre sera téléchargé dans le périphérique et s'ouvrira dans FBReaderJ. Si vous cliquez sur le même lien, le livre ne sera pas téléchargé à nouveau, la copie locale sera utilisée pour la lecture.</p>
 <empty-line/>
 <subtitle><p>Sites connexes</p></subtitle>

@@ -8,7 +8,7 @@
 <empty-line/>
 <subtitle><p>Kezdő lépések</p></subtitle>
 <p>Két módon adható köny az FBReaderJ könyvtárához.</p>
-<p>Az első módszer, az e-könyv fájl bemásolása a készülék <code>/sdcard/Books</code> mappájába (vagy ezen belül egy almappába). Az FBReader automatikusan hozzáadja ezt a könyvet  könyvtárhoz.</p>
+<p>Az első módszer, az e-könyv fájl bemásolása a készülék <code>/sdcard/ebooks</code> mappájába (vagy ezen belül egy almappába). Az FBReader automatikusan hozzáadja ezt a könyvet  könyvtárhoz.</p>
 <p>A második mód, ha egy könyv linkjére (azaz egy <code>.epub</code>, <code>.oeb</code>, <code>.fb2</code> vagy <code>.fb2.zip</code> kiterjesztésű fájlra mutató linkre) kattintunk az alapértelmezett Android böngészőben. A könyv letöltődik a készülékre és azFBReaderJ megnyitja. Ha ismét ugyanarra a linkre kattintunk, a könyv nem lesz újra letöltve, hanem a már letöltött példány nyílik meg olvasásra.</p>
 <empty-line/>
 <subtitle><p>Kapcsolódó weboldalak</p></subtitle>

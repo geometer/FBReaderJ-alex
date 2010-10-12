@@ -9,7 +9,7 @@
 <empty-line/>
 <subtitle><p>Die ersten Schritte</p></subtitle>
 <p>Es gibt zwei Wege um Bücher der FBReaderJ Bibliothek hinzuzufügen.</p>
-<p>Der erste Weg ist die Buchdatei auf dein Gerät in das Verzeichnis <code>/sdcard/Books</code> (oder in ein anderes Unterverzeichnis in diesem) zukopieren. FBReaderJ wird diese Datei automatisch hinzufügen.</p>
+<p>Der erste Weg ist die Buchdatei auf dein Gerät in das Verzeichnis <code>/sdcard/ebooks</code> (oder in ein anderes Unterverzeichnis in diesem) zukopieren. FBReaderJ wird diese Datei automatisch hinzufügen.</p>
 <p>Der zweite Weg ist indem man im Standard Android Browser auf einen Buch Link (z.B. auf einen Link zu eien Datei mit der Erweiterung <code>.epub</code>, <code>.oeb</code>, <code>.fb2</code> or <code>.fb2.zip</code>) klickt. Das Buch wird auf das Gerät geladen und in FBReaderJ geöffnet. Wenn du auf den selben Link noch mal klickst, das Buch wird nicht nochmal geladen und die lokale Kopie wird zum lesen benutzt.</p>
 <empty-line/>
 <subtitle><p>Verwandte Internetseiten</p></subtitle>
