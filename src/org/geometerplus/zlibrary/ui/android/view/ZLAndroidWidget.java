@@ -63,14 +63,9 @@ public class ZLAndroidWidget extends View {
 	};
 
 	private boolean myRotated;
-	private Bitmap myBufferBitmap;
 
 	public void setRotated(boolean rotated) {
 		myRotated = rotated;
-		if (myBufferBitmap != null) {
-			myBufferBitmap.recycle();
-			myBufferBitmap = null;
-		}
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view != null) {
 			final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
@@ -98,10 +93,6 @@ public class ZLAndroidWidget extends View {
 		if ((myMainBitmap != null) && ((myMainBitmap.getWidth() != w) || (myMainBitmap.getHeight() != h))) {
 			myMainBitmap.recycle();
 			myMainBitmap = null;
-			if (myBufferBitmap != null) {
-				myBufferBitmap.recycle();
-				myBufferBitmap = null;
-			}
 			System.gc();
 			System.gc();
 			System.gc();
@@ -125,30 +116,13 @@ public class ZLAndroidWidget extends View {
 			return;
 		}
 
-		final Bitmap bitmap;
-		if (myRotated) {
-			if (myBufferBitmap == null) {
-				final int size = Math.max(myMainBitmap.getWidth(), myMainBitmap.getHeight());
-				myBufferBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
-			}
-			bitmap = myBufferBitmap;
-		} else {
-			bitmap = myMainBitmap;
-		}
-
 		final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
-
-		Canvas canvas = new Canvas(bitmap);
-		context.beginPaint(canvas);
-		updatePaintContextSize(view, context);
-		view.paint(ZLView.PAGE_CENTRAL);
-		context.endPaint();
+		final Canvas canvas = new Canvas(myMainBitmap);
 
 		if (myRotated) {
 			final int w = myMainBitmap.getWidth();
 			final int h = myMainBitmap.getHeight();
 			final float anchor = Math.min(w, h) / 2.0f;
-			canvas = new Canvas(myMainBitmap);
 			canvas.save();
 			canvas.rotate(90.0f, anchor, anchor);
 			// FIXME: handle situation (w > h): How to translate (along X or Y)? and when (before rotation, or after)?
@@ -156,7 +130,14 @@ public class ZLAndroidWidget extends View {
 				canvas.translate(0, w - h);
 				canvas.translate(w - h, 0);
 			}*/
-			canvas.drawBitmap(myBufferBitmap, 0, 0, myPaint);
+		}
+
+		context.beginPaint(canvas);
+		updatePaintContextSize(view, context);
+		view.paint(ZLView.PAGE_CENTRAL);
+		context.endPaint();
+
+		if (myRotated) {
 			canvas.restore();
 		}
 	}
