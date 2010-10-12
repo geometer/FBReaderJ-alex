@@ -24,11 +24,10 @@ import java.util.*;
 import org.geometerplus.zlibrary.core.filesystem.*;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.util.ZLLog;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
-
-import android.util.Log;
 
 public abstract class ZLApplication {
 	public static ZLApplication Instance() {
@@ -96,7 +95,7 @@ public abstract class ZLApplication {
 	}*/
 
 	public final void onRepaintFinished() {
-		Log.w("FBREADER", "Start ZLApp.onRepaintFinished()");
+		ZLLog.log("Start ZLApp.onRepaintFinished()");
 		if (myWindow != null) {
 			myWindow.refreshMenu();
 		}
@@ -106,7 +105,8 @@ public abstract class ZLApplication {
 		if (myWindow != null) {
 			myWindow.onEpdRepaintFinished();
 		}
-		Log.w("FBREADER", "End ZLApp.onRepaintFinished()");
+		ZLLog.log("End ZLApp.onRepaintFinished()");
+		ZLLog.flush();
 	}
 
 	public final void onViewChanged() {

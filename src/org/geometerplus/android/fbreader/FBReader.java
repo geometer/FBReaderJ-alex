@@ -23,7 +23,6 @@ import android.app.SearchManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
@@ -32,6 +31,7 @@ import android.widget.*;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.util.ZLLog;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
@@ -246,7 +246,7 @@ public final class FBReader extends ZLAndroidActivity {
 	private int myCoverHeight;
 
 	public void onEpdRepaintFinished() {
-		Log.w("FBREADER", "Start onEpdRepaintFinished()");
+		ZLLog.log("Start onEpdRepaintFinished()");
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
@@ -359,40 +359,40 @@ public final class FBReader extends ZLAndroidActivity {
 		if (SynchronousActivity.Instance != null) {
 			SynchronousActivity.Instance.updateImage();
 		}
-		Log.w("FBREADER", "End onEpdRepaintFinished()");
+		ZLLog.log("End onEpdRepaintFinished()");
 	}
 
 	public void updateEpdView(int delay) {
-		Log.w("FBREADER", "Start updateEpdView(int delay = " + delay + ")");
+		ZLLog.log("Start updateEpdView(int delay = " + delay + ")");
 		updateEpdStatusbar();
 		if (delay <= 0) {
-			Log.w("FBREADER", "call updateEpdView()");
+			ZLLog.log("call updateEpdView()");
 			EPDView.Instance().updateEpdView();
 		} else {
-			Log.w("FBREADER", "call updateEpdView(int)");
+			ZLLog.log("call updateEpdView(int)");
 			EPDView.Instance().updateEpdViewDelay(delay);
 		}
-		Log.w("FBREADER", "finish updateEpdView()");
+		ZLLog.log("finish updateEpdView()");
 	}
 
 	private void updateEpdStatusbar() {
-		Log.w("FBREADER", "Start updateEpdStatusbar()");
+		ZLLog.log("Start updateEpdStatusbar()");
 		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView
 				&& ((ZLTextView) view).getModel() != null
 				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
 			ZLTextView textView = (ZLTextView) view;
-			Log.w("FBREADER", "compute position...");
+			ZLLog.log("compute position...");
 			final int page = textView.computeCurrentPage();
 			final int pagesNumber = textView.computePageNumber();
-			Log.w("FBREADER", "end compute => display position...");
+			ZLLog.log("end compute => display position...");
 			statusPositionText.setText(makePositionText(page, pagesNumber));
-			Log.w("FBREADER", "end display");
+			ZLLog.log("end display");
 		} else {
 			statusPositionText.setText("");
 		}
-		Log.w("FBREADER", "Start updateEpdStatusbar()");
+		ZLLog.log("Start updateEpdStatusbar()");
 	}
 
 
