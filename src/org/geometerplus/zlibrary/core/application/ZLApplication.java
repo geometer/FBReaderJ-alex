@@ -24,7 +24,6 @@ import java.util.*;
 import org.geometerplus.zlibrary.core.filesystem.*;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.util.ZLLog;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
@@ -95,7 +94,6 @@ public abstract class ZLApplication {
 	}*/
 
 	public final void onRepaintFinished() {
-		ZLLog.log("Start ZLApp.onRepaintFinished()");
 		if (myWindow != null) {
 			myWindow.refreshMenu();
 		}
@@ -105,8 +103,6 @@ public abstract class ZLApplication {
 		if (myWindow != null) {
 			myWindow.onEpdRepaintFinished();
 		}
-		ZLLog.log("End ZLApp.onRepaintFinished()");
-		ZLLog.flush();
 	}
 
 	public final void onViewChanged() {

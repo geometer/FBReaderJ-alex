@@ -31,7 +31,6 @@ import android.widget.*;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.util.ZLLog;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
@@ -246,7 +245,6 @@ public final class FBReader extends ZLAndroidActivity {
 	private int myCoverHeight;
 
 	public void onEpdRepaintFinished() {
-		ZLLog.log("Start onEpdRepaintFinished()");
 		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
 			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
@@ -359,40 +357,30 @@ public final class FBReader extends ZLAndroidActivity {
 		if (SynchronousActivity.Instance != null) {
 			SynchronousActivity.Instance.updateImage();
 		}
-		ZLLog.log("End onEpdRepaintFinished()");
 	}
 
 	public void updateEpdView(int delay) {
-		ZLLog.log("Start updateEpdView(int delay = " + delay + ")");
 		updateEpdStatusbar();
 		if (delay <= 0) {
-			ZLLog.log("call updateEpdView()");
 			EPDView.Instance().updateEpdView();
 		} else {
-			ZLLog.log("call updateEpdView(int)");
 			EPDView.Instance().updateEpdViewDelay(delay);
 		}
-		ZLLog.log("finish updateEpdView()");
 	}
 
 	private void updateEpdStatusbar() {
-		ZLLog.log("Start updateEpdStatusbar()");
 		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView
 				&& ((ZLTextView) view).getModel() != null
 				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
 			ZLTextView textView = (ZLTextView) view;
-			ZLLog.log("compute position...");
 			final int page = textView.computeCurrentPage();
 			final int pagesNumber = textView.computePageNumber();
-			ZLLog.log("end compute => display position...");
 			statusPositionText.setText(makePositionText(page, pagesNumber));
-			ZLLog.log("end display");
 		} else {
 			statusPositionText.setText("");
 		}
-		ZLLog.log("Start updateEpdStatusbar()");
 	}
 
 

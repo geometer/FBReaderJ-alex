@@ -26,7 +26,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 
-import org.geometerplus.zlibrary.core.util.ZLLog;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 
@@ -84,7 +83,6 @@ public class ZLAndroidWidget extends View {
 
 	@Override
 	protected void onDraw(final Canvas canvas) {
-		ZLLog.log("Start onDraw");
 		super.onDraw(canvas);
 
 		final int w = getWidth();
@@ -101,13 +99,10 @@ public class ZLAndroidWidget extends View {
 			myMainBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
 		}
 
-		ZLLog.log("do drawings...");
 		drawOnBitmap();
 		canvas.drawBitmap(myMainBitmap, 0, 0, myPaint);
-		ZLLog.log("finish drawings");
 
 		myRepaintFinishedHandler.sendEmptyMessage(0);
-		ZLLog.log("Finish onDraw");
 	}
 
 	private void drawOnBitmap() {
