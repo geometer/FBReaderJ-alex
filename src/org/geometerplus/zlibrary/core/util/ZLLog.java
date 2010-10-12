@@ -32,6 +32,7 @@ public class ZLLog {
 	public static ZLLog Instance() {
 		if (ourInstance == null) {
 			ourInstance = new ZLLog();
+			ourInstance.setBase0();
 		}
 		return ourInstance;
 	}
