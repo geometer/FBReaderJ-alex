@@ -115,10 +115,10 @@ public final class FBReader extends ZLApplication {
 			public void run() { 
 				Book book = createBookForFile(ZLFile.createFileByPath(myArg0));
 				if (book == null) {
-					book = Library.Instance().getRecentBook();
+					book = Library.getRecentBook();
 				}
 				if ((book == null) || !book.File.exists()) {
-					book = Book.getByFile(Library.Instance().getHelpFile());
+					book = Book.getByFile(Library.getHelpFile());
 				}
 				openBookInternal(book, null);
 			}
@@ -204,7 +204,7 @@ public final class FBReader extends ZLApplication {
 				} else {
 					gotoBookmark(bookmark);
 				}
-				Library.Instance().addBookToRecentList(book);
+				Library.addBookToRecentList(book);
 			}
 		}
 		repaintView();
