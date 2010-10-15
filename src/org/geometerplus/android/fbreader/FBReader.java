@@ -43,6 +43,7 @@ import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.library.Author;
 import org.geometerplus.fbreader.library.Book;
+import org.geometerplus.fbreader.library.Library;
 
 public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
@@ -75,6 +76,10 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 	}
 	private static TextSearchButtonPanel myPanel;
+
+	protected String fileNameForEmptyUri() {
+		return Library.getHelpFile().getPath();
+	}
 
 	@Override
 	public void onCreate(Bundle icicle) {
