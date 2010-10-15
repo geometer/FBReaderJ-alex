@@ -30,7 +30,7 @@ import android.content.res.Configuration;
 import android.view.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.filesystem.ZLPhysicalFile;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
@@ -97,7 +97,7 @@ public abstract class ZLAndroidActivity extends Activity {
 			((ZLAndroidApplication)getApplication()).myMainWindow = new ZLAndroidApplicationWindow(application);
 			application.initWindow();
 		} else if (fileToOpen != null) {
-			ZLApplication.Instance().openFile(new ZLPhysicalFile(new File(fileToOpen)));
+			ZLApplication.Instance().openFile(ZLFile.createFileByPath(fileToOpen));
 		}
 		//ZLApplication.Instance().repaintView();
 	}
@@ -144,7 +144,7 @@ public abstract class ZLAndroidActivity extends Activity {
 		}
 
 		if (fileToOpen != null) {
-			ZLApplication.Instance().openFile(new ZLPhysicalFile(new File(fileToOpen)));
+			ZLApplication.Instance().openFile(ZLFile.createFileByPath(fileToOpen));
 		}
 		//ZLApplication.Instance().repaintView();
 	}
