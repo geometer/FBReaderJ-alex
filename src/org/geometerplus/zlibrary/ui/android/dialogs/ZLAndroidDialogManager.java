@@ -25,7 +25,6 @@ import android.app.*;
 import android.content.*;
 
 import org.geometerplus.zlibrary.core.dialogs.*;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.android.util.AndroidUtil;
 
@@ -39,15 +38,6 @@ public class ZLAndroidDialogManager extends ZLDialogManager {
 		myActivity = activity;
 	}
 	
-	static void runDialog(Activity activity, ZLAndroidDialogInterface dialog) {
-		((ZLAndroidApplication)activity.getApplication()).putData(
-			DialogActivity.DIALOG_KEY, dialog
-		);
-		Intent intent = new Intent();
-		intent.setClass(activity, DialogActivity.class);
-		activity.startActivity(intent);
-	}
-
 	public void runActivity(Class<?> activityClass, Map<String,String> data) {
 		Intent intent = new Intent(myActivity.getApplicationContext(), activityClass);
 		for (Map.Entry<String,String> entry : data.entrySet()) {
