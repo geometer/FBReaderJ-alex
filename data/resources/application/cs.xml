@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Czech FBReaderJ resources, by Marek Pavelka -->
 <resources>
+	<node name="fbreader">
+		<node name="pageChange" toBeTranslated="true" value="Page change"/>
+		<node name="noCover" toBeTranslated="true" value="Cover is not available"/>
+	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Neznámý autor"/>
 		<node name="booksWithNoTags" value="Knihy bez štítků"/>
@@ -16,6 +20,21 @@
 		</node>
 		<node name="openBook" value="Otevřít knihu"/>
 		<node name="deleteBook" value="Odstranit knihu"/>
+	</node>
+	<node name="browser">
+		<node name="errorText" toBeTranslated="true" value="Error: %s"/>
+		<node name="confirmation" toBeTranslated="true" value="Confirmation"/>
+		<node name="resubmitForm" toBeTranslated="true" value="To display this page, browser must send information that will repeat any action (such as a search or order confirmation) that was performed earlier."/>
+		<node name="authenticationRequired" toBeTranslated="true" value="Sign in to %s1 &quot;%s2&quot;"/>
+		<node name="login" toBeTranslated="true" value="User Name" />
+		<node name="password" toBeTranslated="true" value="Password" />
+		<node name="menu">
+			<node name="go" toBeTranslated="true" value="Go"/>
+			<node name="stop" toBeTranslated="true" value="Stop"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="forward" toBeTranslated="true" value="Forward"/>
+			<node name="back" toBeTranslated="true" value="Back"/>
+		</node>
 	</node>
 	<node name="networkView">
 		<node name="openCatalog" value="Otevřít katalog"/>
@@ -66,6 +85,8 @@
 			<node name="addCustomCatalog" value="Přidat katalog"/>
 			<node name="refreshCatalogsList" value="Aktualizovat katalogy"/>
 		</node>
+		<node name="browser" toBeTranslated="true" value="Browser" />
+		<node name="browserSummary" toBeTranslated="true" value="Open built-in browser" />
 	</node>
 	<node name="networkBookView">
 		<node name="bookInfo" value="Informace o knize" />
@@ -111,6 +132,7 @@
 		<node name="day" value="Den"/>
 		<node name="night" value="Noc"/>
 		<node name="networkLibrary" value="Síťová knihovna"/>
+		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
 		<node name="navigate" value="Navigace">
 			<node name="toc" value="Obsah"/>
 			<node name="gotoHome" value="Přejít na začátek dokumentu"/>
@@ -151,6 +173,10 @@
 		<node name="Preferences">
 			<node name="Library" value="Knihovna">
 				<node name="path" value="Adresáře obsahující knihy"/>
+				<node name="networkLibrary" toBeTranslated="true" value="Network library">
+					<node name="summaryOn" toBeTranslated="true" value="Network library is enabled"/>
+					<node name="summaryOff" toBeTranslated="true" value="Network library is disabled"/>
+				</node>
 			</node>
 			<node name="LookNFeel" value="Vzhled a chování">
 				<node name="autoOrientation" value="Automatické otáčení">
@@ -182,10 +208,6 @@
 				<node name="volumeKeys" value="Posunování tlačítky ovládání hlasitosti">
 					<node name="summaryOn" value="Použít tlačítka ovládání hlasitosti pro posun"/>
 					<node name="summaryOff" value="Ponechat tlačítka ovládání hlasitosti pro zvuk"/>
-				</node>
-				<node name="invertVolumeKeys" value="Převrátit posunování tlačítky ovládání hlasitosti">
-					<node name="summaryOn" value="Tlačítko nahoru (dolů) posunuje stránku dolů (nahoru)"/>
-					<node name="summaryOff" value="Tlačítko nahoru (dolů) posunuje stránku nahoru (dolů)"/>
 				</node>
 				<node name="animated" value="Animované posunování">
 					<node name="summaryOn" value="Posunovat stránky hladčeji"/>
@@ -278,6 +300,7 @@
 			<node name="signOut" value="Odhlašování. Čekejte..." />
 			<node name="purchaseBook" value="Nakupování knihy. Čekejte..." />
 			<node name="registerUser" value="Registrace nového účtu. Čekejte..." />
+			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" value="Načítání informací o katalogu. Čekejte..." />
 			<node name="updatingCatalogsList" value="Aktualizace seznamu katalogů. Čekejte..."/>
 		</node>
