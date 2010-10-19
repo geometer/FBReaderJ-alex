@@ -73,7 +73,7 @@ public class ZLAndroidWidget extends View {
 	}
 
 	private void updatePaintContextSize(ZLView view, ZLAndroidPaintContext context) {
-		final int scrollbarWidth = view.showScrollbar() ? getVerticalScrollbarWidth() : 0;
+		final int scrollbarWidth = view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0;
 		if (myRotated) {
 			context.setSize(getHeight(), getWidth(), scrollbarWidth);
 		} else {
@@ -189,7 +189,7 @@ public class ZLAndroidWidget extends View {
 	@Override
 	protected int computeVerticalScrollExtent() {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (!view.showScrollbar()) {
+		if (!view.isScrollbarShown()) {
 			return 0;
 		}
 		return view.getScrollbarThumbLength(ZLView.PAGE_CENTRAL);
@@ -198,7 +198,7 @@ public class ZLAndroidWidget extends View {
 	@Override
 	protected int computeVerticalScrollOffset() {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (!view.showScrollbar()) {
+		if (!view.isScrollbarShown()) {
 			return 0;
 		}
 		return view.getScrollbarThumbPosition(ZLView.PAGE_CENTRAL);
@@ -207,7 +207,7 @@ public class ZLAndroidWidget extends View {
 	@Override
 	protected int computeVerticalScrollRange() {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (!view.showScrollbar()) {
+		if (!view.isScrollbarShown()) {
 			return 0;
 		}
 		return view.getScrollbarFullSize();
