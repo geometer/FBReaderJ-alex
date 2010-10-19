@@ -64,13 +64,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	@Override
 	protected void init() {
 		final Category libraryCategory = createCategory("Library");
-		/*
-		libraryCategory.addPreference(new InfoPreference(
-			this,
-			libraryCategory.Resource.getResource("path").getValue(),
-			Constants.BOOKS_DIRECTORY)
-		);
-		*/
 		libraryCategory.addPreference(new ZLStringOptionPreference(
 			this,
 			Paths.BooksDirectoryOption,
@@ -83,25 +76,34 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			libraryCategory.Resource,
 			"networkLibrary")
 		);
+
 		final Category lookNFeelCategory = createCategory("LookNFeel");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().ShowStatusBarOption, "showStatusBar");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().DontTurnScreenOffOption, "dontTurnScreenOff");
 		//lookNFeelCategory.addPreference(new ScrollbarTypePreference(this, lookNFeelCategory.Resource, "scrollbarType"));
 
+		final FBReader fbReader = (FBReader)FBReader.Instance();
+
 		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
 		appearanceScreen.setSummary( appearanceScreen.Resource.getResource("summary").getValue() );
 		appearanceScreen.setOnPreferenceClickListener(
 				new PreferenceScreen.OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						((FBReader) FBReader.Instance()).showOptionsDialog();
+						fbReader.showOptionsDialog();
 						return true;
 					}
 				}
 		);
 
 		/*
-		final FBReader fbreader = (FBReader)FBReader.Instance();
+		String[] scrollBarTypes = {"hide", "show", "showAsProgress"};
+		lookNFeelCategory.addPreference(new ZLChoicePreference(
+			this, lookNFeelCategory.Resource, "scrollbarType",
+			fbReader.ScrollbarTypeOption, scrollBarTypes));
+		*/
+
+		/*
 		final Screen colorProfileScreen = lookNFeelCategory.createPreferenceScreen("colorProfile");
 		final Category colorProfileCategory = colorProfileScreen.createCategory(null);
 		final ZLResource resource = colorProfileCategory.Resource;
@@ -120,35 +122,3 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		scrollingCategory.addOption(scrollingPreferences.HorizontalOption, "horizontal");*/
 	}
 }
-
-/*class ScrollbarTypePreference extends ZLStringListPreference {
-	private static final String[] ourCodes = { "hide", "show", "showAsProgress" };
-
-	private FBReader myReader;
-
-	ScrollbarTypePreference(Context context, ZLResource rootResource, String resourceKey) {
-		super(context, rootResource, resourceKey);
-		myReader = (FBReader)FBReader.Instance();
-		final String[] names = new String[ourCodes.length];
-		final ZLResource r = rootResource.getResource(resourceKey);
-		for (int i = 0; i < ourCodes.length; ++i) {
-			names[i] = r.getResource(ourCodes[i]).getValue();
-		}
-		setLists(ourCodes, names);
-		setInitialValue(ourCodes[
-			Math.max(0, Math.min(ourCodes.length - 1, myReader.ScrollbarTypeOption.getValue()))
-		]);
-	}
-
-	public void onAccept() {
-		final String value = getValue();
-		int intValue = 0;
-		for (int i = 0; i < ourCodes.length; ++i) {
-			if (value == ourCodes[i]) {
-				intValue = i;
-				break;
-			}
-		}
-		myReader.ScrollbarTypeOption.setValue(intValue);
-	}
-}*/
