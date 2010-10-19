@@ -22,8 +22,6 @@ package org.geometerplus.android.fbreader.network;
 import android.view.Menu;
 import android.view.ContextMenu;
 
-import org.geometerplus.zlibrary.core.util.ZLBoolean3;
-
 import org.geometerplus.fbreader.network.NetworkTree;
 import org.geometerplus.fbreader.network.authentication.NetworkAuthenticationManager;
 
@@ -78,7 +76,7 @@ class RefillAccountActions extends NetworkTreeActions {
 
 	private void doRefill(final NetworkBaseActivity activity, final RefillAccountTree tree) {
 		final NetworkAuthenticationManager mgr = tree.Link.authenticationManager();
-		if (mgr.isAuthorised(false).Status != ZLBoolean3.B3_FALSE) {
+		if (mgr.mayBeAuthorised(false)) {
 			NetworkView.Instance().openInBrowser(
 				activity,
 				tree.Link.authenticationManager().refillAccountLink()
@@ -86,7 +84,7 @@ class RefillAccountActions extends NetworkTreeActions {
 		} else {
 			NetworkDialog.show(activity, NetworkDialog.DIALOG_AUTHENTICATION, tree.Link, new Runnable() {
 				public void run() {
-					if (mgr.isAuthorised(false).Status != ZLBoolean3.B3_FALSE) {
+					if (mgr.mayBeAuthorised(false)) {
 						NetworkView.Instance().openInBrowser(
 							activity,
 							tree.Link.authenticationManager().refillAccountLink()
