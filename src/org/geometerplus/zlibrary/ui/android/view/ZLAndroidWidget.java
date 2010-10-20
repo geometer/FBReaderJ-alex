@@ -141,32 +141,12 @@ public class ZLAndroidWidget extends View {
 		return myMainBitmap;
 	}
 
-	@Override
-	public boolean onTrackballEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null);
-		} else {
-			ZLApplication.Instance().getCurrentView().onTrackballRotated((int)(10 * event.getX()), (int)(10 * event.getY()));
-		}
-		return true;
-	}
-
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
-			case KeyEvent.KEYCODE_VOLUME_DOWN:
-			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_BACK:
-			case KeyEvent.KEYCODE_ENTER:
-			case KeyEvent.KEYCODE_DPAD_CENTER:
 				return ZLApplication.Instance().doActionByKey(ZLAndroidKeyUtil.getKeyNameByCode(keyCode));
-			case KeyEvent.KEYCODE_DPAD_DOWN:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(0, 1);
-				return true;
-			case KeyEvent.KEYCODE_DPAD_UP:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(0, -1);
-				return true;
 			default:
 				return false;
 		}
@@ -175,11 +155,7 @@ public class ZLAndroidWidget extends View {
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		switch (keyCode) {
-			case KeyEvent.KEYCODE_VOLUME_DOWN:
-			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_BACK:
-			case KeyEvent.KEYCODE_ENTER:
-			case KeyEvent.KEYCODE_DPAD_CENTER:
 				return true;
 			default:
 				return false;

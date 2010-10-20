@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Window;
 
 import org.geometerplus.zlibrary.ui.android.R;
@@ -38,6 +39,7 @@ public class SynchronousActivity extends Activity {
 	public static final String ROTATE_KEY = "org.geometerplus.android.fbreader.RotateFlag";
 
 	private ProgressDialog myProgressDialog;
+	private ZLAndroidWidget myWidget;
 
 	private boolean myRotateFlag;
 
@@ -60,9 +62,9 @@ public class SynchronousActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
-		final ZLAndroidWidget widget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
+		myWidget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
-		view.setWidget(widget);
+		view.setWidget(myWidget);
 		view.setRotated(myRotateFlag);
 
 		myProgressDialog = new ProgressDialog(this);
@@ -107,5 +109,15 @@ public class SynchronousActivity extends Activity {
 		if (!myProgressDialog.isShowing()) {
 			myProgressDialog.show();
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		return ((myWidget != null) && myWidget.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		return ((myWidget != null) && myWidget.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 }

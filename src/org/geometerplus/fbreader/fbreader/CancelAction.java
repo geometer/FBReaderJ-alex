@@ -24,11 +24,14 @@ class CancelAction extends FBAction {
 		super(fbreader);
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return Reader.getCurrentView() != Reader.BookTextView;
+	}
+
 	public void run() {
 		if (Reader.getCurrentView() != Reader.BookTextView) {
 			Reader.showBookTextView();
-		} else {
-			Reader.closeWindow();
 		}
 	}
 }
