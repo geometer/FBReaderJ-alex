@@ -416,6 +416,8 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
 
+		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
+
 		return fbReader;
 	}
 
