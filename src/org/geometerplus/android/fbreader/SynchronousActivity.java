@@ -47,7 +47,7 @@ public class SynchronousActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (FBReaderActivity.Instance == null) {
+		if (FBReader.Instance == null) {
 			finish();
 			return;
 		}
@@ -62,7 +62,7 @@ public class SynchronousActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
-		myWidget = (ZLAndroidWidget) FBReaderActivity.Instance.findViewById(R.id.main_view_epd);
+		myWidget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
 		view.setWidget(myWidget);
 		view.setRotated(myRotateFlag);

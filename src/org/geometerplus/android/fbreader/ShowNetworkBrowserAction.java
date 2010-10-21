@@ -20,10 +20,10 @@
 package org.geometerplus.android.fbreader;
 
 import org.geometerplus.android.fbreader.network.browser.BrowserActivity;
-import org.geometerplus.fbreader.fbreader.FBReader;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 class ShowNetworkBrowserAction extends RunActivityAction {
-	ShowNetworkBrowserAction(FBReaderActivity baseActivity, FBReader fbreader) {
+	ShowNetworkBrowserAction(FBReader baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader, BrowserActivity.class);
 	}
 }

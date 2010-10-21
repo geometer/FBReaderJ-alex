@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.widget.EpdRender;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.view.ZLView;
@@ -71,7 +72,7 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onTogglePressed(int arg1, int arg2) {
-		if (!FBReaderActivity.Instance.isReadMode()
+		if (!FBReader.Instance.isReadMode()
 				&& SynchronousActivity.Instance == null) {
 			changeFont();
 		} else {
@@ -96,14 +97,14 @@ class EPDView extends EpdRender {
 		}
 		//((TextView) FBReader.Instance.findViewById(R.id.statusbar_text)).setText("TEXT SIZE = " + option.getValue());
 
-		((org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance()).clearTextCaches();
+		((FBReaderApp)ZLApplication.Instance()).clearTextCaches();
 		ZLApplication.Instance().repaintView();
 	}
 
 	private void synchronizeLCD() {
 		if (SynchronousActivity.Instance == null) {
-			FBReaderActivity.Instance.startActivity(
-				new Intent(FBReaderActivity.Instance.getApplicationContext(), SynchronousActivity.class)
+			FBReader.Instance.startActivity(
+				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
 					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag())
 			);
 		} else {
@@ -112,7 +113,7 @@ class EPDView extends EpdRender {
 	}
 
 	boolean rotateFlag() {
-		final FBReaderActivity fbreader = FBReaderActivity.Instance;
+		final FBReader fbreader = FBReader.Instance;
 		if (fbreader != null) {
 			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 		}

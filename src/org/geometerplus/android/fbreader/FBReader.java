@@ -38,7 +38,7 @@ import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.fbreader.fbreader.FBReader;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
@@ -46,8 +46,8 @@ import org.geometerplus.fbreader.library.Author;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 
-public final class FBReaderActivity extends ZLAndroidActivity {
-	static FBReaderActivity Instance;
+public final class FBReader extends ZLAndroidActivity {
+	static FBReader Instance;
 
 	//private int myFullScreenFlag;
 	private boolean myReadMode;
@@ -253,8 +253,8 @@ public final class FBReaderActivity extends ZLAndroidActivity {
 	private int myCoverHeight;
 
 	public void onEpdRepaintFinished() {
-		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
-			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
+		final FBReaderApp fbreader = (FBReaderApp)FBReaderApp.Instance();
+
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);
 		final TextView bookAuthors = (TextView) findViewById(R.id.book_authors);
 		final ImageView bookCover = (ImageView) findViewById(R.id.book_cover);
@@ -406,7 +406,7 @@ public final class FBReaderActivity extends ZLAndroidActivity {
 		new SQLiteBooksDatabase();
 		final String[] args = (fileName != null) ? new String[] { fileName } : new String[0];
 
-		final FBReader fbReader = new FBReader(args);
+		final FBReaderApp fbReader = new FBReaderApp(args);
 
 		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this, fbReader));
@@ -433,8 +433,7 @@ public final class FBReaderActivity extends ZLAndroidActivity {
 				}
 			});
 		}
-		final org.geometerplus.fbreader.fbreader.FBReader fbreader =
-			(org.geometerplus.fbreader.fbreader.FBReader)ZLApplication.Instance();
+		final FBReaderApp fbreader = (FBReaderApp)ZLApplication.Instance();
 		startSearch(fbreader.TextSearchPatternOption.getValue(), true, null, false);
 		return true;
 	}
