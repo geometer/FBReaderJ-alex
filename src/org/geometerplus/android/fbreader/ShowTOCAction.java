@@ -17,16 +17,16 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.fbreader;
+package org.geometerplus.android.fbreader;
 
-import org.geometerplus.android.fbreader.preferences.BookInfoActivity;
+import org.geometerplus.fbreader.fbreader.FBReader;
 
-class BookInfoAction extends RunActivityAction {
-	BookInfoAction(FBReader fbreader) {
-		super(fbreader, BookInfoActivity.class);
+class ShowTOCAction extends RunActivityAction {
+	ShowTOCAction(FBReaderActivity baseActivity, FBReader fbreader) {
+		super(baseActivity, fbreader, TOCActivity.class);
 	}
 
 	public boolean isVisible() {
-		return Reader.Model != null;
+		return (Reader.Model != null) && Reader.Model.TOCTree.hasChildren();
 	}
 }

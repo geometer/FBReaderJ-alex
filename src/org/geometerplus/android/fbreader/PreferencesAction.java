@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,14 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.fbreader;
+package org.geometerplus.android.fbreader;
 
-import org.geometerplus.android.fbreader.network.NetworkLibraryActivity;
+import org.geometerplus.fbreader.fbreader.FBReader;
 
-class ShowNetworkLibraryAction extends RunActivityAction {
-	ShowNetworkLibraryAction(FBReader fbreader) {
-		super(fbreader, NetworkLibraryActivity.class);
-	}
+import org.geometerplus.android.fbreader.preferences.PreferenceActivity;
 
-	@Override
-	public boolean isVisible() {
-		return Reader.isNetworkLibraryEnabled();
+class PreferencesAction extends RunActivityAction {
+	PreferencesAction(FBReaderActivity baseActivity, FBReader fbreader) {
+		super(baseActivity, fbreader, PreferenceActivity.class);
 	}
 }

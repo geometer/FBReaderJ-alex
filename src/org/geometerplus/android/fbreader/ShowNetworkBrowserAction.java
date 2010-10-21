@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.fbreader;
+package org.geometerplus.android.fbreader;
 
-import org.geometerplus.android.fbreader.BookmarksActivity;
+import org.geometerplus.android.fbreader.network.browser.BrowserActivity;
+import org.geometerplus.fbreader.fbreader.FBReader;
 
-class ShowBookmarksAction extends RunActivityAction {
-	ShowBookmarksAction(FBReader fbreader) {
-		super(fbreader, BookmarksActivity.class);
+class ShowNetworkBrowserAction extends RunActivityAction {
+	ShowNetworkBrowserAction(FBReaderActivity baseActivity, FBReader fbreader) {
+		super(baseActivity, fbreader, BrowserActivity.class);
 	}
 }

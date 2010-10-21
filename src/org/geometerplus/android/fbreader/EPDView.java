@@ -71,7 +71,7 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onTogglePressed(int arg1, int arg2) {
-		if (!FBReader.Instance.isReadMode()
+		if (!FBReaderActivity.Instance.isReadMode()
 				&& SynchronousActivity.Instance == null) {
 			changeFont();
 		} else {
@@ -102,8 +102,8 @@ class EPDView extends EpdRender {
 
 	private void synchronizeLCD() {
 		if (SynchronousActivity.Instance == null) {
-			FBReader.Instance.startActivity(
-				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
+			FBReaderActivity.Instance.startActivity(
+				new Intent(FBReaderActivity.Instance.getApplicationContext(), SynchronousActivity.class)
 					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag())
 			);
 		} else {
@@ -112,7 +112,7 @@ class EPDView extends EpdRender {
 	}
 
 	boolean rotateFlag() {
-		final FBReader fbreader = FBReader.Instance;
+		final FBReaderActivity fbreader = FBReaderActivity.Instance;
 		if (fbreader != null) {
 			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 		}

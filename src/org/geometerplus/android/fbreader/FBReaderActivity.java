@@ -38,6 +38,7 @@ import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.R;
 
+import org.geometerplus.fbreader.fbreader.FBReader;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
@@ -45,8 +46,8 @@ import org.geometerplus.fbreader.library.Author;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 
-public final class FBReader extends ZLAndroidActivity {
-	static FBReader Instance;
+public final class FBReaderActivity extends ZLAndroidActivity {
+	static FBReaderActivity Instance;
 
 	//private int myFullScreenFlag;
 	private boolean myReadMode;
@@ -403,8 +404,19 @@ public final class FBReader extends ZLAndroidActivity {
 
 	protected ZLApplication createApplication(String fileName) {
 		new SQLiteBooksDatabase();
-		String[] args = (fileName != null) ? new String[] { fileName } : new String[0];
-		return new org.geometerplus.fbreader.fbreader.FBReader(args);
+		final String[] args = (fileName != null) ? new String[] { fileName } : new String[0];
+
+		final FBReader fbReader = new FBReader(args);
+
+		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_BOOK_INFO, new BookInfoAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
+
+		return fbReader;
 	}
 
 	@Override
