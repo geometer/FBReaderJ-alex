@@ -50,10 +50,6 @@ public class ZLAndroidWidget extends View {
 		setDrawingCacheEnabled(false);
 	}
 
-	public ZLAndroidPaintContext getPaintContext() {
-		return ZLAndroidPaintContext.Instance();
-	}
-
 	private final Handler myRepaintFinishedHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -65,21 +61,21 @@ public class ZLAndroidWidget extends View {
 
 	public void setRotated(boolean rotated) {
 		myRotated = rotated;
-		final ZLView view = ZLApplication.Instance().getCurrentView();
+		/*final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view != null) {
 			final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
 			updatePaintContextSize(view, context);
-		}
+		}*/
 	}
 
-	private void updatePaintContextSize(ZLView view, ZLAndroidPaintContext context) {
+	/*private void updatePaintContextSize(ZLView view, ZLAndroidPaintContext context) {
 		final int scrollbarWidth = view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0;
 		if (myRotated) {
 			context.setSize(getHeight(), getWidth(), scrollbarWidth);
 		} else {
 			context.setSize(getWidth(), getHeight(), scrollbarWidth);
 		}
-	}
+	}*/
 
 	@Override
 	protected void onDraw(final Canvas canvas) {
@@ -111,7 +107,6 @@ public class ZLAndroidWidget extends View {
 			return;
 		}
 
-		final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
 		final Canvas canvas = new Canvas(myMainBitmap);
 
 		if (myRotated) {
@@ -127,10 +122,13 @@ public class ZLAndroidWidget extends View {
 			}*/
 		}
 
-		context.beginPaint(canvas);
-		updatePaintContextSize(view, context);
-		view.paint(ZLView.PAGE_CENTRAL);
-		context.endPaint();
+		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+			canvas,
+			myRotated ? getHeight() : getWidth(),
+			myRotated ? getWidth() : getHeight(),
+			view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
+		);
+		view.paint(context, ZLView.PAGE_CENTRAL);
 
 		if (myRotated) {
 			canvas.restore();

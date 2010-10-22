@@ -31,7 +31,6 @@ public final class FBView extends ZLTextView {
 	private FBReaderApp myReader;
 
 	FBView(FBReaderApp reader) {
-		super(ZLibrary.Instance().getPaintContext());
 		myReader = reader;
 	}
 
@@ -100,15 +99,15 @@ public final class FBView extends ZLTextView {
 			//myIsManualScrollingActive = true;
 //		} else {
 //			if (preferences.HorizontalOption.getValue()) {
-//				if (x <= Context.getWidth() / 3) {
+//				if (x <= myContext.getWidth() / 3) {
 //					doScrollPage(false);
-//				} else if (x >= Context.getWidth() * 2 / 3) {
+//				} else if (x >= myContext.getWidth() * 2 / 3) {
 //					doScrollPage(true);
 //				}
 //			} else {
-//				if (y <= Context.getHeight() / 3) {
+//				if (y <= myContext.getHeight() / 3) {
 //					doScrollPage(false);
-//				} else if (y >= Context.getHeight() * 2 / 3) {
+//				} else if (y >= myContext.getHeight() * 2 / 3) {
 //					doScrollPage(true);
 //				}
 //			}
@@ -173,12 +172,20 @@ public final class FBView extends ZLTextView {
 					}
 				}
 				if (doScroll) {
+<<<<<<< HEAD
 					final int h = Context.getHeight();
 					final int w = Context.getWidth();
 //					final int minDiff = horizontal ?
 //						((w > h) ? w / 4 : w / 3) :
 //						((h > w) ? h / 4 : h / 3);
 					final int minDiff = (w > h) ? w / 4 : w / 3;
+=======
+					final int h = myContext.getHeight();
+					final int w = myContext.getWidth();
+					final int minDiff = horizontal ?
+						((w > h) ? w / 4 : w / 3) :
+						((h > w) ? h / 4 : h / 3);
+>>>>>>> f02f50c... refactoring: ZLPaintContext static instance has gone
 					int viewPage = PAGE_CENTRAL;
 					if (Math.abs(diff) > minDiff) {
 						viewPage = (diff < 0) ? PAGE_RIGHT : PAGE_LEFT;
