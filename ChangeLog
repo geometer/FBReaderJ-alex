@@ -1,4 +1,4 @@
-===== 0.7.9 (??? ??, 2010) =====
+===== 0.7.9 (Oct 24, 2010) =====
 * List of styles has been fixed in the Options dialog
 * Monospace font has been included in the fonts list
 * Keypressings are handled in the synchronous mode
