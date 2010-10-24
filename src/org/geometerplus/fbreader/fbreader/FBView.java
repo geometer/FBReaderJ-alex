@@ -19,7 +19,6 @@
 
 package org.geometerplus.fbreader.fbreader;
 
-import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
@@ -45,7 +44,7 @@ public final class FBView extends ZLTextView {
 			scrollPage(forward, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 		}
 
-		ZLApplication.Instance().repaintView();
+		myReader.repaintView();
 	}
 
 	/*@Override
@@ -55,7 +54,7 @@ public final class FBView extends ZLTextView {
 
 	final void doScrollPage(boolean forward) {
 		scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
-		ZLApplication.Instance().repaintView();
+		myReader.repaintView();
 	}
 
 	void followHyperlink(ZLTextHyperlink hyperlink) {
@@ -64,7 +63,7 @@ public final class FBView extends ZLTextView {
 				ZLibrary.Instance().openInBrowser(hyperlink.Id);
 				break;
 			case FBHyperlinkType.INTERNAL:
-				((FBReaderApp)ZLApplication.Instance()).tryOpenFootnote(hyperlink.Id);
+				myReader.tryOpenFootnote(hyperlink.Id);
 				break;
 		}
 	}
@@ -86,7 +85,7 @@ public final class FBView extends ZLTextView {
 		final ZLTextHyperlink hyperlink = findHyperlink(x, y, 10);
 		if (hyperlink != null) {
 			selectHyperlink(hyperlink);
-			ZLApplication.Instance().repaintView();
+			myReader.repaintView();
 			followHyperlink(hyperlink);
 			return true;
 		}
@@ -193,9 +192,9 @@ public final class FBView extends ZLTextView {
 	@Override
 	public boolean onTrackballRotated(int diffX, int diffY) {
 		if (diffY > 0) {
-			ZLApplication.Instance().doAction(ActionCode.TRACKBALL_SCROLL_FORWARD);
+			myReader.doAction(ActionCode.TRACKBALL_SCROLL_FORWARD);
 		} else if (diffY < 0) {
-			ZLApplication.Instance().doAction(ActionCode.TRACKBALL_SCROLL_BACKWARD);
+			myReader.doAction(ActionCode.TRACKBALL_SCROLL_BACKWARD);
 		}
 		return true;
 	}
@@ -248,6 +247,7 @@ public final class FBView extends ZLTextView {
 		return myReader.getColorProfile().HighlightingOption.getValue();
 	}
 
+	@Override
 	protected boolean isSelectionEnabled() {
 		return myReader.SelectionEnabledOption.getValue();
 	}
