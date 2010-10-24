@@ -87,11 +87,6 @@ public final class FBReader extends ZLAndroidActivity {
 	public void onCreate(Bundle icicle) {
 		EPDView.Instance().setVdsActive(true);
 		super.onCreate(icicle);
-		/*
-		android.telephony.TelephonyManager tele =
-			(android.telephony.TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-		System.err.println(tele.getNetworkOperator());
-		*/
 		Instance = this;
 		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		myFullScreenFlag =
@@ -153,6 +148,17 @@ public final class FBReader extends ZLAndroidActivity {
 
 		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
 		bookNoCover.setText(Resource.getResource("noCover").getValue());
+
+		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
+		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_BOOK_INFO, new BookInfoAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
+
+		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
 	}
 
 	private static String makePositionText(int page, int pagesNumber) {
@@ -231,6 +237,19 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel.ControlPanel.hide(false);
 			myPanel.ControlPanel = null;
 		}
+
+		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
+
+		fbReader.removeAction(ActionCode.SHOW_LIBRARY);
+		fbReader.removeAction(ActionCode.SHOW_PREFERENCES);
+		fbReader.removeAction(ActionCode.SHOW_BOOK_INFO);
+		fbReader.removeAction(ActionCode.SHOW_CONTENTS);
+		fbReader.removeAction(ActionCode.SHOW_BOOKMARKS);
+		fbReader.removeAction(ActionCode.SHOW_NETWORK_LIBRARY);
+		fbReader.removeAction(ActionCode.SHOW_NETWORK_BROWSER);
+
+		fbReader.removeAction(ActionCode.SEARCH);
+
 		super.onStop();
 	}
 
@@ -405,20 +424,7 @@ public final class FBReader extends ZLAndroidActivity {
 	protected ZLApplication createApplication(String fileName) {
 		new SQLiteBooksDatabase();
 		final String[] args = (fileName != null) ? new String[] { fileName } : new String[0];
-
-		final FBReaderApp fbReader = new FBReaderApp(args);
-
-		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_BOOK_INFO, new BookInfoAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
-
-		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
-
-		return fbReader;
+		return new FBReaderApp(args);
 	}
 
 	@Override
