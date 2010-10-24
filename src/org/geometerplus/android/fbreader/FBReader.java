@@ -237,7 +237,12 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel.ControlPanel.hide(false);
 			myPanel.ControlPanel = null;
 		}
+		super.onStop();
+	}
 
+
+	@Override
+	public void onDestroy() {
 		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
 
 		fbReader.removeAction(ActionCode.SHOW_LIBRARY);
@@ -250,7 +255,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 		fbReader.removeAction(ActionCode.SEARCH);
 
-		super.onStop();
+		super.onDestroy();
 	}
 
 	private final Handler myNotifyApplicationHandler = new Handler() {
