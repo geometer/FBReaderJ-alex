@@ -20,6 +20,7 @@
 package org.geometerplus.zlibrary.ui.android.library;
 
 import java.io.File;
+import java.lang.reflect.*;
 
 import android.net.Uri;
 import android.app.Activity;
@@ -70,6 +71,16 @@ public abstract class ZLAndroidActivity extends Activity {
 		}
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		try {
+			final WindowManager.LayoutParams attrs = getWindow().getAttributes();
+			final Class<?> cls = attrs.getClass();
+			final Field fld = cls.getField("buttonBrightness");
+			if (fld != null && "float".equals(fld.getType().toString())) {
+				fld.setFloat(attrs, 0);
+			}
+		} catch (NoSuchFieldException e) {
+		} catch (IllegalAccessException e) {
+		}
 		//getWindow().getAttributes().buttonBrightness = 0;
 		setContentView(R.layout.main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
