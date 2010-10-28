@@ -15,7 +15,7 @@
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
-				<data android:host="*" android:scheme="file" />
+				<data android:host="" android:scheme="file" />
 				<data android:pathPattern=".*\\.epub" />
 				<data android:pathPattern=".*\\.oeb" />
 				<data android:pathPattern=".*\\.fb2" />
@@ -26,7 +26,7 @@
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
-				<data android:host="*" android:scheme="file" android:mimeType="text/plain" />
+				<data android:host="" android:scheme="file" android:mimeType="text/plain" />
 				<data android:pathPattern=".*\\.epub" />
 				<data android:pathPattern=".*\\.oeb" />
 				<data android:pathPattern=".*\\.fb2" />
@@ -37,14 +37,13 @@
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="*" android:scheme="content" />
-				<data android:pathPattern=".*\\.fb2" />
+				<data android:scheme="content" android:pathPattern=".*\\.fb2" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="*" android:scheme="file" />
+				<data android:host="" android:scheme="file" />
 				<data android:mimeType="application/epub+zip" />
 				<data android:mimeType="application/x-pilot-prc" />
 				<data android:mimeType="application/x-mobipocket-ebook" />

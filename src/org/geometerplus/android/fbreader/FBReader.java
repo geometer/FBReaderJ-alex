@@ -240,24 +240,6 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onStop();
 	}
 
-
-	@Override
-	public void onDestroy() {
-		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
-
-		fbReader.removeAction(ActionCode.SHOW_LIBRARY);
-		fbReader.removeAction(ActionCode.SHOW_PREFERENCES);
-		fbReader.removeAction(ActionCode.SHOW_BOOK_INFO);
-		fbReader.removeAction(ActionCode.SHOW_CONTENTS);
-		fbReader.removeAction(ActionCode.SHOW_BOOKMARKS);
-		fbReader.removeAction(ActionCode.SHOW_NETWORK_LIBRARY);
-		fbReader.removeAction(ActionCode.SHOW_NETWORK_BROWSER);
-
-		fbReader.removeAction(ActionCode.SEARCH);
-
-		super.onDestroy();
-	}
-
 	private final Handler myNotifyApplicationHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
