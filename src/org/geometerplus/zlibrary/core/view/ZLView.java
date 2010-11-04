@@ -26,6 +26,10 @@ abstract public class ZLView {
 		return myContext;
 	}
 
+	public final void resetContext(ZLPaintContext context) {
+		myContext = context;
+	}
+
 	public static final int PAGE_CENTRAL = 0;
 	public static final int PAGE_LEFT = 1;
 	public static final int PAGE_RIGHT = 2;

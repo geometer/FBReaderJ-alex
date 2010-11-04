@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 
+import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 
@@ -61,21 +62,20 @@ public class ZLAndroidWidget extends View {
 
 	public void setRotated(boolean rotated) {
 		myRotated = rotated;
-		/*final ZLView view = ZLApplication.Instance().getCurrentView();
+		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view != null) {
-			final ZLAndroidPaintContext context = ZLAndroidPaintContext.Instance();
-			updatePaintContextSize(view, context);
-		}*/
+			view.resetContext(createContext(view, new Canvas()));
+		}
 	}
 
-	/*private void updatePaintContextSize(ZLView view, ZLAndroidPaintContext context) {
-		final int scrollbarWidth = view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0;
-		if (myRotated) {
-			context.setSize(getHeight(), getWidth(), scrollbarWidth);
-		} else {
-			context.setSize(getWidth(), getHeight(), scrollbarWidth);
-		}
-	}*/
+	private final ZLPaintContext createContext(ZLView view, Canvas canvas) {
+		return new ZLAndroidPaintContext(
+			canvas,
+			myRotated ? getHeight() : getWidth(),
+			myRotated ? getWidth() : getHeight(),
+			view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
+		);
+	}
 
 	@Override
 	protected void onDraw(final Canvas canvas) {
@@ -122,12 +122,7 @@ public class ZLAndroidWidget extends View {
 			}*/
 		}
 
-		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
-			canvas,
-			myRotated ? getHeight() : getWidth(),
-			myRotated ? getWidth() : getHeight(),
-			view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
-		);
+		final ZLPaintContext context = createContext(view, canvas); 
 		view.paint(context, ZLView.PAGE_CENTRAL);
 
 		if (myRotated) {
