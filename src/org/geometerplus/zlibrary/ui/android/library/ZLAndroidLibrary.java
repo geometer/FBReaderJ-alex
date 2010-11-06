@@ -26,6 +26,7 @@ import android.content.res.Resources;
 import android.content.res.AssetFileDescriptor;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
@@ -123,6 +124,16 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	@Override
+	public int getDisplayDPI() {
+		if (myActivity == null) {
+			return 0;
+		}
+		DisplayMetrics metrics = new DisplayMetrics();
+		myActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return (int)(160 * metrics.density);
 	}
 
 	private final class AndroidAssetsFile extends ZLResourceFile {
