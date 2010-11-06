@@ -22,6 +22,8 @@ package org.geometerplus.android.fbreader.preferences;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.core.dialogs.ZLOptionsDialog;
+import org.geometerplus.fbreader.optionsDialog.OptionsDialog;
 
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -88,20 +90,43 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
 		appearanceScreen.setSummary(appearanceScreen.Resource.getResource("summary").getValue());
 		final Category appearanceCategory = appearanceScreen.createCategory(null);
+		final ZLOptionsDialog dlg = new OptionsDialog(fbReader).getDialog();
 		final Screen marginsScreen = appearanceCategory.createPreferenceScreen("margins");
 		final Screen formatScreen = appearanceCategory.createPreferenceScreen("format");
 		final Screen stylesScreen = appearanceCategory.createPreferenceScreen("styles");
 		final Screen colorsScreen = appearanceCategory.createPreferenceScreen("colors");
-		/*
-		appearanceScreen.setOnPreferenceClickListener(
+		marginsScreen.setOnPreferenceClickListener(
 				new PreferenceScreen.OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
-						fbReader.showOptionsDialog();
+						dlg.run(0);
 						return true;
 					}
 				}
 		);
-		*/
+		formatScreen.setOnPreferenceClickListener(
+				new PreferenceScreen.OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						dlg.run(1);
+						return true;
+					}
+				}
+		);
+		stylesScreen.setOnPreferenceClickListener(
+				new PreferenceScreen.OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						dlg.run(2);
+						return true;
+					}
+				}
+		);
+		colorsScreen.setOnPreferenceClickListener(
+				new PreferenceScreen.OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						dlg.run(3);
+						return true;
+					}
+				}
+		);
 
 		/*
 		String[] scrollBarTypes = {"hide", "show", "showAsProgress"};

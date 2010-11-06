@@ -197,6 +197,14 @@
 				</node>
 				<node name="appearanceSettings" value="Appearance">
 					<node name="summary" value="Text displaying settings"/>
+					<node name="margins" value="Margins">
+					</node>
+					<node name="format" value="Format">
+					</node>
+					<node name="styles" value="Styles">
+					</node>
+					<node name="colors" value="Colors">
+					</node>
 				</node>
 			</node>
 			<node name="Scrolling" value="Scrolling">
