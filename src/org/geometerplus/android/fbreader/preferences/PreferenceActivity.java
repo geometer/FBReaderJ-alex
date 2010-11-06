@@ -86,7 +86,13 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 
 		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
-		appearanceScreen.setSummary( appearanceScreen.Resource.getResource("summary").getValue() );
+		appearanceScreen.setSummary(appearanceScreen.Resource.getResource("summary").getValue());
+		final Category appearanceCategory = appearanceScreen.createCategory(null);
+		final Screen marginsScreen = appearanceCategory.createPreferenceScreen("margins");
+		final Screen formatScreen = appearanceCategory.createPreferenceScreen("format");
+		final Screen stylesScreen = appearanceCategory.createPreferenceScreen("styles");
+		final Screen colorsScreen = appearanceCategory.createPreferenceScreen("colors");
+		/*
 		appearanceScreen.setOnPreferenceClickListener(
 				new PreferenceScreen.OnPreferenceClickListener() {
 					public boolean onPreferenceClick(Preference preference) {
@@ -95,6 +101,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 					}
 				}
 		);
+		*/
 
 		/*
 		String[] scrollBarTypes = {"hide", "show", "showAsProgress"};
