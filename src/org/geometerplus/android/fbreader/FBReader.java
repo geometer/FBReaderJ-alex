@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,8 @@ import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 
 public final class FBReader extends ZLAndroidActivity {
+	final static int REPAINT_CODE = 1;
+
 	static FBReader Instance;
 
 	//private int myFullScreenFlag;
@@ -151,7 +154,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
 		fbReader.addAction(ActionCode.SHOW_LIBRARY, new ShowLibraryAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new PreferencesAction(this, fbReader));
+		fbReader.addAction(ActionCode.SHOW_PREFERENCES, new ShowPreferencesAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_BOOK_INFO, new BookInfoAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_CONTENTS, new ShowTOCAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, fbReader));
@@ -254,6 +257,18 @@ public final class FBReader extends ZLAndroidActivity {
 		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case REPAINT_CODE:
+			{
+				final FBReaderApp fbreader = (FBReaderApp)ZLApplication.Instance();
+				fbreader.clearTextCaches();
+				fbreader.repaintView();
+				break;
+			}
+		}
+	}
 
 	private int myCoverWidth;
 	private int myCoverHeight;
