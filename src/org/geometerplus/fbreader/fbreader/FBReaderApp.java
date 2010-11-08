@@ -50,7 +50,7 @@ public final class FBReaderApp extends ZLApplication {
 		new ZLIntegerRangeOption("Options", "BottomMargin", 0, 30, 4);
 
 	/*public final ZLIntegerRangeOption ScrollbarTypeOption =
-		new ZLIntegerRangeOption("Options", "ScrollbarType", 0, 2, FBView.SCROLLBAR_SHOW_AS_PROGRESS);*/
+		new ZLIntegerRangeOption("Options", "ScrollbarType", 0, 3, FBView.SCROLLBAR_SHOW_AS_FOOTER);*/
 
 	final ZLBooleanOption SelectionEnabledOption =
 		new ZLBooleanOption("Options", "IsSelectionEnabled", true);
