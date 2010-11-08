@@ -114,6 +114,11 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		return new AndroidAssetsFile(path);
 	}
 
+	@Override
+	public ZLResourceFile createResourceFile(ZLResourceFile parent, String name) {
+		return new AndroidAssetsFile((AndroidAssetsFile)parent, name);
+	}
+
 	public ZLImage createImage(int drawableId) {
 		return new ZLAndroidResourceBasedImageData(myApplication.getResources(), drawableId);
 	}
@@ -138,8 +143,21 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	}
 
 	private final class AndroidAssetsFile extends ZLResourceFile {
+		private final AndroidAssetsFile myParent;
+
+		AndroidAssetsFile(AndroidAssetsFile parent, String name) {
+			super(parent.getPath().length() == 0 ? name : parent.getPath() + '/' + name);
+			myParent = parent;
+		}
+
 		AndroidAssetsFile(String path) {
 			super(path);
+			if (path.length() == 0) {
+				myParent = null;
+			} else {
+				final int index = path.lastIndexOf('/');
+				myParent = new AndroidAssetsFile(index >= 0 ? path.substring(0, path.lastIndexOf('/')) : "");
+			}
 		}
 
 		@Override
@@ -149,7 +167,7 @@ public final class ZLAndroidLibrary extends ZLibrary {
 				if (names != null && names.length != 0) {
 					ArrayList<ZLFile> files = new ArrayList<ZLFile>(names.length);
 					for (String n : names) {
-						files.add(new AndroidAssetsFile(getPath() + "/" + n));
+						files.add(new AndroidAssetsFile(this, n));
 					}
 					return files;
 				}
@@ -195,6 +213,11 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		@Override
 		public InputStream getInputStream() throws IOException {
 			return myApplication.getAssets().open(getPath());
+		}
+
+		@Override
+		public ZLFile getParent() {
+			return myParent;
 		}
 	}
 }
