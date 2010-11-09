@@ -72,17 +72,13 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	protected void init() {
 		final Category libraryCategory = createCategory("Library");
 		libraryCategory.addPreference(new ZLStringOptionPreference(
-			this,
-			Paths.BooksDirectoryOption,
-			libraryCategory.Resource,
-			"path")
-		);
+			this, Paths.BooksDirectoryOption,
+			libraryCategory.Resource, "path"
+		));
 		libraryCategory.addPreference(new ZLBooleanPreference(
-			this,
-			ZLAndroidApplication.Instance().NetworkLibraryEnabled,
-			libraryCategory.Resource,
-			"networkLibrary")
-		);
+			this, ZLAndroidApplication.Instance().NetworkLibraryEnabled,
+			libraryCategory.Resource, "networkLibrary"
+		));
 
 		final Category lookNFeelCategory = createCategory("LookNFeel");
 		//lookNFeelCategory.addOption(ZLAndroidApplication.Instance().AutoOrientationOption, "autoOrientation");
@@ -96,20 +92,20 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final Category marginsCategory = marginsScreen.createCategory(null);
 		marginsCategory.addPreference(new ZLIntegerRangePreference(
 			this, marginsCategory.Resource.getResource("left"),
-			fbReader.LeftMarginOption)
-		);
+			fbReader.LeftMarginOption
+		));
 		marginsCategory.addPreference(new ZLIntegerRangePreference(
 			this, marginsCategory.Resource.getResource("right"),
-			fbReader.RightMarginOption)
-		);
+			fbReader.RightMarginOption
+		));
 		marginsCategory.addPreference(new ZLIntegerRangePreference(
 			this, marginsCategory.Resource.getResource("top"),
-			fbReader.TopMarginOption)
-		);
+			fbReader.TopMarginOption
+		));
 		marginsCategory.addPreference(new ZLIntegerRangePreference(
 			this, marginsCategory.Resource.getResource("bottom"),
-			fbReader.BottomMarginOption)
-		);
+			fbReader.BottomMarginOption
+		));
 
 		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
 		final Category appearanceCategory = appearanceScreen.createCategory(null);
@@ -117,8 +113,24 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
 		appearanceCategory.addPreference(new FontOption(
 			this, appearanceCategory.Resource, "font",
-			baseStyle.FontFamilyOption)
-		);
+			baseStyle.FontFamilyOption
+		));
+		appearanceCategory.addPreference(new ZLIntegerRangePreference(
+			this, appearanceCategory.Resource.getResource("fontSize"),
+			baseStyle.FontSizeOption
+		));
+		appearanceCategory.addPreference(new ZLBooleanPreference(
+			this, baseStyle.BoldOption,
+			appearanceCategory.Resource, "bold"
+		));
+		appearanceCategory.addPreference(new ZLBooleanPreference(
+			this, baseStyle.ItalicOption,
+			appearanceCategory.Resource, "italic"
+		));
+		appearanceCategory.addPreference(new ZLBooleanPreference(
+			this, baseStyle.AutoHyphenationOption,
+			appearanceCategory.Resource, "autoHyphenations"
+		));
 
 		final ZLOptionsDialog dlg = new OptionsDialog(fbReader).getDialog();
 		final Screen formatScreen = appearanceCategory.createPreferenceScreen("format");
@@ -156,8 +168,8 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		String[] scrollBarTypes = {"hide", "show", "showAsProgress", "showAsFooter"};
 		statusLineCategory.addPreference(new ZLChoicePreference(
 			this, statusLineCategory.Resource, "scrollbarType",
-			fbReader.ScrollbarTypeOption, scrollBarTypes)
-		);
+			fbReader.ScrollbarTypeOption, scrollBarTypes
+		));
 		*/
 
 		/*
