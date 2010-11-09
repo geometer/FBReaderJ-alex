@@ -92,18 +92,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 
-		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
-		appearanceScreen.setSummary(appearanceScreen.Resource.getResource("summary").getValue());
-		final Category appearanceCategory = appearanceScreen.createCategory(null);
-		final ZLTextStyleCollection collection = ZLTextStyleCollection.Instance();
-		final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
-		appearanceCategory.addPreference(new FontOption(
-			this, appearanceCategory.Resource, "font",
-			baseStyle.FontFamilyOption)
-		);
-
-		final ZLOptionsDialog dlg = new OptionsDialog(fbReader).getDialog();
-		final Screen marginsScreen = appearanceCategory.createPreferenceScreen("margins");
+		final Screen marginsScreen = lookNFeelCategory.createPreferenceScreen("margins");
 		final Category marginsCategory = marginsScreen.createCategory(null);
 		marginsCategory.addPreference(new ZLIntegerRangePreference(
 			this, marginsCategory.Resource.getResource("left"),
@@ -121,6 +110,17 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			this, marginsCategory.Resource.getResource("bottom"),
 			fbReader.BottomMarginOption)
 		);
+
+		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
+		final Category appearanceCategory = appearanceScreen.createCategory(null);
+		final ZLTextStyleCollection collection = ZLTextStyleCollection.Instance();
+		final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
+		appearanceCategory.addPreference(new FontOption(
+			this, appearanceCategory.Resource, "font",
+			baseStyle.FontFamilyOption)
+		);
+
+		final ZLOptionsDialog dlg = new OptionsDialog(fbReader).getDialog();
 		final Screen formatScreen = appearanceCategory.createPreferenceScreen("format");
 		final Screen stylesScreen = appearanceCategory.createPreferenceScreen("styles");
 		final Screen colorsScreen = appearanceCategory.createPreferenceScreen("colors");
@@ -150,9 +150,12 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		);
 
 		/*
-		String[] scrollBarTypes = {"hide", "show", "showAsProgress"};
-		lookNFeelCategory.addPreference(new ZLChoicePreference(
-			this, lookNFeelCategory.Resource, "scrollbarType",
+		final Screen statusLineScreen = lookNFeelCategory.createPreferenceScreen("scrollBar");
+		final Category statusLineCategory = statusLineScreen.createCategory(null);
+
+		String[] scrollBarTypes = {"hide", "show", "showAsProgress", "showAsFooter"};
+		statusLineCategory.addPreference(new ZLChoicePreference(
+			this, statusLineCategory.Resource, "scrollbarType",
 			fbReader.ScrollbarTypeOption, scrollBarTypes)
 		);
 		*/
