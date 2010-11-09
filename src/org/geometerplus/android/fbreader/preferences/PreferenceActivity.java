@@ -19,14 +19,19 @@
 
 package org.geometerplus.android.fbreader.preferences;
 
-import org.geometerplus.fbreader.Paths;
-import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
-import org.geometerplus.zlibrary.core.dialogs.ZLOptionsDialog;
-import org.geometerplus.fbreader.optionsDialog.OptionsDialog;
-
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+
+import org.geometerplus.zlibrary.core.dialogs.ZLOptionsDialog;
+
+import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+import org.geometerplus.zlibrary.text.view.style.ZLTextBaseStyle;
+
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+
+import org.geometerplus.fbreader.optionsDialog.OptionsDialog;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.Paths;
 
 public class PreferenceActivity extends ZLPreferenceActivity {
 	public PreferenceActivity() {
@@ -90,6 +95,13 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final Screen appearanceScreen = lookNFeelCategory.createPreferenceScreen("appearanceSettings");
 		appearanceScreen.setSummary(appearanceScreen.Resource.getResource("summary").getValue());
 		final Category appearanceCategory = appearanceScreen.createCategory(null);
+		final ZLTextStyleCollection collection = ZLTextStyleCollection.Instance();
+		final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
+		appearanceCategory.addPreference(new FontOption(
+			this, appearanceCategory.Resource, "font",
+			baseStyle.FontFamilyOption)
+		);
+
 		final ZLOptionsDialog dlg = new OptionsDialog(fbReader).getDialog();
 		final Screen marginsScreen = appearanceCategory.createPreferenceScreen("margins");
 		final Category marginsCategory = marginsScreen.createCategory(null);

@@ -201,6 +201,7 @@
 				</node>
 				<node name="appearanceSettings" value="Apparence">
 					<node name="summary" value="Paramètres d'affichage du texte"/>
+					<node name="font" value="Font family" toBeTranslated="true"/>
 					<node name="margins" value="Marge">
 						<node name="left" value="Marge de gauche"/>
 						<node name="right" value="Marge de droite"/>
