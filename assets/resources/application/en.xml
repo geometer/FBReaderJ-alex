@@ -83,6 +83,7 @@
 			<node name="refillAccount" value="Refill account"/>
 			<node name="addCustomCatalog" value="Add catalog"/>
 			<node name="refreshCatalogsList" value="Refresh catalogs"/>
+			<node name="languages" value="Language filter"/>
 		</node>
 		<node name="browser" value="Browser" />
 		<node name="browserSummary" value="Open built-in browser" />
