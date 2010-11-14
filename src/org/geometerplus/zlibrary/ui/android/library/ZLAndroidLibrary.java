@@ -24,8 +24,8 @@ import java.util.*;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.res.AssetFileDescriptor;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.content.Intent;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
@@ -139,8 +139,12 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		return new AndroidAssetsFile((AndroidAssetsFile)parent, name);
 	}
 
+	public static ZLImage createImage(Context context, int drawableId) {
+		return new ZLAndroidResourceBasedImageData(context.getResources(), drawableId);
+	}
+
 	public ZLImage createImage(int drawableId) {
-		return new ZLAndroidResourceBasedImageData(myApplication.getResources(), drawableId);
+		return createImage(myApplication, drawableId);
 	}
 
 	@Override
