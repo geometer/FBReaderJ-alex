@@ -179,11 +179,11 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		@Override
 		public boolean isDirectory() {
 			try {
-				AssetFileDescriptor descriptor = myApplication.getAssets().openFd(getPath());
-				if (descriptor == null) {
+				InputStream stream = myApplication.getAssets().open(getPath());
+				if (stream == null) {
 					return true;
 				}
-				descriptor.close();
+				stream.close();
 				return false;
 			} catch (IOException e) {
 				return true;
@@ -193,17 +193,19 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		@Override
 		public boolean exists() {
 			try {
-				AssetFileDescriptor descriptor = myApplication.getAssets().openFd(getPath());
-				if (descriptor != null) {
-					descriptor.close();
+				InputStream stream = myApplication.getAssets().open(getPath());
+				if (stream != null) {
+					stream.close();
 					// file exists
 					return true;
 				}
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			try {
 				String[] names = myApplication.getAssets().list(getPath());
 				if (names != null && names.length != 0) {
+					// directory exists
 					return true;
 				}
 			} catch (IOException e) {
@@ -214,6 +216,7 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		@Override
 		public long size() {
 			try {
+				// TODO: for some files (archives, crt) descriptor cannot be opened
 				AssetFileDescriptor descriptor = myApplication.getAssets().openFd(getPath());
 				if (descriptor == null) {
 					return 0;
