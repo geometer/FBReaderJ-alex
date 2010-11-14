@@ -128,7 +128,6 @@
 		</node>
 	</node>
 	<node name="menu">
-		<node name="preferences-old" value="Paramètres avancés"/>
 		<node name="preferences" value="Paramètres"/>
 		<node name="bookInfo" value="Information sur le livre"/>
 		<node name="library" value="Bibliothèque"/>
@@ -199,7 +198,9 @@
 			</node>
 			<node name="text" value="Texte">
 				<node name="summary" value="Polices, césures, etc."/>
-				<node name="font" value="Famille de police"/>
+				<node name="font" value="Famille de police">
+					<node name="unchanged" value="&lt;inchangé&gt;"/>
+				</node>
 				<node name="fontSize" value="Taille de police"/>
 				<node name="fontStyle" value="Style de police">
 					<node name="regular" value="Normale"/>
@@ -338,9 +339,6 @@
 				</node>
 				<node name="Styles" value="Styles">
 					<node name="optionsFor" value="Options pour"/>
-					<node name="fontFamily" value="Famille de police">
-						<node name="unchanged" value="&lt;inchangé&gt;"/>
-					</node>
 					<node name="fontSize" value="Taille de police"/>
 					<node name="fontSizeDifference" value="Différence de taille"/>
 					<node name="bold" value="Gras"/>

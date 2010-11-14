@@ -113,7 +113,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
 		textCategory.addPreference(new FontOption(
 			this, textCategory.Resource, "font",
-			baseStyle.FontFamilyOption
+			baseStyle.FontFamilyOption, false
 		));
 		textCategory.addPreference(new ZLIntegerRangePreference(
 			this, textCategory.Resource.getResource("fontSize"),
@@ -179,9 +179,15 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		};
 		for (int i = 0; i < styles.length; ++i) {
 			final ZLTextStyleDecoration decoration = collection.getDecoration(styles[i]);
-			if (decoration != null) {
-				final Screen formatScreen = moreStylesCategory.createPreferenceScreen(decoration.getName());
+			if (decoration == null) {
+				continue;
 			}
+			final Screen formatScreen = moreStylesCategory.createPreferenceScreen(decoration.getName());
+			final Category formatCategory = formatScreen.createCategory(null);
+			formatCategory.addPreference(new FontOption(
+				this, textCategory.Resource, "font",
+				decoration.FontFamilyOption, true
+			));
 		}
 
 		final Screen formatScreen = moreStylesCategory.createPreferenceScreen("format");

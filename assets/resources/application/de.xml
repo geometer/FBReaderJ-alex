@@ -126,7 +126,6 @@
 		</node>
 	</node>
 	<node name="menu">
-		<node name="preferences-old" value="Einstellungen (mehr)"/>
 		<node name="preferences" value="Einstellungen"/>
 		<node name="bookInfo" value="Buchinformation"/>
 		<node name="library" value="Bibliothek"/>
@@ -197,7 +196,9 @@
 			</node>
 			<node name="text" value="Text Darstellung">
 				<node name="summary" value="Zeichensatz, Silbentrennung, etc."/>
-				<node name="font" value="Schriftart"/>
+				<node name="font" value="Schriftart">
+					<node name="unchanged" value="&lt;unverändert&gt;"/>
+				</node>
 				<node name="fontSize" value="Schriftgröße"/>
 				<node name="fontStyle" value="Schriftschnitt">
 					<node name="regular" value="Normal"/>
@@ -336,9 +337,6 @@
 				</node>
 				<node name="Styles" value="Schriftarten">
 					<node name="optionsFor" value="Optionen für"/>
-					<node name="fontFamily" value="Schriftfamilie">
-						<node name="unchanged" value="&lt;unverändert&gt;"/>
-					</node>
 					<node name="fontSize" value="Größe"/>
 					<node name="fontSizeDifference" value="Größenunterschied"/>
 					<node name="bold" value="Fett"/>
