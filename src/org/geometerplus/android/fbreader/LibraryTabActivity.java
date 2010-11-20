@@ -71,7 +71,7 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 	private void createDefaultTabs() {
 		new LibraryAdapter(createTab(TAG_BY_AUTHOR, R.id.by_author, R.drawable.ic_tab_library_author), myLibrary.byAuthor(), Type.TREE);
 		new LibraryAdapter(createTab(TAG_BY_TAG, R.id.by_tag, R.drawable.ic_tab_library_tag), myLibrary.byTag(), Type.TREE);
-		new LibraryAdapter(createTab(TAG_RECENT, R.id.recent, R.drawable.ic_tab_library_recent), myLibrary.recentBooks(), Type.TREE);
+		new LibraryAdapter(createTab(TAG_RECENT, R.id.recent, R.drawable.ic_tab_library_recent), myLibrary.recentBooks(), Type.FLAT);
 		findViewById(R.id.search_results).setVisibility(View.GONE);
 	}
 

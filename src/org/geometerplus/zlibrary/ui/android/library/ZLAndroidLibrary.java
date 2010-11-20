@@ -139,12 +139,8 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		return new AndroidAssetsFile((AndroidAssetsFile)parent, name);
 	}
 
-	public static ZLImage createImage(Context context, int drawableId) {
-		return new ZLAndroidResourceBasedImageData(context.getResources(), drawableId);
-	}
-
 	public ZLImage createImage(int drawableId) {
-		return createImage(myApplication, drawableId);
+		return new ZLAndroidResourceBasedImageData(myApplication.getResources(), drawableId);
 	}
 
 	@Override
