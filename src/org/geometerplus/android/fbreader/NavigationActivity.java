@@ -199,7 +199,7 @@ public class NavigationActivity extends Activity {
 				bookAuthors.setText(authors.toString());
 
 				Bitmap coverBitmap = null;
-				final FormatPlugin plugin = PluginCollection.instance().getPlugin(myViewBook.File);
+				final FormatPlugin plugin = PluginCollection.Instance().getPlugin(myViewBook.File);
 				if (plugin != null) {
 					final ZLImage image = plugin.readCover(myViewBook);
 					if (image != null) {

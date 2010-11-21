@@ -24,9 +24,10 @@ import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
+import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 import org.geometerplus.fbreader.network.*;
 
-public class BrowserItemTree extends NetworkTree {
+public class BrowserItemTree extends NetworkTree implements ZLAndroidTree {
 
 	public BrowserItemTree() {
 		super(1);
@@ -42,9 +43,8 @@ public class BrowserItemTree extends NetworkTree {
 		return ZLResource.resource("networkView").getResource("browserSummary").getValue();
 	}
 
-	@Override
-	protected ZLImage createCover() {
-		return ((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).createImage(R.drawable.ic_list_browser);
+	public int getCoverResourceId() {
+		return R.drawable.ic_list_browser;
 	}
 
 	@Override

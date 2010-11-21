@@ -187,7 +187,7 @@ public class BookStatusActivity extends Activity {
 		final int maxWidth = maxHeight * 3 / 4;
 
 		Bitmap coverBitmap = null;
-		final FormatPlugin plugin = PluginCollection.instance().getPlugin(book.File);
+		final FormatPlugin plugin = PluginCollection.Instance().getPlugin(book.File);
 		if (plugin != null) {
 			final ZLImage image = plugin.readCover(book);
 			if (image != null) {
