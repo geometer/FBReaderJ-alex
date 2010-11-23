@@ -141,7 +141,8 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		String[] scrollBarTypes = {"hide", "show", "showAsProgress"};
 		lookNFeelCategory.addPreference(new ZLChoicePreference(
 			this, lookNFeelCategory.Resource, "scrollbarType",
-			fbReader.ScrollbarTypeOption, scrollBarTypes));
+			fbReader.ScrollbarTypeOption, scrollBarTypes)
+		);
 		*/
 
 		/*
