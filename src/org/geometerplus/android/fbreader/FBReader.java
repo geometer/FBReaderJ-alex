@@ -243,6 +243,14 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onStop();
 	}
 
+	protected ZLApplication createApplication(String fileName) {
+		if (SQLiteBooksDatabase.Instance() == null) {
+			new SQLiteBooksDatabase(this, "READER");
+		}
+		return new FBReaderApp(fileName);
+	}
+
+
 	private final Handler myNotifyApplicationHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
@@ -421,13 +429,6 @@ public final class FBReader extends ZLAndroidActivity {
 				myPanel.ControlPanel.hide(false);
 			}
 		}
-	}
-
-	protected ZLApplication createApplication(String fileName) {
-		if (SQLiteBooksDatabase.Instance() == null) {
-			new SQLiteBooksDatabase("READER");
-		}
-		return new FBReaderApp(fileName);
 	}
 
 	@Override
