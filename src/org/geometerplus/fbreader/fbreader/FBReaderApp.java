@@ -73,6 +73,7 @@ public final class FBReaderApp extends ZLApplication {
 
 		addAction(ActionCode.INCREASE_FONT, new ChangeFontSizeAction(this, +2));
 		addAction(ActionCode.DECREASE_FONT, new ChangeFontSizeAction(this, -2));
+		addAction(ActionCode.ROTATE, new RotateAction(this));
 
 		addAction(ActionCode.FIND_NEXT, new FindNextAction(this));
 		addAction(ActionCode.FIND_PREVIOUS, new FindPreviousAction(this));
@@ -88,8 +89,6 @@ public final class FBReaderApp extends ZLApplication {
 
 		addAction(ActionCode.SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(this, ColorProfile.DAY));
 		addAction(ActionCode.SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(this, ColorProfile.NIGHT));
-
-		addAction(ActionCode.ROTATE, new RotateAction(this));
 
 		BookTextView = new FBView(this);
 		FootnoteView = new FBView(this);
@@ -112,7 +111,7 @@ public final class FBReaderApp extends ZLApplication {
 			}
 		});
 	}
-	
+
 	public void openBook(final Book book, final Bookmark bookmark) {
 		ZLDialogManager.Instance().wait("loadingBook", new Runnable() {
 			public void run() {
@@ -167,7 +166,7 @@ public final class FBReaderApp extends ZLApplication {
 		BookTextView.clearCaches();
 		FootnoteView.clearCaches();
 	}
-	
+
 	void openBookInternal(Book book, Bookmark bookmark) {
 		if (book != null) {
 			onViewChanged();
@@ -210,11 +209,11 @@ public final class FBReaderApp extends ZLApplication {
 		}
 		repaintView();
 	}
-	
+
 	public void showBookTextView() {
 		setView(BookTextView);
 	}
-	
+
 	private Book createBookForFile(ZLFile file) {
 		if (file == null) {
 			return null;
