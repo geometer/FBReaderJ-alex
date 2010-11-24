@@ -37,7 +37,7 @@ public final class FBReaderApp extends ZLApplication {
 	public final ZLStringOption BookmarkSearchPatternOption =
 		new ZLStringOption("BookmarkSearch", "Pattern", "");
 
-	public final ZLBooleanOption UseSeparateBindingsOption = 
+	public final ZLBooleanOption UseSeparateBindingsOption =
 		new ZLBooleanOption("KeysOptions", "UseSeparateBindings", false);
 
 	public final ZLIntegerRangeOption LeftMarginOption =
@@ -100,7 +100,7 @@ public final class FBReaderApp extends ZLApplication {
 	public void initWindow() {
 		super.initWindow();
 		ZLDialogManager.Instance().wait("loadingBook", new Runnable() {
-			public void run() { 
+			public void run() {
 				Book book = createBookForFile(ZLFile.createFileByPath(myArg0));
 				if (book == null) {
 					book = Library.getRecentBook();
@@ -115,8 +115,8 @@ public final class FBReaderApp extends ZLApplication {
 	
 	public void openBook(final Book book, final Bookmark bookmark) {
 		ZLDialogManager.Instance().wait("loadingBook", new Runnable() {
-			public void run() { 
-				openBookInternal(book, bookmark); 
+			public void run() {
+				openBookInternal(book, bookmark);
 			}
 		});
 	}
