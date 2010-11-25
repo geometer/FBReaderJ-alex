@@ -36,7 +36,7 @@ import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.android.util.AndroidUtil;
+import org.geometerplus.android.util.UIUtil;
 
 import org.geometerplus.fbreader.network.NetworkTree;
 import org.geometerplus.fbreader.network.NetworkLibrary;
@@ -130,7 +130,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 
 		// run this method only is myActivity != null
 		private void runInitialization() {
-			AndroidUtil.wait(myKey, new Runnable() {
+			UIUtil.wait(myKey, new Runnable() {
 				public void run() {
 					String error = null;
 					try {
@@ -304,7 +304,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			}
 		};
 
-		AndroidUtil.wait("updatingCatalogsList", new Runnable() {
+		UIUtil.wait("updatingCatalogsList", new Runnable() {
 			public void run() {
 				String error = null;
 				try {
