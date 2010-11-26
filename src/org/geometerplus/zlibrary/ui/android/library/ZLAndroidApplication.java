@@ -55,22 +55,4 @@ public class ZLAndroidApplication extends Application {
 		new ZLAndroidDialogManager();
 		new ZLAndroidLibrary(this);
 	}
-
-	public void onTerminate() {
-		super.onTerminate();
-	}
-
-	public void putData(Object key, Object value) {
-		myData.put(key, value);
-	}
-
-	public void removeData(Object key) {
-		myData.remove(key);
-	}
-
-	public Object getData(Object key) {
-		return myData.get(key);
-	}
-
-	private final HashMap<Object, Object> myData = new HashMap<Object, Object>();
 }
