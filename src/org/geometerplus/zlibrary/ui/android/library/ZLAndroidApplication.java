@@ -19,8 +19,6 @@
 
 package org.geometerplus.zlibrary.ui.android.library;
 
-import java.util.HashMap;
-
 import android.app.Application;
 
 import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
