@@ -165,5 +165,7 @@
 			android:authorities="org.geometerplus.android.fbreader.network.browser.RecentUrlsProvider"
 		/>
 		<service android:name="org.geometerplus.android.fbreader.network.LibraryInitializationService" android:process=":networkLibrary" />
+		<activity android:name="org.geometerplus.android.fbreader.fmanager.FileManager" android:process=":library" android:label="@string/fmanager_activity"></activity>
+		<activity android:name="org.geometerplus.android.fbreader.fmanager.FilterView" android:process=":library" android:label="@string/filter_activity"></activity>
 	</application>
 </manifest>
