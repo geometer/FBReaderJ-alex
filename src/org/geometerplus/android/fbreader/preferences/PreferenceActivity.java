@@ -45,6 +45,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	protected void init(Intent intent) {
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 		//final ZLAndroidApplication androidApp = ZLAndroidApplication.Instance();
+		final ColorProfile profile = fbReader.getColorProfile();
 
 		final Screen directoriesScreen = createPreferenceScreen("directories");
 		directoriesScreen.addPreference(new ZLStringOptionPreference(
@@ -214,7 +215,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		}
 
 		final Screen colorsScreen = createPreferenceScreen("colors");
-		final ColorProfile profile = fbReader.getColorProfile();
 		colorsScreen.addPreference(new ZLColorPreference(
 			this, colorsScreen.Resource, "background", profile.BackgroundOption
 		));
