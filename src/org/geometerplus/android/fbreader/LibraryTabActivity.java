@@ -42,6 +42,11 @@ import org.geometerplus.fbreader.tree.FBTree;
 public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuItemClickListener {
 	public static final String CURRENT_BOOK_PATH_KEY = "CurrentBookPath";
 
+	public static final String SELECTED_TAG_KEY = "org.geometerplus.android.fbreader.LibraryTabActivity.Tag";
+	public static final String TAG_BY_AUTHOR = "byAuthor";
+	public static final String TAG_BY_TAG = "byTag";
+	public static final String TAG_RECENT = "recent";
+
 	static LibraryTabActivity Instance;
 
 	final ZLStringOption BookSearchPatternOption = new ZLStringOption("BookSearch", "Pattern", "");
@@ -64,9 +69,9 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 	}
 
 	private void createDefaultTabs() {
-		new LibraryAdapter(createTab("byAuthor", R.id.by_author, R.drawable.ic_tab_library_author), myLibrary.byAuthor(), Type.TREE);
-		new LibraryAdapter(createTab("byTag", R.id.by_tag, R.drawable.ic_tab_library_tag), myLibrary.byTag(), Type.TREE);
-		new LibraryAdapter(createTab("recent", R.id.recent, R.drawable.ic_tab_library_recent), myLibrary.recentBooks(), Type.FLAT);
+		new LibraryAdapter(createTab(TAG_BY_AUTHOR, R.id.by_author, R.drawable.ic_tab_library_author), myLibrary.byAuthor(), Type.TREE);
+		new LibraryAdapter(createTab(TAG_BY_TAG, R.id.by_tag, R.drawable.ic_tab_library_tag), myLibrary.byTag(), Type.TREE);
+		new LibraryAdapter(createTab(TAG_RECENT, R.id.recent, R.drawable.ic_tab_library_recent), myLibrary.recentBooks(), Type.FLAT);
 		findViewById(R.id.search_results).setVisibility(View.GONE);
 	}
 
@@ -109,6 +114,10 @@ public class LibraryTabActivity extends TabActivity implements MenuItem.OnMenuIt
 
 		createDefaultTabs();
 
+		final String tag = intent.getStringExtra(SELECTED_TAG_KEY);
+		if (tag != null) {
+			mySelectedTabOption.setValue(tag);
+		}
 		host.setCurrentTabByTag(mySelectedTabOption.getValue());
 	}
 
