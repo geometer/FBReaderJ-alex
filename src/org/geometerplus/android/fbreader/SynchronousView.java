@@ -34,6 +34,7 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 
@@ -58,8 +59,6 @@ public class SynchronousView extends View {
 	private float myStartScrollY;
 
 	private boolean myPendingClick;
-
-	private boolean myRotatedFlag;
 
 	public SynchronousView(Context context) {
 		super(context);
@@ -88,17 +87,13 @@ public class SynchronousView extends View {
 		myWidget = widget;
 	}
 
-	public void setRotated(boolean rotated) {
-		myRotatedFlag = rotated;
-	}
-
 	public void invalidateScroll() {
 		myInvalidScroll = true;
 	}
 
 	public void resetScroll() {
 		if (myInvalidScroll) {
-			if (myRotatedFlag) {
+			if (ZLAndroidApplication.Instance().RotatedFlag) {
 				myScrollX = Integer.MAX_VALUE;
 				myScrollY = 0;
 			} else {
@@ -177,6 +172,8 @@ public class SynchronousView extends View {
 		final float x = event.getX();
 		final float y = event.getY();
 
+		final boolean rotated = ZLAndroidApplication.Instance().RotatedFlag;
+
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
 			if (!myScroller.isFinished()) {
@@ -187,10 +184,10 @@ public class SynchronousView extends View {
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
-			if (myRotatedFlag ?
+			if (rotated ?
 					(myScrollX == myWidget.getWidth() - getClientWidth()) : (myScrollY == 0)) {
 				myScrollPage = -1;
-			} else if (myRotatedFlag ?
+			} else if (rotated ?
 					(myScrollX == 0) : (myScrollY == myWidget.getHeight() - getClientHeight())) {
 				myScrollPage = 1;
 			}
@@ -217,7 +214,7 @@ public class SynchronousView extends View {
 				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
 						&& y > getPaddingTop() && y < getHeight() - getPaddingBottom()) {
 					final int startX, startY, stopX, stopY;
-					if (myRotatedFlag) {
+					if (rotated) {
 						stopX = getBitmapY(y);
 						stopY = myWidget.getWidth() - getBitmapX(x);
 						startX = getBitmapY(myStartScrollY);
@@ -252,7 +249,7 @@ public class SynchronousView extends View {
 					&& Math.abs(myStartScrollX - x) < getWidth() / 4
 					&& Math.abs(myStartScrollY - y) > getHeight() / 3; 
 
-				if (myRotatedFlag ? tryScrollX : tryScrollY) {
+				if (rotated ? tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
 					EPDView.Instance().scrollPage(myScrollPage > 0);
 				} else {

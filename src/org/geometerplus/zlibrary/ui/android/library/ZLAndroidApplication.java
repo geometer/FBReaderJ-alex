@@ -36,6 +36,8 @@ public class ZLAndroidApplication extends Application {
 	//public final ZLBooleanOption DontTurnScreenOffOption = new ZLBooleanOption("LookNFeel", "DontTurnScreenOff", true);
 	public final ZLBooleanOption NetworkLibraryEnabled = new ZLBooleanOption("Library", "NetworkLibraryEnabled", false);
 
+	public boolean RotatedFlag;
+
 	public static ZLAndroidApplication Instance() {
 		return ourApplication;
 	}

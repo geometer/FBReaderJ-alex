@@ -37,6 +37,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -164,7 +165,7 @@ public final class FBReader extends ZLAndroidActivity implements ZLAndroidLibrar
 		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
 
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
-		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
+		fbReader.addAction(ActionCode.ROTATE, new RotateAction(fbReader));
 	}
 
 	private static String makePositionText(int page, int pagesNumber) {
@@ -350,7 +351,7 @@ public final class FBReader extends ZLAndroidActivity implements ZLAndroidLibrar
 					bookNoCoverLayout.setVisibility(View.VISIBLE);
 				}
 			}
-			if (EPDView.Instance().rotateFlag()) {
+			if (ZLAndroidApplication.Instance().RotatedFlag) {
 				final RotateAnimation anim = new RotateAnimation(90.0f, 90.0f, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 				anim.setFillEnabled(true);
 				anim.setFillAfter(true);

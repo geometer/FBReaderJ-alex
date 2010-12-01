@@ -21,13 +21,11 @@ package org.geometerplus.android.fbreader;
 
 import org.geometerplus.fbreader.fbreader.FBAction;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 class RotateAction extends FBAction {
-	private final FBReader myActivity;
-
-	RotateAction(FBReader activity, FBReaderApp fbreader) {
+	RotateAction(FBReaderApp fbreader) {
 		super(fbreader);
-		myActivity = activity;
 	}
 
 	@Override
@@ -38,7 +36,7 @@ class RotateAction extends FBAction {
 
 	@Override
 	protected void run() {
-		myActivity.rotate();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotate();
 		Reader.repaintView();
 	}
 }

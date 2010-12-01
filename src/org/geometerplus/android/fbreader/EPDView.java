@@ -20,7 +20,6 @@
 package org.geometerplus.android.fbreader;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.widget.EpdRender;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
@@ -30,6 +29,7 @@ import org.geometerplus.zlibrary.core.view.ZLView;
 
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 
 class EPDView extends EpdRender {
@@ -49,13 +49,13 @@ class EPDView extends EpdRender {
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		scrollPage(rotateFlag());
+		scrollPage(ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		scrollPage(!rotateFlag());
+		scrollPage(!ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
 
@@ -105,18 +105,9 @@ class EPDView extends EpdRender {
 		if (SynchronousActivity.Instance == null) {
 			FBReader.Instance.startActivity(
 				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
-					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag())
 			);
 		} else {
 			SynchronousActivity.Instance.finish();
 		}
-	}
-
-	boolean rotateFlag() {
-		final FBReader fbreader = FBReader.Instance;
-		if (fbreader != null) {
-			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-		}
-		return false;
 	}
 }

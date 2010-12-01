@@ -71,11 +71,21 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	public void setActivity(Activity activity) {
 		myActivity = activity;
 		((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).setActivity(activity);
-		myWidget = null;
+		myWidget = (ZLAndroidWidget)myActivity.findViewById(R.id.main_view_epd);
+		if (myWidget == null) {
+			throw new RuntimeException("Activity " + myActivity.getClass() + " doesn't have R.id.main_view_epd view.");
+		}
+		myWidget.setRotated(ZLAndroidApplication.Instance().RotatedFlag);
 	}
 
 	public void setEventsListener(EventsListener listener) {
 		myEventsListener = listener;
+	}
+
+	public void rotate() {
+		ZLAndroidApplication app = ZLAndroidApplication.Instance();
+		app.RotatedFlag = !app.RotatedFlag;
+		myWidget.setRotated(app.RotatedFlag);
 	}
 
 	public void finish() {
@@ -97,12 +107,6 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	}
 
 	public ZLAndroidWidget getWidget() {
-		if (myWidget == null) {
-			myWidget = (ZLAndroidWidget)myActivity.findViewById(R.id.main_view_epd);
-			if (myWidget == null) {
-				throw new RuntimeException("Activity " + myActivity.getClass() + " doesn't have R.id.main_view_epd view.");
-			}
-		}
 		return myWidget;
 	}
 
