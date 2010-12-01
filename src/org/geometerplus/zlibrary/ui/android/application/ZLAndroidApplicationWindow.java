@@ -28,7 +28,6 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import org.geometerplus.zlibrary.ui.android.R;
@@ -114,10 +113,6 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 
 	public void onEpdRepaintFinished() {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).onEpdRepaintFinished();
-	}
-
-	public boolean isNetworkLibraryEnabled() {
-		return ZLAndroidApplication.Instance().NetworkLibraryEnabled.getValue();
 	}
 
 	public void close() {

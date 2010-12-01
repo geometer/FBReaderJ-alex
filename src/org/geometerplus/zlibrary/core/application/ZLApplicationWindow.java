@@ -41,8 +41,6 @@ abstract public class ZLApplicationWindow {
 	abstract protected void repaintView();
 	//abstract protected void startViewAutoScrolling(int viewPage);
 
-	abstract protected boolean isNetworkLibraryEnabled();
-
 	abstract protected void close();
 
 	abstract protected void notifyApplicationChanges(boolean singleChange);
