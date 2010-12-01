@@ -59,12 +59,6 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		myWidget = null;
 	}
 
-	public void rotateScreen() {
-		if (myActivity != null)	{
-			myActivity.rotate();
-		}
-	}
-
 	public void finish() {
 		if ((myActivity != null) && !myActivity.isFinishing()) {
 			myActivity.finish();

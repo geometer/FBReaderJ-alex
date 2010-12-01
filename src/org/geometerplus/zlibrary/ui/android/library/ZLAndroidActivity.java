@@ -226,7 +226,7 @@ public abstract class ZLAndroidActivity extends Activity {
 		}
 	}
 
-	void rotate() {
+	public void rotate() {
 		View view = findViewById(R.id.main_view_epd);
 		if (view != null) {
 			switch (getRequestedOrientation()) {

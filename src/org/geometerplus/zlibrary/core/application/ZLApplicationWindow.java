@@ -41,9 +41,6 @@ abstract public class ZLApplicationWindow {
 	abstract protected void repaintView();
 	//abstract protected void startViewAutoScrolling(int viewPage);
 
-	abstract protected void rotate();
-	abstract protected boolean canRotate();
-
 	abstract protected boolean isNetworkLibraryEnabled();
 
 	abstract protected void close();
