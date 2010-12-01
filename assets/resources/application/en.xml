@@ -3,6 +3,9 @@
 	<node name="fbreader">
 		<node name="pageChange" value="Page change"/>
 		<node name="noCover" value="Cover is not available"/>
+		<node name="buttons">
+			<node name="gotoPage" value="Go to page"/>
+		</node>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Unknown author"/>

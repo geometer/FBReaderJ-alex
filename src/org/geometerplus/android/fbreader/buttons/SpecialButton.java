@@ -19,41 +19,18 @@
 
 package org.geometerplus.android.fbreader.buttons;
 
-import org.geometerplus.zlibrary.ui.android.R;
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
+import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 abstract class SpecialButton extends SimpleButton {
 
 	@Override
+	public final String getCaption() {
+		return ZLResource.resource("fbreader").getResource("buttons")
+			.getResource(getType()).getValue();
+	}
+
+	@Override
 	public final String getData() {
 		return null;
-	}
-
-	protected abstract Drawable getIconDrawable();
-
-	@Override
-	protected final String getImageId() {
-		return null;
-	}
-
-	@Override
-	protected View createViewInternal(final Context context) {
-		View res = super.createViewInternal(context);
-		if (res != null) {
-			return res;
-		}
-		final View view = LayoutInflater.from(context).inflate(R.layout.buttons_item, null);
-		((TextView) view.findViewById(R.id.text)).setText(getCaption());
-		((ImageView) view.findViewById(R.id.icon)).setImageDrawable(getIconDrawable());
-		setDefaultListeners((ImageButton)view.findViewById(R.id.btn), context);
-		return view;
 	}
 }
