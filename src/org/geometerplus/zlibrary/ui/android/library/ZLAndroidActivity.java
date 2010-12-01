@@ -105,7 +105,7 @@ public abstract class ZLAndroidActivity extends Activity {
 		setContentView(R.layout.main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
-		getLibrary().setActivity(this);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
 
 		final String fileToOpen = extractFileNameFromIntent(getIntent());
 
@@ -122,6 +122,7 @@ public abstract class ZLAndroidActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
 
 //		if (ZLAndroidApplication.Instance().AutoOrientationOption.getValue()) {
 //			setAutoRotationMode();
@@ -158,10 +159,6 @@ public abstract class ZLAndroidActivity extends Activity {
 		// ZLApplication.Instance().repaintView();
 	}
 
-	private static ZLAndroidLibrary getLibrary() {
-		return (ZLAndroidLibrary)ZLAndroidLibrary.Instance();
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -180,16 +177,6 @@ public abstract class ZLAndroidActivity extends Activity {
 		View view = findViewById(R.id.main_view_epd);
 		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
-
-	/*
-	 * singleChange parameter must be <code>true</code> if there will 
-	 * be no changes in near future;
-	 * 
-	 * singleChange parameter must be <code>false</code> if there can be
-	 * another changes in near future.  
-	 */
-	public abstract void notifyApplicationChanges(boolean singleChange);
-	public abstract void onEpdRepaintFinished();
 
 	private int myChangeCounter;
 	private int myOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;

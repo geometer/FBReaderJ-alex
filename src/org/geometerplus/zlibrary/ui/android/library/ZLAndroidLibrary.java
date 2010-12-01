@@ -22,6 +22,7 @@ package org.geometerplus.zlibrary.ui.android.library;
 import java.io.*;
 import java.util.*;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.res.AssetFileDescriptor;
 import android.content.Intent;
@@ -45,18 +46,36 @@ import org.geometerplus.android.fbreader.network.BookDownloaderService;
 import org.geometerplus.fbreader.network.NetworkLibrary;
 
 public final class ZLAndroidLibrary extends ZLibrary {
-	private ZLAndroidActivity myActivity;
+	private Activity myActivity;
 	private final Application myApplication;
 	private ZLAndroidWidget myWidget;
+
+	public interface EventsListener {
+		/*
+		 * singleChange parameter must be <code>true</code> if there will 
+		 * be no changes in near future;
+		 * 
+		 * singleChange parameter must be <code>false</code> if there can be
+		 * another changes in near future.  
+		 */
+		void notifyApplicationChanges(boolean singleChange);
+		void onEpdRepaintFinished();
+	}
+
+	private EventsListener myEventsListener;
 
 	ZLAndroidLibrary(Application application) {
 		myApplication = application;
 	}
 
-	void setActivity(ZLAndroidActivity activity) {
+	public void setActivity(Activity activity) {
 		myActivity = activity;
 		((ZLAndroidDialogManager)ZLAndroidDialogManager.Instance()).setActivity(activity);
 		myWidget = null;
+	}
+
+	public void setEventsListener(EventsListener listener) {
+		myEventsListener = listener;
 	}
 
 	public void finish() {
@@ -66,20 +85,23 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	}
 
 	public void notifyApplicationChanges(boolean singleChange) {
-		if (myActivity != null) {
-			myActivity.notifyApplicationChanges(singleChange);
+		if (myEventsListener != null) {
+			myEventsListener.notifyApplicationChanges(singleChange);
 		}
 	}
 
 	public void onEpdRepaintFinished() {
-		if (myActivity != null) {
-			myActivity.onEpdRepaintFinished();
+		if (myEventsListener != null) {
+			myEventsListener.onEpdRepaintFinished();
 		}
 	}
 
 	public ZLAndroidWidget getWidget() {
 		if (myWidget == null) {
 			myWidget = (ZLAndroidWidget)myActivity.findViewById(R.id.main_view_epd);
+			if (myWidget == null) {
+				throw new RuntimeException("Activity " + myActivity.getClass() + " doesn't have R.id.main_view_epd view.");
+			}
 		}
 		return myWidget;
 	}

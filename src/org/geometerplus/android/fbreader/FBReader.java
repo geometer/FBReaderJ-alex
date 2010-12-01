@@ -37,6 +37,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
@@ -47,7 +48,7 @@ import org.geometerplus.fbreader.library.Author;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 
-public final class FBReader extends ZLAndroidActivity {
+public final class FBReader extends ZLAndroidActivity implements ZLAndroidLibrary.EventsListener {
 	final static int REPAINT_CODE = 1;
 
 	static FBReader Instance;
@@ -90,6 +91,7 @@ public final class FBReader extends ZLAndroidActivity {
 	public void onCreate(Bundle icicle) {
 		EPDView.Instance().setVdsActive(true);
 		super.onCreate(icicle);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(this);
 		Instance = this;
 		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		myFullScreenFlag =
@@ -172,6 +174,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(this);
 
 		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		final int fullScreenFlag =
@@ -261,7 +264,7 @@ public final class FBReader extends ZLAndroidActivity {
 		};
 	};
 
-	@Override
+
 	public void notifyApplicationChanges(boolean singleChange) {
 		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
