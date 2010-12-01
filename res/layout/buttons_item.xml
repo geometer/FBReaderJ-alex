@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="96px"
+	android:layout_height="144px"
+>
+	<ImageButton
+		android:id="@+id/btn"
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:background="@drawable/buttons_blank_selector"
+	/>
+	<ImageView
+		android:id="@+id/icon"
+		android:layout_width="50px"
+		android:layout_height="50px"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="15px"
+		android:clickable="false"
+		android:scaleType="fitCenter"
+	/>
+	<TextView
+		android:id="@+id/text"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="25px"
+		android:layout_gravity="bottom"
+		android:gravity="center"
+		android:clickable="false"
+		android:cursorVisible="false"
+		android:textColor="#eeeeee"
+		android:textStyle="bold"
+		android:typeface="sans"
+		android:shadowColor="#555555"
+		android:shadowDx="1.0"
+		android:shadowDy="1.0"
+		android:shadowRadius="2.0"
+	/>
+</FrameLayout>

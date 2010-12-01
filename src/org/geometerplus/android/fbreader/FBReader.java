@@ -19,6 +19,8 @@
 
 package org.geometerplus.android.fbreader;
 
+import java.util.ArrayList;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.RotateAnimation;
 import android.widget.*;
 
@@ -47,12 +50,16 @@ import org.geometerplus.fbreader.library.Author;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 
+import org.geometerplus.android.fbreader.buttons.AbstractButton;
+import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
+
 public final class FBReader extends ZLAndroidActivity {
 	final static int REPAINT_CODE = 1;
 
 	static FBReader Instance;
 
-	//private int myFullScreenFlag;
+	private ArrayList<AbstractButton> myButtons = new ArrayList<AbstractButton>();
+
 	private boolean myReadMode;
 	private Book myViewBook;
 
@@ -162,10 +169,52 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
 
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
+
+		updateButtons();
 	}
 
 	private static String makePositionText(int page, int pagesNumber) {
 		return "" + page + " / " + pagesNumber;
+	}
+
+
+	private void updateButtons() {
+		ButtonsCollection.Instance().collectButtons(myButtons);
+		final LinearLayout topDock = (LinearLayout) findViewById(R.id.topDock);
+		final LinearLayout bottomDock = (LinearLayout) findViewById(R.id.bottomDock);
+		topDock.removeAllViews();
+		bottomDock.removeAllViews();
+		int count = 0;
+		for (AbstractButton btn : myButtons) {
+			if (count++ % 2 == 0) {
+				addItemView(btn, topDock);
+			} else {
+				addItemView(btn, bottomDock);
+			}
+
+		}
+	}
+
+	private void addItemView(final AbstractButton btn, LinearLayout layout) {
+		btn.setStartEditListener(new AbstractButton.OnStartEditListener() {
+			public void onStartEdit(AbstractButton button) {
+			}
+		});
+		btn.setItemSelectedListener(new AbstractButton.OnButtonSelectedListener() {
+			public void onButtonSelected(AbstractButton button) {
+			}
+		});
+
+		final View itemView = btn.createView(this);
+		ViewParent parent = itemView.getParent();
+		if (parent != null)
+			((ViewGroup) parent).removeView(itemView);
+
+		final FrameLayout view = new FrameLayout(layout.getContext());
+		view.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+		view.addView(itemView);
+
+		layout.addView(view);
 	}
 
 	@Override
@@ -187,7 +236,7 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel.ControlPanel.addButton(ActionCode.CLEAR_FIND_RESULTS, true, R.drawable.text_search_close);
 			myPanel.ControlPanel.addButton(ActionCode.FIND_NEXT, false, R.drawable.text_search_next);
 
-			RelativeLayout root = (RelativeLayout)findViewById(R.id.root_view);
+			RelativeLayout root = (RelativeLayout)findViewById(R.id.navigation_view);
 			RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT,
 				RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -366,7 +415,7 @@ public final class FBReader extends ZLAndroidActivity {
 			bookNoCoverLayout.setVisibility(View.GONE);
 		}
 
-		findViewById(R.id.root_view).invalidate();
+		findViewById(R.id.navigation_view).invalidate();
 
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
