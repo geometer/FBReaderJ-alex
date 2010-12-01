@@ -52,6 +52,7 @@ import org.geometerplus.fbreader.library.Library;
 
 import org.geometerplus.android.fbreader.buttons.AbstractButton;
 import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
+import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
 
 public final class FBReader extends ZLAndroidActivity {
 	final static int REPAINT_CODE = 1;
@@ -179,7 +180,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 
 	private void updateButtons() {
-		ButtonsCollection.Instance().collectButtons(myButtons);
+		ButtonsCollection.Instance().loadButtons(myButtons);
 		final LinearLayout topDock = (LinearLayout) findViewById(R.id.topDock);
 		final LinearLayout bottomDock = (LinearLayout) findViewById(R.id.bottomDock);
 		topDock.removeAllViews();
@@ -295,6 +296,9 @@ public final class FBReader extends ZLAndroidActivity {
 	protected ZLApplication createApplication(String fileName) {
 		if (SQLiteBooksDatabase.Instance() == null) {
 			new SQLiteBooksDatabase(this, "READER");
+		}
+		if (SQLiteButtonsDatabase.Instance() == null) {
+			new SQLiteButtonsDatabase(this);
 		}
 		return new FBReaderApp(fileName);
 	}

@@ -53,11 +53,15 @@ public class ButtonsCollection {
 	}
 
 
-	public void collectButtons(List<AbstractButton> buttons) {
+	public void loadButtons(List<AbstractButton> buttons) {
 		buttons.clear();
-		// TODO: load buttons from database;
+		SQLiteButtonsDatabase.Instance().loadButtons(buttons);
 		if (buttons.isEmpty()) {
 			collectDefaultButtons(buttons);
 		}
+	}
+
+	public void saveButtons(List<AbstractButton> buttons) {
+		SQLiteButtonsDatabase.Instance().saveButtons(buttons);
 	}
 }

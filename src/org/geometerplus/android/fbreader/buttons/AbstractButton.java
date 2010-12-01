@@ -28,7 +28,7 @@ public abstract class AbstractButton {
 
 	public static final String TYPE_GOTO_PAGE = "gotoPage";
 
-	public static AbstractButton createButton(String id, String data, Context context) {
+	public static AbstractButton createButton(String type, String data) {
 		return null;
 	}
 

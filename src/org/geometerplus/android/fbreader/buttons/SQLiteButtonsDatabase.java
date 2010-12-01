@@ -19,20 +19,27 @@
 
 package org.geometerplus.android.fbreader.buttons;
 
+import java.util.List;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.database.SQLException;
-import android.database.Cursor;
-
 
 import org.geometerplus.android.util.UIUtil;
 
-final class SQLiteButtonsDatabase {
+public final class SQLiteButtonsDatabase {
 	private final SQLiteDatabase myDatabase;
 
+	private static SQLiteButtonsDatabase ourInstance;
+
+	public static SQLiteButtonsDatabase Instance() {
+		return ourInstance;
+	}
+
+
 	public SQLiteButtonsDatabase(Context context) {
+		ourInstance = this;
 		myDatabase = context.openOrCreateDatabase("buttons.db", Context.MODE_PRIVATE, null);
 		migrate(context);
 	}
@@ -79,8 +86,38 @@ final class SQLiteButtonsDatabase {
 	}
 
 
+	public void loadButtons(List<AbstractButton> buttons) {
+		buttons.clear();
+        final Cursor c = myDatabase.rawQuery("SELECT btn_type, btn_data FROM Buttons", null);
+        while (c.moveToNext()) {
+        	final String type = c.getString(0);
+        	final String data = c.getString(1);
+        	buttons.add(AbstractButton.createButton(type, data));
+        }
+	}
+
+	private SQLiteStatement mySaveButtonStatement;
+	public void saveButtons(final List<AbstractButton> buttons) {
+		if (mySaveButtonStatement == null) {
+			mySaveButtonStatement = myDatabase.compileStatement("INSERT INTO Buttons (btn_type, btn_data) VALUES (?,?)");
+		}
+		executeAsATransaction(new Runnable() {
+			public void run() {
+				myDatabase.delete("Buttons", null, null);
+				for (AbstractButton btn: buttons) {
+					mySaveButtonStatement.bindString(0, btn.getType());
+					bindString(mySaveButtonStatement, 1, btn.getData());
+					mySaveButtonStatement.execute();
+				}
+			}
+		});
+	}
+
 
 	private void createTables() {
-		myDatabase.execSQL("CREATE TABLE Buttons (btn_id TEXT, btn_data TEXT)");
+		myDatabase.execSQL("CREATE TABLE Buttons (" +
+				"btn_type TEXT NOT NULL, " +
+				"btn_data TEXT," +
+				"CONSTRAINT pk_Buttons UNIQUE (btn_type, btn_data))");
 	}
 }
