@@ -19,10 +19,10 @@
 
 package org.geometerplus.android.fbreader.network;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
-import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import org.geometerplus.fbreader.network.*;
 
@@ -44,8 +44,7 @@ public class BrowserItemTree extends NetworkTree {
 
 	@Override
 	protected ZLImage createCover() {
-		ZLResourceFile file = ZLResourceFile.createResourceFile("data/browser.png");
-		return new ZLFileImage("image/png", file);
+		return ((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).createImage(R.drawable.ic_list_browser);
 	}
 
 	@Override
