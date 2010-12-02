@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Region;
@@ -34,12 +35,14 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 
 public class SynchronousView extends View {
 
+	private EPDView myEPDView;
 	private ZLAndroidWidget myWidget;
 
     private int myMinimumVelocity;
@@ -83,8 +86,9 @@ public class SynchronousView extends View {
 		myMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 	}
 
-	public void setWidget(ZLAndroidWidget widget) {
-		myWidget = widget;
+	public void setEPDView(EPDView view) {
+		myEPDView = view;
+		myWidget = (ZLAndroidWidget) view.getActivity().findViewById(R.id.main_view_epd);
 	}
 
 	public void invalidateScroll() {
@@ -125,8 +129,14 @@ public class SynchronousView extends View {
 		canvas.clipRect(getPaddingLeft(), getPaddingTop(), 
 				getWidth() - getPaddingRight(), getHeight() - getPaddingBottom(), 
 				Region.Op.REPLACE);
-		canvas.drawBitmap(myWidget.getBitmap(),
-				getPaddingLeft() - myScrollX, getPaddingTop() - myScrollY, null);
+		final Bitmap bmp = myWidget.getBitmap();
+		if (bmp != null && !bmp.isRecycled()) {
+			canvas.drawBitmap(bmp,
+				getPaddingLeft() - myScrollX,
+				getPaddingTop() - myScrollY,
+				null
+			);
+		}
 		canvas.restore();
 	}
 
@@ -251,7 +261,7 @@ public class SynchronousView extends View {
 
 				if (rotated ? tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
-					EPDView.Instance().scrollPage(myScrollPage > 0);
+					myEPDView.scrollPage(myScrollPage > 0);
 				} else {
 					final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
 					final int maxY = Math.max(0, myWidget.getHeight() - getClientHeight());
