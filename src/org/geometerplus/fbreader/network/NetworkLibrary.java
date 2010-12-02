@@ -85,9 +85,7 @@ public class NetworkLibrary {
 	public final ZLStringOption NetworkBrowserPageOption = new ZLStringOption("NetworkBrowser", "Page", "http://highscreen.litres.ru");
 	public final ZLStringOption NetworkSearchPatternOption = new ZLStringOption("NetworkSearch", "Pattern", "");
 
-
 	private final ArrayList<INetworkLink> myLinks = new ArrayList<INetworkLink>();
-
 
 	public List<String> languageCodes() {
 		final TreeSet<String> languageSet = new TreeSet<String>();
@@ -100,11 +98,13 @@ public class NetworkLibrary {
 	private ZLStringOption myActiveLanguageCodesOption;
 	private ZLStringOption activeLanguageCodesOption() {
  		if (myActiveLanguageCodesOption == null) {
+			final TreeSet<String> defaultCodes = new TreeSet<String>(new ZLLanguageUtil.CodeComparator());
+			defaultCodes.addAll(ZLibrary.Instance().defaultLanguageCodes());
 			myActiveLanguageCodesOption =
 				new ZLStringOption(
 					"Options",
 					"ActiveLanguages",
-					commaSeparatedString(ZLibrary.Instance().defaultLanguageCodes())
+					commaSeparatedString(defaultCodes)
 				);
 		}
 		return myActiveLanguageCodesOption;
@@ -115,7 +115,8 @@ public class NetworkLibrary {
 	}
 
 	public void setActiveLanguageCodes(Collection<String> codes) {
-		final TreeSet<String> allCodes = new TreeSet<String>(ZLibrary.Instance().defaultLanguageCodes());
+		final TreeSet<String> allCodes = new TreeSet<String>(new ZLLanguageUtil.CodeComparator());
+		allCodes.addAll(ZLibrary.Instance().defaultLanguageCodes());
 		allCodes.removeAll(languageCodes());
 		allCodes.addAll(codes);
 		activeLanguageCodesOption().setValue(commaSeparatedString(allCodes));
