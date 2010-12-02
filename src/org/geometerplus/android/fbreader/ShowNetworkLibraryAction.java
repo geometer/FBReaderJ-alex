@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.android.fbreader.network.NetworkLibraryActivity;
 
@@ -30,6 +31,6 @@ class ShowNetworkLibraryAction extends RunActivityAction {
 
 	@Override
 	public boolean isVisible() {
-		return Reader.isNetworkLibraryEnabled();
+		return ZLAndroidApplication.Instance().NetworkLibraryEnabled.getValue();
 	}
 }

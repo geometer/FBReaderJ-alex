@@ -25,7 +25,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -34,12 +33,16 @@ import android.widget.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.image.ZLImage;
+import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
@@ -66,9 +69,6 @@ public final class FBReader extends ZLAndroidActivity {
 
 	public final ZLResource Resource = ZLResource.resource("fbreader"); 
 
-	boolean isReadMode() {
-		return myReadMode;
-	}
 
 	private static class TextSearchButtonPanel implements ZLApplication.ButtonPanel {
 		boolean Visible;
@@ -89,6 +89,45 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 	private static TextSearchButtonPanel myPanel;
 
+
+	private static class ReadingEPDView extends EPDView {
+
+		public ReadingEPDView(FBReader activity) {
+			super(activity);
+		}
+
+		@Override
+		public boolean onTogglePressed(int arg1, int arg2) {
+			final FBReader fbreader = (FBReader)getActivity();
+			if (!fbreader.myReadMode /*&& SynchronousActivity.Instance == null*/) {
+				changeFont();
+			} else {
+				fbreader.startActivity(
+					new Intent(fbreader.getApplicationContext(), SynchronousActivity.class)
+				);
+			}
+			return true;
+		}
+
+		private final static int FONT_DELTA = 9;
+		private final static int FONT_START = 18;
+		private final static int FONT_END = 63;
+		private void changeFont() {
+			final ZLIntegerRangeOption option =
+				ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
+			final int newValue = option.getValue() + FONT_DELTA;
+			option.setValue((newValue > FONT_END) ? FONT_START : newValue);
+			((FBReaderApp)ZLApplication.Instance()).clearTextCaches();
+			ZLApplication.Instance().repaintView();
+		}
+
+		public void onEpdRepaintFinished() {
+			final FBReader fbreader = (FBReader)getActivity();
+			fbreader.onEpdRepaintFinished();
+		}
+	}
+	private EPDView myEPDView = new ReadingEPDView(this);
+
 	@Override
 	protected String fileNameForEmptyUri() {
 		return Library.getHelpFile().getPath();
@@ -96,8 +135,9 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onCreate(Bundle icicle) {
-		EPDView.Instance().setVdsActive(true);
+		myEPDView.onCreate();
 		super.onCreate(icicle);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
 		Instance = this;
 		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		myFullScreenFlag =
@@ -136,7 +176,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				gotoPage(seekBar.getProgress() + 1);
-				updateEpdView(0);
+				myEPDView.updateEpdView(0);
 				myInTouch = false;
 			}
 
@@ -148,10 +188,10 @@ public final class FBReader extends ZLAndroidActivity {
 				if (fromUser) {
 					final int page = progress + 1;
 					final int pagesNumber = seekBar.getMax() + 1;
-					bookPositionText.setText(makePositionText(page, pagesNumber));
+					bookPositionText.setText(EPDView.makePositionText(page, pagesNumber));
 					if (!myInTouch) {
 						gotoPage(page);
-						updateEpdView(250);
+						myEPDView.updateEpdView(250);
 					}
 				}
 			}
@@ -170,12 +210,9 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
 
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
+		fbReader.addAction(ActionCode.ROTATE, new RotateAction(fbReader));
 
 		updateButtons();
-	}
-
-	private static String makePositionText(int page, int pagesNumber) {
-		return "" + page + " / " + pagesNumber;
 	}
 
 
@@ -221,6 +258,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
 
 		/*final ZLAndroidApplication application = ZLAndroidApplication.Instance();
 		final int fullScreenFlag =
@@ -246,10 +284,7 @@ public final class FBReader extends ZLAndroidActivity {
 			root.addView(myPanel.ControlPanel, p);
 		}
 
-		final LinearLayout view = (LinearLayout) findViewById(R.id.epd_layout);
-		EPDView.Instance().bindLayout((ViewGroup) view);
-		EPDView.Instance().setVdsActive(true);
-		EPDView.Instance().updateEpdViewDelay(200);
+		myEPDView.onStart();
 	}
 
 	//private PowerManager.WakeLock myWakeLock;
@@ -285,7 +320,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onStop() {
-		EPDView.Instance().setVdsActive(false);
+		myEPDView.setVdsActive(false);
 		if (myPanel.ControlPanel != null) {
 			myPanel.ControlPanel.hide(false);
 			myPanel.ControlPanel = null;
@@ -303,20 +338,6 @@ public final class FBReader extends ZLAndroidActivity {
 		return new FBReaderApp(fileName);
 	}
 
-
-	private final Handler myNotifyApplicationHandler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			/*final boolean singleChange = msg.what == 1;
-			updateEpdView(singleChange ? 0 : 10);*/
-			updateEpdView(0);
-		};
-	};
-
-	@Override
-	public void notifyApplicationChanges(boolean singleChange) {
-		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -399,7 +420,7 @@ public final class FBReader extends ZLAndroidActivity {
 					bookNoCoverLayout.setVisibility(View.VISIBLE);
 				}
 			}
-			if (EPDView.Instance().rotateFlag()) {
+			if (ZLAndroidApplication.Instance().RotatedFlag) {
 				final RotateAnimation anim = new RotateAnimation(90.0f, 90.0f, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 				anim.setFillEnabled(true);
 				anim.setFillAfter(true);
@@ -433,7 +454,7 @@ public final class FBReader extends ZLAndroidActivity {
 			final int page = textView.computeCurrentPage();
 			final int pagesNumber = textView.computePageNumber();
 
-			bookPositionText.setText(makePositionText(page, pagesNumber));
+			bookPositionText.setText(EPDView.makePositionText(page, pagesNumber));
 			bookPositionSlider.setVisibility(View.VISIBLE);
 			bookPositionSlider.setMax(pagesNumber - 1);
 			bookPositionSlider.setProgress(page - 1);
@@ -442,34 +463,6 @@ public final class FBReader extends ZLAndroidActivity {
 			bookPositionSlider.setProgress(0);
 			bookPositionSlider.setMax(1);
 			bookPositionSlider.setVisibility(View.INVISIBLE);
-		}
-
-		if (SynchronousActivity.Instance != null) {
-			SynchronousActivity.Instance.updateImage();
-		}
-	}
-
-	public void updateEpdView(int delay) {
-		updateEpdStatusbar();
-		if (delay <= 0) {
-			EPDView.Instance().updateEpdView();
-		} else {
-			EPDView.Instance().updateEpdViewDelay(delay);
-		}
-	}
-
-	private void updateEpdStatusbar() {
-		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
-		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (view instanceof ZLTextView
-				&& ((ZLTextView) view).getModel() != null
-				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
-			ZLTextView textView = (ZLTextView) view;
-			final int page = textView.computeCurrentPage();
-			final int pagesNumber = textView.computePageNumber();
-			statusPositionText.setText(makePositionText(page, pagesNumber));
-		} else {
-			statusPositionText.setText("");
 		}
 	}
 

@@ -135,37 +135,5 @@
 			</RelativeLayout>
 		</LinearLayout>
 	</RelativeLayout>
-	<LinearLayout
-		android:id="@+id/epd_layout"
-		android:orientation="vertical"
-		android:layout_width="600px"
-		android:layout_height="wrap_content"
-		android:visibility="invisible"
-	>
-		<org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget
-			android:id="@+id/main_view_epd"
-			android:layout_width="600px"
-			android:layout_height="772px"
-			android:focusable="false"
-			android:scrollbars="none"
-		/>
-		<LinearLayout
-			android:layout_width="336px"
-			android:layout_height="28px"
-			android:background="@drawable/statusbar"
-			android:orientation="horizontal"
-			android:paddingLeft="12px"
-			android:paddingTop="2px"
-		>
-			<TextView
-				android:id="@+id/statusbar_position_text"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:singleLine="true"
-				android:textStyle="bold"
-				android:textColor="#000000"
-				android:textSize="16px"
-			/>
-		</LinearLayout>
-	</LinearLayout>
+	<include layout="@layout/epd_layout"/>
 </LinearLayout>

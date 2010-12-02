@@ -62,9 +62,12 @@ public class ZLAndroidWidget extends View {
 
 	public void setRotated(boolean rotated) {
 		myRotated = rotated;
-		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (view != null) {
-			view.resetContext(createContext(view, new Canvas()));
+		final ZLApplication app = ZLApplication.Instance();
+		if (app != null) {
+			final ZLView view = app.getCurrentView();
+			if (view != null) {
+				view.resetContext(createContext(view, new Canvas()));
+			}
 		}
 	}
 

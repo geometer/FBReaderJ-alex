@@ -21,74 +21,81 @@ package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 
 public class SynchronousActivity extends Activity {
-	static SynchronousActivity Instance;
-
-	public static final String ROTATE_KEY = "org.geometerplus.android.fbreader.RotateFlag";
 
 	private ProgressDialog myProgressDialog;
-	private ZLAndroidWidget myWidget;
 
-	private boolean myRotateFlag;
+	private static class SyncEPDView extends EPDView {
+
+		public SyncEPDView(SynchronousActivity activity) {
+			super(activity);
+		}
+
+		@Override
+		public boolean onTogglePressed(int arg1, int arg2) {
+			((SynchronousActivity) getActivity()).finish();
+			return true;
+		}
+
+		@Override
+		protected void onPageScrolling() {
+			((SynchronousActivity) getActivity()).showPageProgress();
+		}
+
+		public void onEpdRepaintFinished() {
+			((SynchronousActivity) getActivity()).updateImage();
+		}
+	}
+	private EPDView myEPDView = new SyncEPDView(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		myEPDView.onCreate();
 		super.onCreate(savedInstanceState);
-
-		if (FBReader.Instance == null) {
-			finish();
-			return;
-		}
-
-		if (savedInstanceState != null) {
-			myRotateFlag = savedInstanceState.getBoolean(ROTATE_KEY, false);
-		} else {
-			final Intent intent = getIntent();
-			myRotateFlag = intent.getBooleanExtra(ROTATE_KEY, false);
-		}
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
-		myWidget = (ZLAndroidWidget) FBReader.Instance.findViewById(R.id.main_view_epd);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
+
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
-		view.setWidget(myWidget);
-		view.setRotated(myRotateFlag);
+		view.setEPDView(myEPDView);
 
 		myProgressDialog = new ProgressDialog(this);
 		myProgressDialog.setIndeterminate(true);
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
+		myEPDView.onStart();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		updateImage();
-		Instance = this;
 	}
 
 	@Override
 	protected void onPause() {
 		myProgressDialog.cancel();
-		Instance = null;
 		super.onPause();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(ROTATE_KEY, myRotateFlag);
 	}
 
 	void updateImage() {
@@ -113,11 +120,13 @@ public class SynchronousActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		return ((myWidget != null) && myWidget.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+		View view = findViewById(R.id.main_view_epd);
+		return ((view != null) && view.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		return ((myWidget != null) && myWidget.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
+		View view = findViewById(R.id.main_view_epd);
+		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 }

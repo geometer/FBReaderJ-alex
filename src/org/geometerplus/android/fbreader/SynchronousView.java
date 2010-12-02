@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Region;
@@ -34,11 +35,14 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 
 public class SynchronousView extends View {
 
+	private EPDView myEPDView;
 	private ZLAndroidWidget myWidget;
 
     private int myMinimumVelocity;
@@ -58,8 +62,6 @@ public class SynchronousView extends View {
 	private float myStartScrollY;
 
 	private boolean myPendingClick;
-
-	private boolean myRotatedFlag;
 
 	public SynchronousView(Context context) {
 		super(context);
@@ -84,12 +86,9 @@ public class SynchronousView extends View {
 		myMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 	}
 
-	public void setWidget(ZLAndroidWidget widget) {
-		myWidget = widget;
-	}
-
-	public void setRotated(boolean rotated) {
-		myRotatedFlag = rotated;
+	public void setEPDView(EPDView view) {
+		myEPDView = view;
+		myWidget = (ZLAndroidWidget) view.getActivity().findViewById(R.id.main_view_epd);
 	}
 
 	public void invalidateScroll() {
@@ -98,7 +97,7 @@ public class SynchronousView extends View {
 
 	public void resetScroll() {
 		if (myInvalidScroll) {
-			if (myRotatedFlag) {
+			if (ZLAndroidApplication.Instance().RotatedFlag) {
 				myScrollX = Integer.MAX_VALUE;
 				myScrollY = 0;
 			} else {
@@ -130,8 +129,14 @@ public class SynchronousView extends View {
 		canvas.clipRect(getPaddingLeft(), getPaddingTop(), 
 				getWidth() - getPaddingRight(), getHeight() - getPaddingBottom(), 
 				Region.Op.REPLACE);
-		canvas.drawBitmap(myWidget.getBitmap(),
-				getPaddingLeft() - myScrollX, getPaddingTop() - myScrollY, null);
+		final Bitmap bmp = myWidget.getBitmap();
+		if (bmp != null && !bmp.isRecycled()) {
+			canvas.drawBitmap(bmp,
+				getPaddingLeft() - myScrollX,
+				getPaddingTop() - myScrollY,
+				null
+			);
+		}
 		canvas.restore();
 	}
 
@@ -177,6 +182,8 @@ public class SynchronousView extends View {
 		final float x = event.getX();
 		final float y = event.getY();
 
+		final boolean rotated = ZLAndroidApplication.Instance().RotatedFlag;
+
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
 			if (!myScroller.isFinished()) {
@@ -187,10 +194,10 @@ public class SynchronousView extends View {
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
-			if (myRotatedFlag ?
+			if (rotated ?
 					(myScrollX == myWidget.getWidth() - getClientWidth()) : (myScrollY == 0)) {
 				myScrollPage = -1;
-			} else if (myRotatedFlag ?
+			} else if (rotated ?
 					(myScrollX == 0) : (myScrollY == myWidget.getHeight() - getClientHeight())) {
 				myScrollPage = 1;
 			}
@@ -217,7 +224,7 @@ public class SynchronousView extends View {
 				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
 						&& y > getPaddingTop() && y < getHeight() - getPaddingBottom()) {
 					final int startX, startY, stopX, stopY;
-					if (myRotatedFlag) {
+					if (rotated) {
 						stopX = getBitmapY(y);
 						stopY = myWidget.getWidth() - getBitmapX(x);
 						startX = getBitmapY(myStartScrollY);
@@ -252,9 +259,9 @@ public class SynchronousView extends View {
 					&& Math.abs(myStartScrollX - x) < getWidth() / 4
 					&& Math.abs(myStartScrollY - y) > getHeight() / 3; 
 
-				if (myRotatedFlag ? tryScrollX : tryScrollY) {
+				if (rotated ? tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
-					EPDView.Instance().scrollPage(myScrollPage > 0);
+					myEPDView.scrollPage(myScrollPage > 0);
 				} else {
 					final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
 					final int maxY = Math.max(0, myWidget.getHeight() - getClientHeight());

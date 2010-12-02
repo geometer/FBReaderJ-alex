@@ -17,7 +17,11 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.fbreader;
+package org.geometerplus.android.fbreader;
+
+import org.geometerplus.fbreader.fbreader.FBAction;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 class RotateAction extends FBAction {
 	RotateAction(FBReaderApp fbreader) {
@@ -26,12 +30,13 @@ class RotateAction extends FBAction {
 
 	@Override
 	public boolean isVisible() {
-		return Reader.canRotateScreen();
+		//return !ZLAndroidApplication.Instance().AutoOrientationOption.getValue();
+		return true;
 	}
 
 	@Override
 	protected void run() {
-		Reader.rotateScreen();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotate();
 		Reader.repaintView();
 	}
 }

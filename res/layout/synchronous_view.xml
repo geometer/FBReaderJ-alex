@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:orientation="vertical"
 >
 	<org.geometerplus.android.fbreader.SynchronousView
 		android:id="@+id/synchronous_view"
@@ -14,4 +15,5 @@
 		android:paddingRight="?android:attr/scrollbarSize"
 		android:paddingBottom="?android:attr/scrollbarSize"
 	/>
-</RelativeLayout>
+	<include layout="@layout/epd_layout"/>
+</LinearLayout>

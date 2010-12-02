@@ -19,104 +19,128 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.app.Activity;
+import android.os.Handler;
+import android.view.ViewGroup;
 import android.widget.EpdRender;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
 import org.geometerplus.zlibrary.text.view.ZLTextView;
-import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+
+import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 
-class EPDView extends EpdRender {
+abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListener {
 
-	private static EPDView ourInstance;
+	private static EPDView ourActiveEPDView;
 
-	public static EPDView Instance() {
-		if (ourInstance == null) {
-			ourInstance = new EPDView();
-		}
-		return ourInstance;
+	private final Activity myActivity;
+
+	public EPDView(Activity activity) {
+		myActivity = activity;
 	}
 
-
-	private EPDView() {
+	public final Activity getActivity() {
+		return myActivity;
 	}
 
 	@Override
+	public void setVdsActive(boolean active) {
+		if (active) {
+			if (ourActiveEPDView != null) {
+				ourActiveEPDView.setVdsActive(false);
+			}
+			ourActiveEPDView = this;
+		}
+		super.setVdsActive(active);
+	}
+
+
+	public void onCreate() {
+		setVdsActive(true);
+	}
+
+	public void onStart() {
+		final LinearLayout view = (LinearLayout) myActivity.findViewById(R.id.epd_layout);
+		if (view == null) {
+			throw new RuntimeException("EPDView's activity must be layed out with \"epd_layout\" layout.");
+		}
+		bindLayout((ViewGroup) view);
+		setVdsActive(true);
+		updateEpdViewDelay(200);
+	}
+
+
+	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		scrollPage(rotateFlag());
+		scrollPage(ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		scrollPage(!rotateFlag());
+		scrollPage(!ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
 
-	final void scrollPage(boolean forward) {
+	public final void scrollPage(boolean forward) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
 			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
-			if (SynchronousActivity.Instance != null) {
-				SynchronousActivity.Instance.showPageProgress();
-			}
+			onPageScrolling();
 			ZLApplication.Instance().repaintView();
 		}
 	}
 
-	@Override
-	public boolean onTogglePressed(int arg1, int arg2) {
-		if (!FBReader.Instance.isReadMode()
-				&& SynchronousActivity.Instance == null) {
-			changeFont();
-		} else {
-			synchronizeLCD();
-		}
-		return true;
+	protected void onPageScrolling() {
 	}
 
-	private final static int FONT_DELTA = 9;
-	private final static int FONT_START = 18;
-	private final static int FONT_END = 63;
-	private void changeFont() {
-		ZLIntegerRangeOption option =
-			ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
-
-		final int newValue = option.getValue() + FONT_DELTA;
-
-		if (newValue > FONT_END) {
-			option.setValue(FONT_START);
+	public void updateEpdView(int delay) {
+		updateEpdStatusbar();
+		if (delay <= 0) {
+			updateEpdView();
 		} else {
-			option.setValue(newValue);
-		}
-		//((TextView) FBReader.Instance.findViewById(R.id.statusbar_text)).setText("TEXT SIZE = " + option.getValue());
-
-		((FBReaderApp)ZLApplication.Instance()).clearTextCaches();
-		ZLApplication.Instance().repaintView();
-	}
-
-	private void synchronizeLCD() {
-		if (SynchronousActivity.Instance == null) {
-			FBReader.Instance.startActivity(
-				new Intent(FBReader.Instance.getApplicationContext(), SynchronousActivity.class)
-					.putExtra(SynchronousActivity.ROTATE_KEY, rotateFlag())
-			);
-		} else {
-			SynchronousActivity.Instance.finish();
+			updateEpdViewDelay(delay);
 		}
 	}
 
-	boolean rotateFlag() {
-		final FBReader fbreader = FBReader.Instance;
-		if (fbreader != null) {
-			return fbreader.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+	private void updateEpdStatusbar() {
+		final TextView statusPositionText = (TextView) myActivity.findViewById(R.id.statusbar_position_text);
+		final ZLView view = ZLApplication.Instance().getCurrentView();
+		if (view instanceof ZLTextView
+				&& ((ZLTextView) view).getModel() != null
+				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
+			ZLTextView textView = (ZLTextView) view;
+			final int page = textView.computeCurrentPage();
+			final int pagesNumber = textView.computePageNumber();
+			statusPositionText.setText(makePositionText(page, pagesNumber));
+		} else {
+			statusPositionText.setText("");
 		}
-		return false;
+	}
+
+	public static String makePositionText(int page, int pagesNumber) {
+		return "" + page + " / " + pagesNumber;
+	}
+
+	private class NotificationHandler extends Handler {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			/*final boolean singleChange = msg.what == 1;
+			updateEpdView(singleChange ? 0 : 10);*/
+			updateEpdView(0);
+		};
+	};
+	private final Handler myNotifyApplicationHandler = new NotificationHandler();
+
+
+	public void notifyApplicationChanges(boolean singleChange) {
+		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
 }
