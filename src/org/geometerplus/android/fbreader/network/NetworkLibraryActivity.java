@@ -20,6 +20,8 @@
 package org.geometerplus.android.fbreader.network;
 
 import java.util.List;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,7 +46,6 @@ import org.geometerplus.fbreader.network.NetworkLibrary;
 
 
 public class NetworkLibraryActivity extends NetworkBaseActivity {
-
 	private NetworkTree myTree;
 
 	@Override
@@ -104,7 +105,6 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 
 
 	private static class Initializator extends Handler {
-
 		private Activity myActivity;
 		private String myKey;
 		private Runnable myDoAfter;
@@ -190,7 +190,6 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 
 
 	private final class LibraryAdapter extends BaseAdapter {
-
 		public final int getCount() {
 			return myTree.subTrees().size()
 				+ NetworkView.Instance().getSpecialItems().size() + 1;
@@ -205,7 +204,7 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 			position -= size;
 			size = myTree.subTrees().size();
 			if (position < size) {
-				return (NetworkTree) myTree.subTrees().get(position);
+				return (NetworkTree)myTree.subTrees().get(position);
 			}
 			position -= size;
 			if (position == 0) {
@@ -266,11 +265,45 @@ public class NetworkLibraryActivity extends NetworkBaseActivity {
 				refreshCatalogsList();
 				return true;
 			case MENU_LANGUAGES:
-				for (String langCode : NetworkLibrary.Instance().languages()) {
-					System.err.println("Language: " + ZLLanguageUtil.languageName(langCode));
+			{
+				final List<String> allLanguageCodes = NetworkLibrary.Instance().languageCodes();
+				final Collection<String> activeLanguageCodes = NetworkLibrary.Instance().activeLanguageCodes();
+				final CharSequence[] languageNames = new CharSequence[allLanguageCodes.size()];
+				final boolean[] checked = new boolean[allLanguageCodes.size()];
+
+				for (int i = 0; i < allLanguageCodes.size(); ++i) {
+					final String code = allLanguageCodes.get(i);
+					languageNames[i] = ZLLanguageUtil.languageName(code);
+					checked[i] = activeLanguageCodes.contains(code);
 				}
-				//showDialog(R.layout.network_languages_list_dialog);
+
+				final DialogInterface.OnMultiChoiceClickListener listener =
+					new DialogInterface.OnMultiChoiceClickListener() {
+						public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+							checked[which] = isChecked;
+						}
+					};
+				final ZLResource dialogResource = ZLResource.resource("dialog");
+				final AlertDialog dialog = new AlertDialog.Builder(this)
+					.setMultiChoiceItems(languageNames, checked, listener)
+					.setTitle(dialogResource.getResource("languageFilterDialog").getResource("title").getValue())
+					.setPositiveButton(dialogResource.getResource("button").getResource("ok").getValue(), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							final ArrayList<String> newActiveCodes = new ArrayList<String>();
+							for (int i = 0; i < checked.length; ++i) {
+								if (checked[i]) {
+									newActiveCodes.add(allLanguageCodes.get(i));
+								}
+							}
+							NetworkLibrary.Instance().setActiveLanguageCodes(newActiveCodes);
+							NetworkLibrary.Instance().invalidateChildren();
+							((BaseAdapter)getListAdapter()).notifyDataSetInvalidated();
+						}
+					})
+					.create();
+				dialog.show();
 				return true;
+			}
 			default:
 				return true;
 		}
