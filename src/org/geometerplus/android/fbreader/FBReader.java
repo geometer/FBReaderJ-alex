@@ -23,6 +23,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
@@ -91,6 +92,7 @@ public final class FBReader extends ZLAndroidActivity {
 		@Override
 		public boolean onTogglePressed(int arg1, int arg2) {
 			final FBReader fbreader = (FBReader)getActivity();
+			Log.w("FBREADER", "ReadingEPDView: onTogglePressed (readMode = " + fbreader.myReadMode + ")");
 			if (!fbreader.myReadMode /*&& SynchronousActivity.Instance == null*/) {
 				changeFont();
 			} else {
@@ -114,6 +116,7 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 
 		public void onEpdRepaintFinished() {
+			Log.w("FBREADER", "ReadingEPDView: onEpdRepaintFinished");
 			final FBReader fbreader = (FBReader)getActivity();
 			fbreader.onEpdRepaintFinished();
 		}
@@ -127,7 +130,6 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onCreate(Bundle icicle) {
-		myEPDView.onCreate();
 		super.onCreate(icicle);
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
 		Instance = this;
@@ -270,7 +272,6 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onStop() {
-		myEPDView.setVdsActive(false);
 		if (myPanel.ControlPanel != null) {
 			myPanel.ControlPanel.hide(false);
 			myPanel.ControlPanel = null;
