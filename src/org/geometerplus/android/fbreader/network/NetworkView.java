@@ -233,14 +233,16 @@ class NetworkView {
 	private final CoverSynchronizedHandler myCoverSynchronizedHandler = new CoverSynchronizedHandler();
 
 	public void performCoverSynchronization(final NetworkImage image, Runnable finishRunnable) {
-		if (myOnCoverSyncRunnables.containsKey(image.Url)) {
+		LinkedList<Runnable> runnables = myOnCoverSyncRunnables.get(image.Url);
+		if (runnables != null) {
+			runnables.add(finishRunnable);
 			return;
 		}
-		final LinkedList<Runnable> runnables = new LinkedList<Runnable>();
-		if (finishRunnable != null) {
-			runnables.add(finishRunnable);
-		}
+
+		runnables = new LinkedList<Runnable>();
+		runnables.add(finishRunnable);
 		myOnCoverSyncRunnables.put(image.Url, runnables);
+
 		myPool.execute(new Runnable() {
 			public void run() {
 				image.synchronize();
@@ -259,7 +261,6 @@ class NetworkView {
 			runnables.add(finishRunnable);
 		}
 	}
-
 
 	/*
 	 * Open Network URL in browser
