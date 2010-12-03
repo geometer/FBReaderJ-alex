@@ -22,7 +22,6 @@ package org.geometerplus.android.fbreader;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -46,7 +45,6 @@ public class SynchronousActivity extends Activity {
 
 		@Override
 		public boolean onTogglePressed(int arg1, int arg2) {
-			Log.w("FBREADER", "SyncEPDView: onTogglePressed");
 			finishActivity();
 			return true;
 		}
@@ -57,7 +55,6 @@ public class SynchronousActivity extends Activity {
 		}
 
 		public void onEpdRepaintFinished() {
-			Log.w("FBREADER", "SyncEPDView: onEpdRepaintFinished");
 			((SynchronousActivity) getActivity()).updateImage();
 		}
 	}

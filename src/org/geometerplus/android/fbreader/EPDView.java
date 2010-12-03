@@ -21,7 +21,6 @@ package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.EpdRender;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,23 +72,13 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 	}
 
 
-	@Override
-	public void setVdsActive(boolean active) {
-		Log.w("FBREADER", "EPDView: " + (active ? "Activate" : "Deactivate") +
-				" VDS for (" + myActivity.getClass().getSimpleName() + ")");
-		super.setVdsActive(active);
-	}
-
-
 	public void onResume() {
 		final LinearLayout view = (LinearLayout) myActivity.findViewById(R.id.epd_layout);
 		if (view == null) {
 			throw new RuntimeException("EPDView's activity must be layed out with \"epd_layout\" layout.");
 		}
 		setVdsActive(true);
-
 		if (getLayout() != view) {
-			Log.w("FBREADER", "EPDView: bind layout for (" + myActivity.getClass().getSimpleName() + ")");
 			bindLayout(view);
 		}
 		updateEpdViewDelay(200);
@@ -101,14 +90,12 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		Log.w("FBREADER", "EPDView: onPageUp (" + myActivity.getClass().getSimpleName() + ")");
 		scrollPage(ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		Log.w("FBREADER", "EPDView: onPageDown (" + myActivity.getClass().getSimpleName() + ")");
 		scrollPage(!ZLAndroidApplication.Instance().RotatedFlag);
 		return true;
 	}
@@ -126,7 +113,6 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 	}
 
 	public void updateEpdView(int delay) {
-		Log.w("FBREADER", "EPDView: updateEPDView(" + delay + ") for (" + myActivity.getClass().getSimpleName() + ")");
 		updateEpdStatusbar();
 		if (delay <= 0) {
 			updateEpdView();
