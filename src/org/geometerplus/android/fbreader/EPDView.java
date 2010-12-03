@@ -103,8 +103,8 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 	public final void scrollPage(boolean forward) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		if (view instanceof ZLTextView) {
-			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
 			onPageScrolling();
+			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
 			ZLApplication.Instance().repaintView();
 		}
 	}
