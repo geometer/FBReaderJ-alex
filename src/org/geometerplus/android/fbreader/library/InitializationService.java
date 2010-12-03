@@ -17,25 +17,26 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader;
+package org.geometerplus.android.fbreader.library;
 
-import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.IBinder;
 
-public class RecentBooksActivity extends Activity {
+public class InitializationService extends Service {
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		/*startActivity(
-			new Intent(getApplicationContext(), LibraryTabActivity.class)
-				.putExtra(LibraryTabActivity.SELECTED_TAG_KEY, LibraryTabActivity.TAG_RECENT)
-				//.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
-				.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP)
-		);*/
-
-		finish();
+	public void onStart(Intent intent, int startId) {
+		LibraryTopLevelActivity.Library.synchronize();
 	}
+
+	/*@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		onStart(intent, startId);
+		return 0;
+	}*/
 }
