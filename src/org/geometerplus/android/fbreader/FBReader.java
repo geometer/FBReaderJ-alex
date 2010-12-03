@@ -235,8 +235,6 @@ public final class FBReader extends ZLAndroidActivity {
 			p.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			root.addView(myPanel.ControlPanel, p);
 		}
-
-		myEPDView.onStart();
 	}
 
 	//private PowerManager.WakeLock myWakeLock;
@@ -244,6 +242,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		myEPDView.onResume();
 		if (myPanel.ControlPanel != null) {
 			myPanel.ControlPanel.setVisibility(myPanel.Visible ? View.VISIBLE : View.GONE);
 		}
@@ -267,6 +266,7 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel.Visible = myPanel.ControlPanel.getVisibility() == View.VISIBLE;
 		}
 		myReadMode = false;
+		myEPDView.onPause();
 		super.onPause();
 	}
 

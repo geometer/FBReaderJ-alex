@@ -38,9 +38,23 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListener {
 
-	private static EPDView ourActiveEPDView;
-
 	private final Activity myActivity;
+
+	private class ViewHandler extends Handler {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				updateEpdView(0);
+				break;
+			case -1:
+				myActivity.finish();
+				break;
+			}
+		};
+	};
+	private final Handler myHandler = new ViewHandler();
+
 
 	public EPDView(Activity activity) {
 		myActivity = activity;
@@ -50,35 +64,40 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		return myActivity;
 	}
 
+	public void notifyApplicationChanges(boolean singleChange) {
+		myHandler.sendEmptyMessage(0);
+	}
+
+	public void finishActivity() {
+		myHandler.sendEmptyMessage(-1);
+	}
+
+
 	@Override
 	public void setVdsActive(boolean active) {
-		if (active) {
-			if (ourActiveEPDView == this) {
-				return;
-			}
-			if (ourActiveEPDView != null) {
-				ourActiveEPDView.setVdsActive(false);
-			}
-			ourActiveEPDView = this;
-		}
 		Log.w("FBREADER", "EPDView: " + (active ? "Activate" : "Deactivate") +
 				" VDS for (" + myActivity.getClass().getSimpleName() + ")");
 		super.setVdsActive(active);
 	}
 
 
-	public void onStart() {
+	public void onResume() {
 		final LinearLayout view = (LinearLayout) myActivity.findViewById(R.id.epd_layout);
 		if (view == null) {
 			throw new RuntimeException("EPDView's activity must be layed out with \"epd_layout\" layout.");
 		}
 		setVdsActive(true);
 
-		Log.w("FBREADER", "EPDView: bind layout for (" + myActivity.getClass().getSimpleName() + ")");
-		bindLayout(view);
+		if (getLayout() != view) {
+			Log.w("FBREADER", "EPDView: bind layout for (" + myActivity.getClass().getSimpleName() + ")");
+			bindLayout(view);
+		}
 		updateEpdViewDelay(200);
 	}
 
+	public void onPause() {
+		setVdsActive(false);
+	}
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
@@ -133,20 +152,5 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	public static String makePositionText(int page, int pagesNumber) {
 		return "" + page + " / " + pagesNumber;
-	}
-
-	private class NotificationHandler extends Handler {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			/*final boolean singleChange = msg.what == 1;
-			updateEpdView(singleChange ? 0 : 10);*/
-			updateEpdView(0);
-		};
-	};
-	private final Handler myNotifyApplicationHandler = new NotificationHandler();
-
-
-	public void notifyApplicationChanges(boolean singleChange) {
-		myNotifyApplicationHandler.sendEmptyMessage(singleChange ? 1 : 0);
 	}
 }

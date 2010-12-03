@@ -47,7 +47,7 @@ public class SynchronousActivity extends Activity {
 		@Override
 		public boolean onTogglePressed(int arg1, int arg2) {
 			Log.w("FBREADER", "SyncEPDView: onTogglePressed");
-			((SynchronousActivity) getActivity()).finish();
+			finishActivity();
 			return true;
 		}
 
@@ -85,18 +85,19 @@ public class SynchronousActivity extends Activity {
 		super.onStart();
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
-		myEPDView.onStart();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		myEPDView.onResume();
 		updateImage();
 	}
 
 	@Override
 	protected void onPause() {
 		myProgressDialog.cancel();
+		myEPDView.onPause();
 		super.onPause();
 	}
 
