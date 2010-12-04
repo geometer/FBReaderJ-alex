@@ -34,6 +34,7 @@ import android.os.Message;
 import android.view.MenuItem;
 import android.view.Menu;
 
+import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
 import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 
 import org.geometerplus.fbreader.network.*;
@@ -232,8 +233,8 @@ class NetworkView {
 
 	private final CoverSynchronizedHandler myCoverSynchronizedHandler = new CoverSynchronizedHandler();
 
-	public void performCoverSynchronization(final NetworkImage image, Runnable finishRunnable) {
-		LinkedList<Runnable> runnables = myOnCoverSyncRunnables.get(image.Url);
+	public void performCoverSynchronization(final ZLLoadableImage image, Runnable finishRunnable) {
+		LinkedList<Runnable> runnables = myOnCoverSyncRunnables.get(image.getId());
 		if (runnables != null) {
 			runnables.add(finishRunnable);
 			return;
@@ -241,12 +242,12 @@ class NetworkView {
 
 		runnables = new LinkedList<Runnable>();
 		runnables.add(finishRunnable);
-		myOnCoverSyncRunnables.put(image.Url, runnables);
+		myOnCoverSyncRunnables.put(image.getId(), runnables);
 
 		myPool.execute(new Runnable() {
 			public void run() {
 				image.synchronize();
-				myCoverSynchronizedHandler.fireMessage(image.Url);
+				myCoverSynchronizedHandler.fireMessage(image.getId());
 			}
 		});
 	}
