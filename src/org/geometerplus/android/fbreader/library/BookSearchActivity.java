@@ -17,26 +17,29 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader;
+package org.geometerplus.android.fbreader.library;
 
 import android.app.Activity;
 
-import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.library.*;
 
-public class TextSearchActivity extends SearchActivity {
+import org.geometerplus.android.fbreader.SearchActivity;
+
+public class BookSearchActivity extends SearchActivity {
+	//private LibraryTree myTree;
+
 	@Override
 	public void onSuccess() {
-		FBReader.Instance.showTextSearchControls(true);
+		//LibraryTabActivity.Instance.showSearchResultsTab(myTree);
 	}
 
 	/*@Override
 	public void onFailure() {
-		FBReader.Instance.showTextSearchControls(false);
 	}*/
 
 	@Override
 	public String getFailureMessageResourceKey() {
-		return "textNotFound";
+		return "bookNotFound";
 	}
 
 	@Override
@@ -46,13 +49,17 @@ public class TextSearchActivity extends SearchActivity {
 
 	@Override
 	public boolean runSearch(final String pattern) {
-		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
-		fbReader.TextSearchPatternOption.setValue(pattern);
-		return fbReader.getTextView().search(pattern, true, false, false, false) != 0;
+		/*
+		final LibraryTabActivity parentActivity = LibraryTabActivity.Instance;
+		parentActivity.BookSearchPatternOption.setValue(pattern);
+		myTree = parentActivity.library().searchBooks(pattern);
+		return myTree.hasChildren();
+		*/
+		return false;
 	}
 
 	@Override
 	public Activity getParentActivity() {
-		return FBReader.Instance;
+		return null;//LibraryTabActivity.Instance;
 	}
 }
