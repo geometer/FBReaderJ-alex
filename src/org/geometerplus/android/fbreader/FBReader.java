@@ -47,6 +47,8 @@ import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
 public final class FBReader extends ZLAndroidActivity {
 	final static int REPAINT_CODE = 1;
 
+	public static final String ACTION_START_SEARCH = "org.geometerplus.android.fbreader.FBReader.START_SEARCH";
+
 	static FBReader Instance;
 
 	private ArrayList<AbstractButton> myButtons = new ArrayList<AbstractButton>();
@@ -258,6 +260,14 @@ public final class FBReader extends ZLAndroidActivity {
 			myPanel.ControlPanel = null;
 		}
 		super.onStop();
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (ACTION_START_SEARCH.equals(intent.getAction())) {
+			onSearchRequested();
+		}
 	}
 
 	protected ZLApplication createApplication(String fileName) {

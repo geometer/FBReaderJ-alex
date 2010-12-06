@@ -22,6 +22,8 @@ package org.geometerplus.android.fbreader.buttons;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.geometerplus.fbreader.fbreader.ActionCode;
+
 
 public class ButtonsCollection {
 	private static ButtonsCollection ourInstance;
@@ -45,6 +47,7 @@ public class ButtonsCollection {
 		}
 		myButtons = new LinkedList<AbstractButton>();
 		myButtons.add(new GotoPageButton());
+		myButtons.add(new FBActionButton("search", ActionCode.SEARCH));
 	}
 
 	private void collectDefaultButtons(List<AbstractButton> buttons) {
