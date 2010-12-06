@@ -38,7 +38,7 @@ public abstract class AbstractButton {
 	public abstract View createView(Context context);
 	public abstract String getCaption();
 
-    public abstract void onAction(Context context);
+	public abstract void onAction(Context context);
 
 	@Override
 	public boolean equals(Object o) {
@@ -52,7 +52,7 @@ public abstract class AbstractButton {
 
 	@Override
 	public int hashCode() {
-		final String data = getData(); 
+		final String data = getData();
 		return getType().hashCode()
 			+ ((data == null) ? 0 : data.hashCode());
 	}
@@ -85,26 +85,26 @@ public abstract class AbstractButton {
 		myIsEditing = false;
 	}
 
-    protected void setDefaultListeners(View view, final Context context) {
-        view.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (myIsEditing) {
-                    if (mySelectedListener != null) {
-                        mySelectedListener.onButtonSelected(AbstractButton.this);
-                    }
-                } else {
-                    onAction(context);
-                }
-            }
-        });
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            public boolean onLongClick(View view) {
-                if (myEditListener != null) {
-                    myEditListener.onStartEdit(AbstractButton.this);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
+	protected void setDefaultListeners(View view, final Context context) {
+		view.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				if (myIsEditing) {
+					if (mySelectedListener != null) {
+						mySelectedListener.onButtonSelected(AbstractButton.this);
+					}
+				} else {
+					onAction(context);
+				}
+			}
+		});
+		view.setOnLongClickListener(new View.OnLongClickListener() {
+			public boolean onLongClick(View view) {
+				if (myEditListener != null) {
+					myEditListener.onStartEdit(AbstractButton.this);
+					return true;
+				}
+				return false;
+			}
+		});
+	}
 }

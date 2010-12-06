@@ -32,9 +32,9 @@ import android.widget.ImageButton;
 
 abstract class SimpleButton extends AbstractButton {
 
-    protected abstract String getImageId();
+	protected abstract String getImageId();
 
-    private Drawable createDrawable(Context context, String id) {
+	private Drawable createDrawable(Context context, String id) {
 		final String fileName = id + ".png";
 		try {
 			final String locale = context.getResources().getConfiguration().locale.getLanguage();
@@ -50,63 +50,63 @@ abstract class SimpleButton extends AbstractButton {
 		return null;
 	}
 
-    private Drawable createDrawableNormal(Context context) {
-    	final String id = getImageId();
-    	if (id == null) {
-    		return null;
-    	}
-        return createDrawable(context, id);
-    }
+	private Drawable createDrawableNormal(Context context) {
+		final String id = getImageId();
+		if (id == null) {
+			return null;
+		}
+		return createDrawable(context, id);
+	}
 
-    private Drawable createDrawablePressed(Context context) {
-    	final String id = getImageId();
-    	if (id == null) {
-    		return null;
-    	}
-        return createDrawable(context, id + "_focus");
-    }
+	private Drawable createDrawablePressed(Context context) {
+		final String id = getImageId();
+		if (id == null) {
+			return null;
+		}
+		return createDrawable(context, id + "_focus");
+	}
 
-    private Drawable getImageDrawable(Context context) {
-        final Drawable normal = createDrawableNormal(context);
-        if (normal == null) {
-            return null;
-        }
-        final Drawable pressed = createDrawablePressed(context);
-        if (pressed == null) {
-            return null;
-        }
-        android.graphics.drawable.StateListDrawable image = new StateListDrawable();
-        image.addState(new int[]{-android.R.attr.state_pressed}, normal);
-        image.addState(new int[]{android.R.attr.state_pressed}, pressed);
-        return image;
-    }
+	private Drawable getImageDrawable(Context context) {
+		final Drawable normal = createDrawableNormal(context);
+		if (normal == null) {
+			return null;
+		}
+		final Drawable pressed = createDrawablePressed(context);
+		if (pressed == null) {
+			return null;
+		}
+		android.graphics.drawable.StateListDrawable image = new StateListDrawable();
+		image.addState(new int[]{-android.R.attr.state_pressed}, normal);
+		image.addState(new int[]{android.R.attr.state_pressed}, pressed);
+		return image;
+	}
 
-    protected View createViewInternal(final Context context) {
-        final Drawable image = getImageDrawable(context);
-        if (image == null) {
-        	return null;
-        }
-        final ImageButton view = new ImageButton(context);
-        view.setImageDrawable(image);
-        setDefaultListeners(view, context);
-        return view;
-    }
+	protected View createViewInternal(final Context context) {
+		final Drawable image = getImageDrawable(context);
+		if (image == null) {
+			return null;
+		}
+		final ImageButton view = new ImageButton(context);
+		view.setImageDrawable(image);
+		setDefaultListeners(view, context);
+		return view;
+	}
 
-    private View myView;
+	private View myView;
 
-    @Override
-    public View createView(final Context context) {
-        if (myView == null) {
-            myView = createViewInternal(context);
-            if (myView == null) {
-                final Button view = new Button(context);
-                view.setText(getCaption());
-                setDefaultListeners(view, context);
-                myView = view;
-            }
-            myView.setPadding(0, 0, 0, 0);
-            myView.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
-        }
-        return myView;
-    }
+	@Override
+	public View createView(final Context context) {
+		if (myView == null) {
+			myView = createViewInternal(context);
+			if (myView == null) {
+				final Button view = new Button(context);
+				view.setText(getCaption());
+				setDefaultListeners(view, context);
+				myView = view;
+			}
+			myView.setPadding(0, 0, 0, 0);
+			myView.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+		}
+		return myView;
+	}
 }

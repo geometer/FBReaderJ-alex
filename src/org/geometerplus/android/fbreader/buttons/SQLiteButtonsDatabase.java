@@ -88,12 +88,12 @@ public final class SQLiteButtonsDatabase {
 
 	public void loadButtons(List<AbstractButton> buttons) {
 		buttons.clear();
-        final Cursor c = myDatabase.rawQuery("SELECT btn_type, btn_data FROM Buttons", null);
-        while (c.moveToNext()) {
-        	final String type = c.getString(0);
-        	final String data = c.getString(1);
-        	buttons.add(AbstractButton.createButton(type, data));
-        }
+		final Cursor c = myDatabase.rawQuery("SELECT btn_type, btn_data FROM Buttons", null);
+		while (c.moveToNext()) {
+			final String type = c.getString(0);
+			final String data = c.getString(1);
+			buttons.add(AbstractButton.createButton(type, data));
+		}
 	}
 
 	private SQLiteStatement mySaveButtonStatement;
