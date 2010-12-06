@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import org.geometerplus.android.fbreader.NavigationActivity;
 
-class GotoPageItem extends SpecialButton {
+class GotoPageButton extends SpecialButton {
 
 	@Override
 	protected String getImageId() {

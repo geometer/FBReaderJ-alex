@@ -44,7 +44,7 @@ public class ButtonsCollection {
 			return;
 		}
 		myButtons = new LinkedList<AbstractButton>();
-		myButtons.add(new GotoPageItem());
+		myButtons.add(new GotoPageButton());
 	}
 
 	private void collectDefaultButtons(List<AbstractButton> buttons) {
