@@ -73,7 +73,6 @@ public class NavigationActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		myEPDView.onCreate();
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -140,7 +139,18 @@ public class NavigationActivity extends Activity {
 
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
-		myEPDView.onStart();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		myEPDView.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		myEPDView.onPause();
+		super.onPause();
 	}
 
 	private int myCoverWidth;
