@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="Kicsinyítés" />
 		<node name="toggleFullscreen" value="Teljes kijelző"/>
 		<node name="bookmarks" value="Könyvjelzők"/>
+		<node name="gotoPage" value="Ugrás oldalszámra"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

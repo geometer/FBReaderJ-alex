@@ -13,4 +13,5 @@
 	<item id="rotate"/>
 	<item id="increaseFont"/>
 	<item id="decreaseFont"/>
+	<item id="gotoPage"/>
 </menubar>

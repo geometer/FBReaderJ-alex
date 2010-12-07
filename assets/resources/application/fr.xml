@@ -158,6 +158,7 @@
 		<node name="decreaseFont" value="Diminuer la taille" />
 		<node name="toggleFullscreen" value="Plein écran"/>
 		<node name="bookmarks" value="Marque-pages"/>
+		<node name="gotoPage" value="Aller à la Page"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

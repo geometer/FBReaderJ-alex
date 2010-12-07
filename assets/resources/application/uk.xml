@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="Зменшити шрифт" />
 		<node name="toggleFullscreen" value="На весь екран"/>
 		<node name="bookmarks" value="Закладки"/>
+		<node name="gotoPage" value="На сторінку"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

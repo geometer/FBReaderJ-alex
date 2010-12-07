@@ -145,6 +145,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(fbReader));
+		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 
 		updateButtons();
 	}

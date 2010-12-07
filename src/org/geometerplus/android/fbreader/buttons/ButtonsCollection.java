@@ -46,7 +46,7 @@ public class ButtonsCollection {
 			return;
 		}
 		myButtons = new LinkedList<AbstractButton>();
-		myButtons.add(new GotoPageButton());
+		myButtons.add(new FBActionButton("page", ActionCode.GOTO_PAGE));
 		myButtons.add(new FBActionButton("search", ActionCode.SEARCH));
 		myButtons.add(new FBActionButton("bookmarks", ActionCode.SHOW_BOOKMARKS));
 		myButtons.add(new FBActionButton("table_of_contents", ActionCode.SHOW_CONTENTS));

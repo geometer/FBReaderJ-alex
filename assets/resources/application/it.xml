@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="Zoom -" />
 		<node name="toggleFullscreen" value="Tutto schermo"/>
 		<node name="bookmarks" value="Segnalibri"/>
+		<node name="gotoPage" value="Vai a Pagine"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

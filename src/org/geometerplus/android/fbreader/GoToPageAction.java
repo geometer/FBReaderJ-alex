@@ -17,20 +17,29 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader.buttons;
+package org.geometerplus.android.fbreader;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
+import android.content.Intent;
 
-abstract class SpecialButton extends SimpleButton {
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.fbreader.FBAction;
 
-	@Override
-	public final String getCaption() {
-		return ZLResource.resource("fbreader").getResource("buttons")
-			.getResource(getType()).getValue();
+
+class GoToPageAction extends FBAction {
+	private final FBReader myActivity;
+
+	GoToPageAction(FBReader activity, FBReaderApp fbreader) {
+		super(fbreader);
+		myActivity = activity;
 	}
 
-	@Override
-	public final String getData() {
-		return null;
+	public boolean isVisible() {
+		return Reader.Model != null;
+	}
+
+	public void run() {
+		myActivity.startActivity(
+			new Intent(myActivity.getApplicationContext(), NavigationActivity.class)
+		);
 	}
 }
