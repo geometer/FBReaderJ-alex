@@ -113,6 +113,9 @@
 		<node name="time" value="Last modified:" />
 		<node name="sizeInBytes" value="%s byte(s)" />
 		<node name="sizeInKiloBytes" value="%s kB" />
+		<node name="menu">
+			<node name="edit" value="Edit" />
+		</node>
 	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Book has been downloaded" />

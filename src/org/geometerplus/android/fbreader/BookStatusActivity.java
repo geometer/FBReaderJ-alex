@@ -24,8 +24,11 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -41,6 +44,7 @@ import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
+import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
@@ -49,11 +53,14 @@ import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.SeriesInfo;
 import org.geometerplus.fbreader.library.Tag;
 
-public class BookInfoActivity extends Activity {
+import org.geometerplus.android.fbreader.preferences.BookInfoActivity;
+
+
+public class BookStatusActivity extends Activity {
 
 	private static class InfoEPDView extends EPDView {
 
-		public InfoEPDView(BookInfoActivity activity) {
+		public InfoEPDView(BookStatusActivity activity) {
 			super(activity);
 		}
 
@@ -112,6 +119,54 @@ public class BookInfoActivity extends Activity {
 	protected void onPause() {
 		myEPDView.onPause();
 		super.onPause();
+	}
+
+	protected MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
+		final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
+		return menu.add(0, index, Menu.NONE, label).setIcon(iconId);
+	}
+
+	private static final int MENU_EDIT = 1;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		addMenuItem(menu, MENU_EDIT, "edit", android.R.drawable.ic_menu_edit);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		//menu.findItem(MENU_EDIT).setEnabled(true);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_EDIT:
+			startEditDialog();
+			return true;
+		default:
+			return true;
+		}
+	}
+
+	private void startEditDialog() {
+		final Intent intent = new Intent(getApplicationContext(), BookInfoActivity.class);
+		final BookModel model = ((FBReaderApp)FBReaderApp.Instance()).Model;
+		if (model != null && model.Book != null) {
+			final ZLFile file = model.Book.File;
+			final ZLFile physicalFile = file.getPhysicalFile();
+			if (physicalFile == null || physicalFile == file) {
+				intent.putExtra(BookInfoActivity.CURRENT_BOOK_PATH_KEY, file.getPath());
+			} else {
+				intent.putExtra(BookInfoActivity.CURRENT_BOOK_PATH_KEY, physicalFile.getPath());
+				intent.putExtra(BookInfoActivity.CURRENT_BOOK_ARCHIVE_ENTRY_KEY, file.getName(false));
+			}
+		}
+		startActivity(intent);
 	}
 
 	private void setupInfoPair(int id, String key, CharSequence value) {

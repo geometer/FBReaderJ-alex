@@ -113,6 +113,9 @@
 		<node name="time" value="Последнее изменение:" />
 		<node name="sizeInBytes" value="%s байт" />
 		<node name="sizeInKiloBytes" value="%s кБ" />
+		<node name="menu">
+			<node name="edit" value="Редактировать" />
+		</node>
 	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Книга скачана" />

@@ -114,6 +114,9 @@
 		<node name="time" toBeTranslated="true" value="Last modified:" />
 		<node name="sizeInBytes" toBeTranslated="true" value="%s byte(s)" />
 		<node name="sizeInKiloBytes" toBeTranslated="true" value="%s kB" />
+		<node name="menu">
+			<node name="edit" toBeTranslated="true" value="Edit" />
+		</node>
 	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Книга завантажена" />
