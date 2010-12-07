@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="Thu nhỏ" />
 		<node name="toggleFullscreen" value="Toàn Màn hình "/>
 		<node name="bookmarks" value="Đánh dấu"/>
+		<node name="gotoPage" value="Đến trang"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

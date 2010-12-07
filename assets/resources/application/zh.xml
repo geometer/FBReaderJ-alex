@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="字体缩小" />
 		<node name="toggleFullscreen" value="全屏" />
 		<node name="bookmarks" value="书签" />
+		<node name="gotoPage" toBeTranslated="true" value="Go to page"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

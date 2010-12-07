@@ -155,6 +155,7 @@
 		<node name="decreaseFont" value="Zmenšit" />
 		<node name="toggleFullscreen" value="Na celou obrazovku"/>
 		<node name="bookmarks" value="Záložky"/>
+		<node name="gotoPage" value="Přejít na stránku"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

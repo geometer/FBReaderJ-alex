@@ -49,4 +49,6 @@ public interface ActionCode {
 	String OPEN_SELECTED_TEXT_IN_DICTIONARY = "openInDictionary";
 	String FOLLOW_HYPERLINK = "followHyperlink";
 	String ROTATE = "rotate";
+
+	String GOTO_PAGE = "gotoPage";
 };
