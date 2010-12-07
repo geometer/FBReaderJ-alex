@@ -69,8 +69,6 @@ public class NavigationActivity extends Activity {
 	}
 	private EPDView myEPDView = new NavigationEPDView(this);
 
-	private Book myViewBook;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -155,6 +153,7 @@ public class NavigationActivity extends Activity {
 
 	private int myCoverWidth;
 	private int myCoverHeight;
+	private Book myViewBook;
 
 	public void onEpdRepaintFinished() {
 		final FBReaderApp fbreader = (FBReaderApp)FBReaderApp.Instance();
