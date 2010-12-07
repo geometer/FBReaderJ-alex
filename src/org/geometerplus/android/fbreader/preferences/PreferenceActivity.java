@@ -39,7 +39,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	}
 
 	@Override
-	protected void init(Intent intent) {
+	protected boolean init(Intent intent) {
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 		//final ZLAndroidApplication androidApp = ZLAndroidApplication.Instance();
 		//final ColorProfile profile = fbReader.getColorProfile();
@@ -241,5 +241,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			this, marginsScreen.Resource.getResource("bottom"),
 			fbReader.BottomMarginOption
 		));
+		return true;
 	}
 }

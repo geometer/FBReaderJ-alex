@@ -109,7 +109,7 @@ abstract class ZLPreferenceActivity extends android.preference.PreferenceActivit
 	}
 	*/
 
-	protected abstract void init(Intent intent);
+	protected abstract boolean init(Intent intent);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -119,7 +119,10 @@ abstract class ZLPreferenceActivity extends android.preference.PreferenceActivit
 
 		myScreen = getPreferenceManager().createPreferenceScreen(this);
 
-		init(getIntent());
+		if (!init(getIntent())) {
+			finish();
+			return;
+		}
 
 		setPreferenceScreen(myScreen);
 	}

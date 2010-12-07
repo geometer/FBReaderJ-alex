@@ -96,7 +96,7 @@ public class BookInfoActivity extends ZLPreferenceActivity {
 	}
 
 	@Override
-	protected void init(Intent intent) {
+	protected boolean init(Intent intent) {
 		if (SQLiteBooksDatabase.Instance() == null) {
 			new SQLiteBooksDatabase(this, "LIBRARY");
 		}
@@ -108,6 +108,9 @@ public class BookInfoActivity extends ZLPreferenceActivity {
 			file = ZLFile.createFile(file, archiveEntry);
 		}
 		myBook = Book.getByFile(file);
+		if (myBook == null) {
+			return false;
+		}
 
 		if (myBook.File.getPhysicalFile() != null) {
 			addPreference(new InfoPreference(
@@ -118,6 +121,7 @@ public class BookInfoActivity extends ZLPreferenceActivity {
 		}
 		addPreference(new BookTitlePreference(this, Resource, "title", myBook));
 		addPreference(new LanguagePreference(this, Resource, "language", myBook));
+		return true;
 	}
 
 	@Override
