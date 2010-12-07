@@ -20,42 +20,51 @@
 package org.geometerplus.android.fbreader.buttons;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import android.content.Context;
 
-class FBActionButton extends SimpleButton {
+class FBActionDecorator extends FBActionButton {
 
-	protected final String myImageId;
-	protected final String myActionId;
+	private final SimpleButton myButton;
 
-	public FBActionButton(String imageId, String actionId) {
-		myImageId = imageId;
-		myActionId = actionId;
+	public FBActionDecorator(String imageId, String actionId, SimpleButton button) {
+		super(imageId, actionId);
+		myButton = button;
 	}
 
 	@Override
-	public String getCaption() {
-		return ZLResource.resource("menu").getResource(myActionId).getValue();
+	public final String getCaption() {
+		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+			return super.getCaption();
+		}
+		return myButton.getCaption();
 	}
 
 	@Override
-	public String getData() {
-		return myImageId + ":" + myActionId;
+	public final String getData() {
+		return myImageId + ":" + myActionId + ":" + myButton.getType() + ":" + myButton.getData();
 	}
 
 	@Override
 	protected String getImageId() {
-		return myImageId;
+		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+			return super.getImageId();
+		}
+		return myButton.getImageId();
 	}
 
 	@Override
 	public String getType() {
-		return FBREADER_ACTION;
+		return FBREADER_ACTION_DECORATOR;
 	}
 
 	@Override
 	public void onAction(Context context) {
-		FBReaderApp.Instance().doAction(myActionId);
+		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+			super.onAction(context);
+		} else {
+			myButton.onAction(context);
+		}
+		updateView();
 	}
 }

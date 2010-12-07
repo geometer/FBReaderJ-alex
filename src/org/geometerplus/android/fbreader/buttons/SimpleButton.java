@@ -109,4 +109,19 @@ abstract class SimpleButton extends AbstractButton {
 		}
 		return myView;
 	}
+
+	protected void updateView() {
+		if (myView == null) {
+			return;
+		}
+		if (myView instanceof ImageButton) {
+			final Drawable image = getImageDrawable(myView.getContext());
+			if (image != null) {
+				((ImageButton)myView).setImageDrawable(image);
+			}
+		} else if (myView instanceof Button) {
+			((Button)myView).setText(getCaption());
+		}
+		myView.invalidate();
+	}
 }
