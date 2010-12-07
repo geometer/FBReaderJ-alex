@@ -3,6 +3,7 @@
 	<node name="fbreader">
 		<node name="pageChange" value="Смена страницы"/>
 		<node name="noCover" value="Обложка недоступна"/>
+		<node name="rotationButton" value="Абв"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>

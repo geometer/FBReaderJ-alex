@@ -32,6 +32,7 @@ import android.widget.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
@@ -148,7 +149,6 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 
-		setupRotation();
 		updateButtons();
 	}
 
@@ -219,6 +219,8 @@ public final class FBReader extends ZLAndroidActivity {
 			p.addRule(RelativeLayout.CENTER_HORIZONTAL);
 			root.addView(myPanel.ControlPanel, p);
 		}
+
+		setupRotation();
 	}
 
 	//private PowerManager.WakeLock myWakeLock;
@@ -325,7 +327,7 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	private void setupRotation() {
-		final String string = "Abc"; // TODO: i18n
+		final String string = ZLResource.resource("fbreader").getResource("rotationButton").getValue();
 		setupRotationButton(string, R.id.rotate_bottom, ZLAndroidApplication.ROTATE_0);
 		setupRotationButton(string, R.id.rotate_left, ZLAndroidApplication.ROTATE_90);
 		setupRotationButton(string, R.id.rotate_top, ZLAndroidApplication.ROTATE_180);
@@ -334,7 +336,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 	private void setupRotationButton(String string, int id, final int angle) {
 		final ImageButton btn = (ImageButton)findViewById(id);
-		btn.setImageDrawable(RotatedStringDrawable.create("Abc", angle));
+		btn.setImageDrawable(RotatedStringDrawable.create(string, angle));
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotate(angle);

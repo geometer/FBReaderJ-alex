@@ -4,6 +4,7 @@
 	<node name="fbreader">
 		<node name="pageChange" toBeTranslated="true" value="Page change"/>
 		<node name="noCover" toBeTranslated="true" value="Cover is not available"/>
+		<node name="rotationButton" toBeTranslated="true" value="Abc"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Ismeretlen szerző"/>
