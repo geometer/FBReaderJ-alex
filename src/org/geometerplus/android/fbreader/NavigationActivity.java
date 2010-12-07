@@ -220,13 +220,14 @@ public class NavigationActivity extends Activity {
 					bookNoCoverLayout.setVisibility(View.VISIBLE);
 				}
 			}
-			if (ZLAndroidApplication.Instance().RotatedFlag) {
-				final RotateAnimation anim = new RotateAnimation(90.0f, 90.0f, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+			final int angle = ZLAndroidApplication.Instance().RotationFlag;
+			if (angle != ZLAndroidApplication.ROTATE_0) {
+				final RotateAnimation anim = new RotateAnimation(angle, angle, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 				anim.setFillEnabled(true);
 				anim.setFillAfter(true);
 				final View coverView = bookCover.getVisibility() == View.VISIBLE ? bookCover : bookNoCoverText;
 				coverView.startAnimation(anim);
-				if (coverView == bookCover) {
+				if (coverView == bookCover && angle != ZLAndroidApplication.ROTATE_180) {
 					final int padding = (bookCover.getHeight() - bookCover.getWidth()) / 2;
 					bookCover.setPadding(0, padding, 0, padding);
 				}

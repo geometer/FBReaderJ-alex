@@ -90,13 +90,15 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	@Override
 	public boolean onPageUp(int arg1, int arg2) {
-		scrollPage(ZLAndroidApplication.Instance().RotatedFlag);
+		final int angle = ZLAndroidApplication.Instance().RotationFlag;
+		scrollPage(angle == ZLAndroidApplication.ROTATE_90 || angle == ZLAndroidApplication.ROTATE_180);
 		return true;
 	}
 
 	@Override
 	public boolean onPageDown(int arg1, int arg2) {
-		scrollPage(!ZLAndroidApplication.Instance().RotatedFlag);
+		final int angle = ZLAndroidApplication.Instance().RotationFlag;
+		scrollPage(angle == ZLAndroidApplication.ROTATE_0 || angle == ZLAndroidApplication.ROTATE_270);
 		return true;
 	}
 

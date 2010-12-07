@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -33,6 +34,7 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -143,12 +145,12 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_NETWORK_BROWSER, new ShowNetworkBrowserAction(this, fbReader));
 
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
-		fbReader.addAction(ActionCode.ROTATE, new RotateAction(fbReader));
+		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 
+		setupRotation();
 		updateButtons();
 	}
-
 
 	private void updateButtons() {
 		ButtonsCollection.Instance().loadButtons(myButtons);
@@ -320,5 +322,49 @@ public final class FBReader extends ZLAndroidActivity {
 		final FBReaderApp fbreader = (FBReaderApp)ZLApplication.Instance();
 		startSearch(fbreader.TextSearchPatternOption.getValue(), true, null, false);
 		return true;
+	}
+
+	private void setupRotation() {
+		final String string = "Abc"; // TODO: i18n
+		setupRotationButton(string, R.id.rotate_bottom, ZLAndroidApplication.ROTATE_0);
+		setupRotationButton(string, R.id.rotate_left, ZLAndroidApplication.ROTATE_90);
+		setupRotationButton(string, R.id.rotate_top, ZLAndroidApplication.ROTATE_180);
+		setupRotationButton(string, R.id.rotate_right, ZLAndroidApplication.ROTATE_270);
+	}
+
+	private void setupRotationButton(String string, int id, final int angle) {
+		final ImageButton btn = (ImageButton)findViewById(id);
+		btn.setImageDrawable(RotatedStringDrawable.create("Abc", angle));
+		btn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotate(angle);
+				showRotationButtons(false);
+				FBReaderApp.Instance().repaintView();
+			}
+		});
+	}
+
+	private void showRotationButtons(boolean show) {
+		final View scrollView = findViewById(R.id.root_scroll_view);
+		final View rotateView = findViewById(R.id.root_rotate_view);
+		scrollView.setVisibility(show ? View.GONE : View.VISIBLE);
+		rotateView.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	public void onRotationRequested() {
+		showRotationButtons(true);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			final View scrollView = findViewById(R.id.root_scroll_view);
+			if (scrollView.getVisibility() == View.GONE) {
+				findViewById(R.id.root_rotate_view).setVisibility(View.GONE);
+				scrollView.setVisibility(View.VISIBLE);
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

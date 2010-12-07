@@ -30,6 +30,7 @@ import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidKeyUtil;
 
 public class ZLAndroidWidget extends View {
@@ -58,10 +59,10 @@ public class ZLAndroidWidget extends View {
 		}
 	};
 
-	private boolean myRotated;
+	private int myRotationAngle;
 
-	public void setRotated(boolean rotated) {
-		myRotated = rotated;
+	public void setRotation(int angle) {
+		myRotationAngle = angle;
 		final ZLApplication app = ZLApplication.Instance();
 		if (app != null) {
 			final ZLView view = app.getCurrentView();
@@ -72,10 +73,11 @@ public class ZLAndroidWidget extends View {
 	}
 
 	private final ZLPaintContext createContext(ZLView view, Canvas canvas) {
+		final boolean rotated = myRotationAngle == 90 || myRotationAngle == 270;
 		return new ZLAndroidPaintContext(
 			canvas,
-			myRotated ? getHeight() : getWidth(),
-			myRotated ? getWidth() : getHeight(),
+			rotated ? getHeight() : getWidth(),
+			rotated ? getWidth() : getHeight(),
 			view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
 		);
 	}
@@ -112,25 +114,26 @@ public class ZLAndroidWidget extends View {
 
 		final Canvas canvas = new Canvas(myMainBitmap);
 
-		if (myRotated) {
-			final int w = myMainBitmap.getWidth();
-			final int h = myMainBitmap.getHeight();
-			final float anchor = Math.min(w, h) / 2.0f;
-			canvas.save();
-			canvas.rotate(90.0f, anchor, anchor);
-			// FIXME: handle situation (w > h): How to translate (along X or Y)? and when (before rotation, or after)?
-			/*if (w > h) {
-				canvas.translate(0, w - h);
-				canvas.translate(w - h, 0);
-			}*/
+		canvas.save();
+		final int w = myMainBitmap.getWidth();
+		final int h = myMainBitmap.getHeight();
+		switch (myRotationAngle) {
+		case ZLAndroidApplication.ROTATE_90:
+			canvas.rotate(90.0f);
+			canvas.translate(0.0f, -w);
+			break;
+		case ZLAndroidApplication.ROTATE_180:
+			canvas.rotate(180.0f, w / 2.0f, h / 2.0f);
+			break;
+		case ZLAndroidApplication.ROTATE_270:
+			canvas.rotate(-90.0f);
+			canvas.translate(-h, 0.0f);
+			break;
 		}
 
 		final ZLPaintContext context = createContext(view, canvas); 
 		view.paint(context, ZLView.PAGE_CENTRAL);
-
-		if (myRotated) {
-			canvas.restore();
-		}
+		canvas.restore();
 	}
 
 	public final Bitmap getBitmap() {

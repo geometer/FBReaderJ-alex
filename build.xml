@@ -69,6 +69,7 @@
 		<copy todir="res/drawable" verbose="false" overwrite="true" flatten="true">
 			<fileset file="icons/fbreader.png" />
 			<fileset file="icons/nocover.xml" />
+			<fileset file="icons/rotate_center.xml" />
 			<fileset dir="icons/" includes="*/*" />
 		</copy>
 		<echo message="DONE (Copying icons files to 'res/drawable/' folder)" />

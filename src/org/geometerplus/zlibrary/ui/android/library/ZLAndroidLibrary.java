@@ -75,17 +75,16 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		if (myWidget == null) {
 			throw new RuntimeException("Activity " + myActivity.getClass() + " doesn't have R.id.main_view_epd view.");
 		}
-		myWidget.setRotated(ZLAndroidApplication.Instance().RotatedFlag);
+		myWidget.setRotation(ZLAndroidApplication.Instance().RotationFlag);
 	}
 
 	public void setEventsListener(EventsListener listener) {
 		myEventsListener = listener;
 	}
 
-	public void rotate() {
-		ZLAndroidApplication app = ZLAndroidApplication.Instance();
-		app.RotatedFlag = !app.RotatedFlag;
-		myWidget.setRotated(app.RotatedFlag);
+	public void rotate(int angle) {
+		ZLAndroidApplication.Instance().RotationFlag = angle;
+		myWidget.setRotation(angle);
 	}
 
 	public void finish() {

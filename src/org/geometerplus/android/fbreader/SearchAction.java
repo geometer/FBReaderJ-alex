@@ -30,11 +30,13 @@ class SearchAction extends FBAction {
 		myActivity = activity;
 	}
 
+	@Override
 	public boolean isVisible() {
 		return Reader.Model != null;
 	}
 
-	public void run() {
+	@Override
+	protected void run() {
 		myActivity.onSearchRequested();
 	}
 }

@@ -97,11 +97,22 @@ public class SynchronousView extends View {
 
 	public void resetScroll() {
 		if (myInvalidScroll) {
-			if (ZLAndroidApplication.Instance().RotatedFlag) {
+			switch (ZLAndroidApplication.Instance().RotationFlag) {
+			case ZLAndroidApplication.ROTATE_0:
+				myScrollX = myScrollY = 0;
+				break;
+			case ZLAndroidApplication.ROTATE_90:
 				myScrollX = Integer.MAX_VALUE;
 				myScrollY = 0;
-			} else {
-				myScrollX = myScrollY = 0;
+				break;
+			case ZLAndroidApplication.ROTATE_180:
+				myScrollX = Integer.MAX_VALUE;
+				myScrollY = Integer.MAX_VALUE;
+				break;
+			case ZLAndroidApplication.ROTATE_270:
+				myScrollX = 0;
+				myScrollY = Integer.MAX_VALUE;
+				break;
 			}
 		}
 		myInvalidScroll = false;
@@ -182,7 +193,9 @@ public class SynchronousView extends View {
 		final float x = event.getX();
 		final float y = event.getY();
 
-		final boolean rotated = ZLAndroidApplication.Instance().RotatedFlag;
+		final int angle = ZLAndroidApplication.Instance().RotationFlag;
+		final int widthDiff = myWidget.getWidth() - getClientWidth();
+		final int heightDiff = myWidget.getHeight() - getClientHeight();
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -194,12 +207,18 @@ public class SynchronousView extends View {
 			myLastScrollY = y;
 			myLastScrollX = x;
 			myScrollPage = 0;
-			if (rotated ?
-					(myScrollX == myWidget.getWidth() - getClientWidth()) : (myScrollY == 0)) {
-				myScrollPage = -1;
-			} else if (rotated ?
-					(myScrollX == 0) : (myScrollY == myWidget.getHeight() - getClientHeight())) {
-				myScrollPage = 1;
+			if (angle == ZLAndroidApplication.ROTATE_0 || angle == ZLAndroidApplication.ROTATE_180) {
+				if (myScrollY == 0) {
+					myScrollPage = -1;
+				} else if (myScrollY == heightDiff) {
+					myScrollPage = 1;
+				}
+			} else {
+				if (myScrollX == widthDiff) {
+					myScrollPage = -1;
+				} else if (myScrollX == 0) {
+					myScrollPage = 1;
+				}
 			}
 			myPendingClick = true;
 			break;
@@ -223,23 +242,40 @@ public class SynchronousView extends View {
 			if (myPendingClick) {
 				if (x > getPaddingLeft() && x < getWidth() - getPaddingRight()
 						&& y > getPaddingTop() && y < getHeight() - getPaddingBottom()) {
-					final int startX, startY, stopX, stopY;
-					if (rotated) {
-						stopX = getBitmapY(y);
-						stopY = myWidget.getWidth() - getBitmapX(x);
-						startX = getBitmapY(myStartScrollY);
-						startY = myWidget.getWidth() - getBitmapX(myStartScrollX);
-					} else {
+					int startX = -1, startY = -1, stopX = -1, stopY = -1;
+					switch (angle) {
+					case ZLAndroidApplication.ROTATE_0:
 						stopX = getBitmapX(x);
 						stopY = getBitmapY(y);
 						startX = getBitmapX(myStartScrollX);
 						startY = getBitmapY(myStartScrollY);
+						break;
+					case ZLAndroidApplication.ROTATE_90:
+						stopX = getBitmapY(y);
+						stopY = myWidget.getWidth() - getBitmapX(x);
+						startX = getBitmapY(myStartScrollY);
+						startY = myWidget.getWidth() - getBitmapX(myStartScrollX);
+						break;
+					case ZLAndroidApplication.ROTATE_180:
+						stopX = myWidget.getWidth() - getBitmapX(x);
+						stopY = myWidget.getHeight() - getBitmapY(y);
+						startX = myWidget.getWidth() - getBitmapX(myStartScrollX);
+						startY = myWidget.getHeight() - getBitmapY(myStartScrollY);
+						break;
+					case ZLAndroidApplication.ROTATE_270:
+						stopX = myWidget.getHeight() - getBitmapY(y);
+						stopY = getBitmapX(x);
+						startX = myWidget.getHeight() - getBitmapY(myStartScrollY);
+						startY = getBitmapX(myStartScrollX);
+						break;
 					}
-					final ZLView view = ZLApplication.Instance().getCurrentView();
-					view.onStylusPress(startX, startY);
-					view.onStylusMovePressed(stopX, stopY);
-					view.onStylusRelease(stopX, stopY);
-					ZLApplication.Instance().repaintView();
+					if (startX >= 0 && startY >= 0 && stopX >= 0 && stopY >= 0) {
+						final ZLView view = ZLApplication.Instance().getCurrentView();
+						view.onStylusPress(startX, startY);
+						view.onStylusMovePressed(stopX, stopY);
+						view.onStylusRelease(stopX, stopY);
+						ZLApplication.Instance().repaintView();
+					}
 				}
 			} else {
 				myVelocityTracker.computeCurrentVelocity(1000);
@@ -259,14 +295,16 @@ public class SynchronousView extends View {
 					&& Math.abs(myStartScrollX - x) < getWidth() / 4
 					&& Math.abs(myStartScrollY - y) > getHeight() / 3; 
 
-				if (rotated ? tryScrollX : tryScrollY) {
+				if ((angle == ZLAndroidApplication.ROTATE_90 || angle == ZLAndroidApplication.ROTATE_270) ?
+						tryScrollX : tryScrollY) {
 					myInvalidScroll = true;
-					myEPDView.scrollPage(myScrollPage > 0);
+					myEPDView.scrollPage((angle == ZLAndroidApplication.ROTATE_0
+							|| angle == ZLAndroidApplication.ROTATE_90) ?
+						(myScrollPage > 0) : (myScrollPage < 0)
+					);
 				} else {
-					final int maxX = Math.max(0, myWidget.getWidth() - getClientWidth());
-					final int maxY = Math.max(0, myWidget.getHeight() - getClientHeight());
 					myScroller.fling(myScrollX, myScrollY, -velocityX, -velocityY,
-							0, maxX, 0, maxY);
+							0, widthDiff, 0, heightDiff);
 				}
 			}
 			if (myVelocityTracker != null) {
