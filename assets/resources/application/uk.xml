@@ -100,6 +100,21 @@
 		<node name="indexInSeries" value="Номер у серії:" />
 		<node name="tags" value="Категорії:" />
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Інформація про книгу" />
+		<node name="fileInfo" toBeTranslated="true" value="File Info" />
+		<node name="title" value="Назва:" />
+		<node name="authors" value="Автори:" />
+		<node name="series" value="Серія:" />
+		<node name="indexInSeries" value="Номер у серії:" />
+		<node name="tags" value="Категорії:" />
+		<node name="name" toBeTranslated="true" value="Name:" />
+		<node name="type" toBeTranslated="true" value="Type:" />
+		<node name="size" toBeTranslated="true" value="Size:" />
+		<node name="time" toBeTranslated="true" value="Last modified:" />
+		<node name="sizeInBytes" toBeTranslated="true" value="%s byte(s)" />
+		<node name="sizeInKiloBytes" toBeTranslated="true" value="%s kB" />
+	</node>
 	<node name="bookDownloader">
 		<node name="tickerSuccess" value="Книга завантажена" />
 		<node name="tickerError" value="Книгу завантажити не вдалось" />
