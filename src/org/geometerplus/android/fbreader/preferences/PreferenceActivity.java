@@ -20,12 +20,9 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Intent;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
 
 import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import org.geometerplus.zlibrary.text.view.style.*;
 
@@ -45,7 +42,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 	protected void init(Intent intent) {
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 		//final ZLAndroidApplication androidApp = ZLAndroidApplication.Instance();
-		final ColorProfile profile = fbReader.getColorProfile();
+		//final ColorProfile profile = fbReader.getColorProfile();
 
 		final Screen directoriesScreen = createPreferenceScreen("directories");
 		directoriesScreen.addPreference(new ZLStringOptionPreference(
@@ -59,10 +56,9 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 			));
 		}
 
-		final Screen libraryScreen = createPreferenceScreen("library");
-		libraryScreen.addPreference(new ZLBooleanPreference(
+		addPreference(new ZLBooleanPreference(
 			this, ZLAndroidApplication.Instance().NetworkLibraryEnabled,
-			libraryScreen.Resource, "networkLibrary"
+			Resource, "networkLibrary"
 		));
 
 		/*final Screen appearanceScreen = createPreferenceScreen("appearance");
@@ -214,7 +210,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 				
 		}
 
-		final Screen colorsScreen = createPreferenceScreen("colors");
+		/*final Screen colorsScreen = createPreferenceScreen("colors");
 		colorsScreen.addPreference(new ZLColorPreference(
 			this, colorsScreen.Resource, "background", profile.BackgroundOption
 		));
@@ -226,7 +222,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 		));
 		colorsScreen.addPreference(new ZLColorPreference(
 			this, colorsScreen.Resource, "hyperlink", profile.HyperlinkTextOption
-		));
+		));*/
 
 		final Screen marginsScreen = createPreferenceScreen("margins");
 		marginsScreen.addPreference(new ZLIntegerRangePreference(

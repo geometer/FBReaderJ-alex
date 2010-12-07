@@ -173,10 +173,10 @@
 		</node>
 		<node name="Preferences">
 			<node name="library" value="Library">
-				<node name="networkLibrary" value="Network library">
-					<node name="summaryOn" value="Network library is enabled"/>
-					<node name="summaryOff" value="Network library is disabled"/>
-				</node>
+			</node>
+			<node name="networkLibrary" value="Network library">
+				<node name="summaryOn" value="Network library is enabled"/>
+				<node name="summaryOff" value="Network library is disabled"/>
 			</node>
 			<node name="directories" value="Directories">
 				<node name="summary" value="Directories to seek for files"/>

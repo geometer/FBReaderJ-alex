@@ -175,10 +175,10 @@
 		</node>
 		<node name="Preferences">
 			<node name="library" value="Bibliothek">
-				<node name="networkLibrary" toBeTranslated="true" value="Network library">
-					<node name="summaryOn" toBeTranslated="true" value="Network library is enabled"/>
-					<node name="summaryOff" toBeTranslated="true" value="Network library is disabled"/>
-				</node>
+			</node>
+			<node name="networkLibrary" toBeTranslated="true" value="Network library">
+				<node name="summaryOn" toBeTranslated="true" value="Network library is enabled"/>
+				<node name="summaryOff" toBeTranslated="true" value="Network library is disabled"/>
 			</node>
 			<node name="directories" value="Verzeichnisse">
 				<node name="summary" value="Verzeichnisse in den Dateien gesucht werden."/>
