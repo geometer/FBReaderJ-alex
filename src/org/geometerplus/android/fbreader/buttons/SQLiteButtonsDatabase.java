@@ -92,7 +92,10 @@ public final class SQLiteButtonsDatabase {
 		while (c.moveToNext()) {
 			final String type = c.getString(0);
 			final String data = c.getString(1);
-			buttons.add(AbstractButton.createButton(type, data));
+			final AbstractButton btn = AbstractButton.createButton(type, data);
+			if (btn != null) {
+				buttons.add(btn);
+			}
 		}
 	}
 
@@ -105,8 +108,8 @@ public final class SQLiteButtonsDatabase {
 			public void run() {
 				myDatabase.delete("Buttons", null, null);
 				for (AbstractButton btn: buttons) {
-					mySaveButtonStatement.bindString(0, btn.getType());
-					bindString(mySaveButtonStatement, 1, btn.getData());
+					mySaveButtonStatement.bindString(1, btn.getType());
+					bindString(mySaveButtonStatement, 2, btn.getData());
 					mySaveButtonStatement.execute();
 				}
 			}

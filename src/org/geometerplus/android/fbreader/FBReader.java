@@ -55,6 +55,8 @@ public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
 
 	private ArrayList<AbstractButton> myButtons = new ArrayList<AbstractButton>();
+	private ImageView mySelector;
+	private AbstractButton mySelectedButton;
 
 	private boolean myReadMode;
 
@@ -149,46 +151,13 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 
+		mySelector = new ImageView(this);
+		mySelector.setImageResource(R.drawable.selector);
+		mySelector.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+
+		setupEditMode();
+
 		updateButtons();
-	}
-
-	private void updateButtons() {
-		ButtonsCollection.Instance().loadButtons(myButtons);
-		final LinearLayout topDock = (LinearLayout) findViewById(R.id.topDock);
-		final LinearLayout bottomDock = (LinearLayout) findViewById(R.id.bottomDock);
-		topDock.removeAllViews();
-		bottomDock.removeAllViews();
-		int count = 0;
-		for (AbstractButton btn : myButtons) {
-			if (count++ % 2 == 0) {
-				addItemView(btn, topDock);
-			} else {
-				addItemView(btn, bottomDock);
-			}
-
-		}
-	}
-
-	private void addItemView(final AbstractButton btn, LinearLayout layout) {
-		btn.setStartEditListener(new AbstractButton.OnStartEditListener() {
-			public void onStartEdit(AbstractButton button) {
-			}
-		});
-		btn.setItemSelectedListener(new AbstractButton.OnButtonSelectedListener() {
-			public void onButtonSelected(AbstractButton button) {
-			}
-		});
-
-		final View itemView = btn.createView(this);
-		ViewParent parent = itemView.getParent();
-		if (parent != null)
-			((ViewGroup) parent).removeView(itemView);
-
-		final FrameLayout view = new FrameLayout(layout.getContext());
-		view.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
-		view.addView(itemView);
-
-		layout.addView(view);
 	}
 
 	@Override
@@ -368,5 +337,290 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	// --- Code from launcher ---
+
+	private void setupEditMode() {
+		((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				stopEdit();
+			}
+		});
+		((ImageButton)findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				removeSelection();
+				updateButtons();
+				startEdit();
+			}
+		});
+		((ImageButton) findViewById(R.id.turnLeft)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				final View selectedView = (View)mySelector.getParent();
+				if (mySelectedButton != null && selectedView != null) {
+					final LinearLayout parent = (LinearLayout)selectedView.getParent();
+					final int index = getItemIndex(selectedView, parent);
+					if (index > 0) {
+						focusScroll(parent.getChildAt(index - 1));
+						parent.removeView(selectedView);
+						parent.addView(selectedView, index - 1);
+						if (parent == findViewById(R.id.topDock)) {
+							AbstractButton leftItem = myButtons.get(2 * index - 2);
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index - 2, mySelectedButton);
+							myButtons.remove(leftItem);
+							myButtons.add(2 * index, leftItem);
+						} else {
+							AbstractButton leftItem = myButtons.get(2 * index - 1);
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index - 1, mySelectedButton);
+							myButtons.remove(leftItem);
+							myButtons.add(2 * index + 1, leftItem);
+						}
+					} else {
+						focusScroll(parent.getChildAt(0));
+					}
+				}
+			}
+		});
+		((ImageButton) findViewById(R.id.turnRight)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				final View selectedView = (View)mySelector.getParent();
+				if (mySelectedButton != null && selectedView != null) {
+					LinearLayout parent = (LinearLayout)selectedView.getParent();
+					final int index = getItemIndex(selectedView, parent);
+					if (index < 0) {
+						return;
+					}
+					if (index + 1 < parent.getChildCount()) {
+						focusScroll(parent.getChildAt(index + 1));
+						parent.removeView(selectedView);
+						if (parent.getChildCount() < index + 1) {
+							parent.addView(selectedView);
+						} else {
+							parent.addView(selectedView, index + 1);
+						}
+						focusScroll(selectedView);
+						if (parent == findViewById(R.id.topDock)) {
+							AbstractButton rightItem = myButtons.get(2 * index + 2);
+							myButtons.remove(rightItem);
+							myButtons.add(2 * index, rightItem);
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index + 2, mySelectedButton);
+						} else {
+							AbstractButton rightItem = myButtons.get(2 * index + 3);
+							myButtons.remove(rightItem);
+							myButtons.add(2 * (index) + 1, rightItem);
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * (index) + 3, mySelectedButton);
+						}
+					} else if (index == parent.getChildCount() - 1) {
+						focusScroll(parent.getChildAt(parent.getChildCount() - 1));
+					}
+				}
+			}
+		});
+		((ImageButton) findViewById(R.id.turnUp)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				final View selectedView = (View)mySelector.getParent();
+				if (mySelectedButton != null && selectedView != null) {
+					final LinearLayout parent = (LinearLayout)selectedView.getParent();
+
+					final LinearLayout topDock = (LinearLayout)findViewById(R.id.topDock);
+					final LinearLayout bottomDock = (LinearLayout)findViewById(R.id.bottomDock);
+					final LinearLayout opposite = (parent == topDock) ? bottomDock : topDock;
+
+					final int index = getItemIndex(selectedView, parent);
+					final View oppositeView = opposite.getChildAt(index);
+					if (oppositeView != null) {
+						opposite.removeView(oppositeView);
+						parent.removeView(selectedView);
+						opposite.addView(selectedView, index);
+						parent.addView(oppositeView, index);
+						if (parent == topDock) {
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index + 1, mySelectedButton);
+						} else {
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index, mySelectedButton);
+						}
+					}
+					focusScroll(selectedView);
+				}
+			}
+		});
+		((ImageButton) findViewById(R.id.turnDown)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				final View selectedView = (View)mySelector.getParent();
+				if (mySelectedButton != null && selectedView != null) {
+					final LinearLayout parent = (LinearLayout)selectedView.getParent();
+
+					final LinearLayout topDock = (LinearLayout)findViewById(R.id.topDock);
+					final LinearLayout bottomDock = (LinearLayout)findViewById(R.id.bottomDock);
+					final LinearLayout opposite = (parent == topDock) ? bottomDock : topDock;
+
+					final int index = getItemIndex(selectedView, parent);
+					final View oppositeView = opposite.getChildAt(index);
+					if (oppositeView != null) {
+						opposite.removeView(oppositeView);
+						parent.removeView(selectedView);
+						opposite.addView(selectedView, index);
+						parent.addView(oppositeView, index);
+						if (parent == topDock) {
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index + 1, mySelectedButton);
+						} else {
+							myButtons.remove(mySelectedButton);
+							myButtons.add(2 * index, mySelectedButton);
+						}
+					}
+					focusScroll(selectedView);
+				}
+			}
+		});
+		/*((ImageButton) findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				final AddItemDialog.OnAddItemDialogResultListener listener = 
+						new AddItemDialog.OnAddItemDialogResultListener() {
+					public void onAddItemDialogResult(AbstractItem item) {
+						LinearLayout to;
+						if (myTopDock.getChildCount() <= myBottomDock.getChildCount()) {
+							to = myTopDock;
+						} else {
+							to = myBottomDock;
+						}
+						addItemView(item, to);
+						final int resultIndex;
+						if (to == myTopDock) {
+							resultIndex = to.getChildCount() * 2 - 2;
+						} else {
+							resultIndex = to.getChildCount() * 2 - 1;
+						}
+						myItems.add(resultIndex, item);
+						saveChanges();
+					}
+				};
+				AddItemDialog dialog = new AddItemDialog(LauncherActivity.this, listener);
+				dialog.show();
+			}
+		});*/
+		/*((ImageButton) findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				if ((mySelectedItem != null) && (mySelectedView != null)) {
+					if (myItems.size() <= 5) {
+						Toast t = Toast.makeText(LauncherActivity.this,
+								R.string.too_little_items,
+								Toast.LENGTH_LONG);
+						t.setGravity(Gravity.CENTER, t.getXOffset(),
+								t.getYOffset());
+						t.show();
+						return;
+					}
+					((LinearLayout) mySelectedView.getParent())
+							.removeView(mySelectedView);
+					// topDock.removeView(selectedView);
+					myItems.remove(mySelectedItem);
+					mySelectedView = null;
+					mySelectedItem = null;
+
+					saveChanges();
+				}
+			}
+		});*/
+	}
+
+	private void updateButtons() {
+		ButtonsCollection.Instance().loadButtons(myButtons);
+		final LinearLayout topDock = (LinearLayout) findViewById(R.id.topDock);
+		final LinearLayout bottomDock = (LinearLayout) findViewById(R.id.bottomDock);
+		topDock.removeAllViews();
+		bottomDock.removeAllViews();
+		int count = 0;
+		for (AbstractButton btn : myButtons) {
+			if (count++ % 2 == 0) {
+				addItemView(btn, topDock);
+			} else {
+				addItemView(btn, bottomDock);
+			}
+
+		}
+	}
+
+	private void addItemView(final AbstractButton btn, LinearLayout layout) {
+		final FrameLayout view = new FrameLayout(layout.getContext());
+		view.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+
+		btn.setStartEditListener(new AbstractButton.OnStartEditListener() {
+			public void onStartEdit(AbstractButton button) {
+				setSelection(btn, view);
+				startEdit();
+			}
+		});
+		btn.setItemSelectedListener(new AbstractButton.OnButtonSelectedListener() {
+			public void onButtonSelected(AbstractButton button) {
+				setSelection(btn, view);
+			}
+		});
+
+		final View itemView = btn.createView(this);
+		final ViewParent parent = itemView.getParent();
+		if (parent != null)
+			((ViewGroup) parent).removeView(itemView);
+
+		view.addView(itemView);
+
+		layout.addView(view);
+	}
+
+	private void startEdit() {
+		for (AbstractButton btn : myButtons) {
+			btn.startEdit();
+		}
+		findViewById(R.id.root_edit_view).setVisibility(View.VISIBLE);
+	}
+
+	private void stopEdit() {
+		findViewById(R.id.root_edit_view).setVisibility(View.GONE);
+		removeSelection();
+		for (AbstractButton btn : myButtons) {
+			btn.stopEdit();
+		}
+		saveChanges();
+	}
+
+	private void setSelection(AbstractButton btn, ViewGroup view) {
+		removeSelection();
+		view.addView(mySelector);
+		mySelectedButton = btn;
+	}
+
+	private void removeSelection() {
+		mySelectedButton = null;
+		final ViewParent parent = mySelector.getParent();
+		if (parent != null) {
+			((ViewGroup)parent).removeView(mySelector);
+		}
+	}
+
+	private void saveChanges() {
+		ButtonsCollection.Instance().saveButtons(myButtons);
+	}
+
+	private void focusScroll(View view) {
+		final HorizontalScrollView scrollView = (HorizontalScrollView)findViewById(R.id.root_scroll_view);
+		if (scrollView.getScrollX() + scrollView.getWidth() < view.getRight()) {
+			scrollView.smoothScrollTo(view.getRight() - scrollView.getWidth(), 0);
+		} else if (scrollView.getScrollX() > view.getLeft()) {
+			scrollView.smoothScrollTo(view.getLeft(), 0);
+		}
+	}
+
+	private int getItemIndex(View view, LinearLayout dock) {
+		for (int index = 0; index < dock.getChildCount(); ++index) {
+			if (dock.getChildAt(index) == view) {
+				return index;
+			}
+		}
+		return -1;
 	}
 }

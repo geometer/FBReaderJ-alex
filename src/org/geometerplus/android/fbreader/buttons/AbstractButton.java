@@ -31,6 +31,44 @@ public abstract class AbstractButton {
 
 
 	public static AbstractButton createButton(String type, String data) {
+		if (type == null) {
+			return null;
+		} else if (FBREADER_ACTION.equals(type)) {
+			if (data == null) {
+				return null;
+			}
+			final int index = data.indexOf(':');
+			if (index >= 0) {
+				final String imageId = data.substring(0, index);
+				final String actionId = data.substring(index + 1);
+				return new FBActionButton(imageId, actionId);
+			}
+		} else if (FBREADER_ACTION_DECORATOR.equals(type)) {
+			if (data == null) {
+				return null;
+			}
+			final int index0 = data.indexOf(':');
+			if (index0 < 0) {
+				return null;
+			}
+			final int index1 = data.indexOf(':', index0 + 1);
+			if (index1 < 0) {
+				return null;
+			}
+			final int index2 = data.indexOf(':', index1 + 1);
+			if (index2 < 0) {
+				return null;
+			}
+			final String imageId = data.substring(0, index0);
+			final String actionId = data.substring(index0 + 1, index1);
+			final String btnType = data.substring(index1 + 1, index2);
+			final String btnData = data.substring(index2 + 1);
+			final AbstractButton button = createButton(btnType, btnData);
+			if (!(button instanceof SimpleButton)) {
+				return null;
+			}
+			return new FBActionDecorator(imageId, actionId, (SimpleButton)button);
+		}
 		return null;
 	}
 
