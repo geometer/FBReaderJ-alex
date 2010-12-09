@@ -20,10 +20,14 @@
 package org.geometerplus.android.fbreader;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +64,9 @@ public final class FBReader extends ZLAndroidActivity {
 
 	private boolean myReadMode;
 
+	public static ZLResource getResource() {
+		return ZLResource.resource("fbreader");
+	}
 
 	private static class TextSearchButtonPanel implements ZLApplication.ButtonPanel {
 		boolean Visible;
@@ -151,12 +158,16 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 
-		mySelector = new ImageView(this);
-		mySelector.setImageResource(R.drawable.selector);
-		mySelector.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+		if (mySelector == null) {
+			mySelector = new ImageView(this);
+			mySelector.setImageResource(R.drawable.selector);
+			mySelector.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
+		}
 
 		setupEditMode();
 
+		myButtons.clear();
+		ButtonsCollection.Instance().loadButtons(myButtons);
 		updateButtons();
 	}
 
@@ -296,7 +307,7 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	private void setupRotation() {
-		final String string = ZLResource.resource("fbreader").getResource("rotationButton").getValue();
+		final String string = getResource().getResource("rotationButton").getValue();
 		setupRotationButton(string, R.id.rotate_bottom, ZLAndroidApplication.ROTATE_0);
 		setupRotationButton(string, R.id.rotate_left, ZLAndroidApplication.ROTATE_90);
 		setupRotationButton(string, R.id.rotate_top, ZLAndroidApplication.ROTATE_180);
@@ -344,12 +355,17 @@ public final class FBReader extends ZLAndroidActivity {
 	private void setupEditMode() {
 		((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
+				removeSelection();
 				stopEdit();
+				saveChanges();
+				updateButtons();
 			}
 		});
 		((ImageButton)findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				removeSelection();
+				myButtons.clear();
+				ButtonsCollection.Instance().loadButtons(myButtons);
 				updateButtons();
 				startEdit();
 			}
@@ -478,59 +494,59 @@ public final class FBReader extends ZLAndroidActivity {
 				}
 			}
 		});
-		/*((ImageButton) findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				final AddItemDialog.OnAddItemDialogResultListener listener = 
-						new AddItemDialog.OnAddItemDialogResultListener() {
-					public void onAddItemDialogResult(AbstractItem item) {
-						LinearLayout to;
-						if (myTopDock.getChildCount() <= myBottomDock.getChildCount()) {
-							to = myTopDock;
+				final AddItemDialog.OnAddButtonListener listener = new AddItemDialog.OnAddButtonListener() {
+					public void onAddButton(AbstractButton button) {
+						final LinearLayout topDock = (LinearLayout)findViewById(R.id.topDock);
+						final LinearLayout bottomDock = (LinearLayout)findViewById(R.id.bottomDock);
+						final LinearLayout layout;
+						if (topDock.getChildCount() <= bottomDock.getChildCount()) {
+							layout = topDock;
 						} else {
-							to = myBottomDock;
+							layout = bottomDock;
 						}
-						addItemView(item, to);
+						addItemView(button, layout);
 						final int resultIndex;
-						if (to == myTopDock) {
-							resultIndex = to.getChildCount() * 2 - 2;
+						if (layout == topDock) {
+							resultIndex = layout.getChildCount() * 2 - 2;
 						} else {
-							resultIndex = to.getChildCount() * 2 - 1;
+							resultIndex = layout.getChildCount() * 2 - 1;
 						}
-						myItems.add(resultIndex, item);
+						myButtons.add(resultIndex, button);
 						saveChanges();
 					}
 				};
-				AddItemDialog dialog = new AddItemDialog(LauncherActivity.this, listener);
-				dialog.show();
+				ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>();
+				ButtonsCollection.Instance().loadAllButtons(buttons);
+				buttons.removeAll(myButtons);
+				new AddItemDialog(FBReader.this, buttons, listener).show();
 			}
-		});*/
-		/*((ImageButton) findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
+		});
+		((ImageButton) findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				if ((mySelectedItem != null) && (mySelectedView != null)) {
-					if (myItems.size() <= 5) {
-						Toast t = Toast.makeText(LauncherActivity.this,
-								R.string.too_little_items,
-								Toast.LENGTH_LONG);
-						t.setGravity(Gravity.CENTER, t.getXOffset(),
-								t.getYOffset());
+				final View selectedView = (View)mySelector.getParent();
+				if (mySelectedButton != null && selectedView != null) {
+					final int limit = 10;
+					if (myButtons.size() <= limit) {
+						final String message = getResource().getResource("buttonsLimit").getValue()
+							.replaceAll("%s", String.valueOf(limit));
+						Toast t = Toast.makeText(FBReader.this, message, Toast.LENGTH_LONG);
+						t.setGravity(Gravity.CENTER, t.getXOffset(), t.getYOffset());
 						t.show();
 						return;
 					}
-					((LinearLayout) mySelectedView.getParent())
-							.removeView(mySelectedView);
-					// topDock.removeView(selectedView);
-					myItems.remove(mySelectedItem);
-					mySelectedView = null;
-					mySelectedItem = null;
-
+					((LinearLayout)selectedView.getParent()).removeView(selectedView);
+					myButtons.remove(mySelectedButton);
+					removeSelection();
 					saveChanges();
+					updateButtons();
 				}
 			}
-		});*/
+		});
 	}
 
 	private void updateButtons() {
-		ButtonsCollection.Instance().loadButtons(myButtons);
 		final LinearLayout topDock = (LinearLayout) findViewById(R.id.topDock);
 		final LinearLayout bottomDock = (LinearLayout) findViewById(R.id.bottomDock);
 		topDock.removeAllViews();
@@ -546,27 +562,27 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 	}
 
-	private void addItemView(final AbstractButton btn, LinearLayout layout) {
+	private void addItemView(AbstractButton btn, LinearLayout layout) {
 		final FrameLayout view = new FrameLayout(layout.getContext());
 		view.setLayoutParams(new ViewGroup.LayoutParams(96, 144));
 
 		btn.setStartEditListener(new AbstractButton.OnStartEditListener() {
 			public void onStartEdit(AbstractButton button) {
-				setSelection(btn, view);
+				setSelection(button, view);
 				startEdit();
 			}
 		});
 		btn.setItemSelectedListener(new AbstractButton.OnButtonSelectedListener() {
 			public void onButtonSelected(AbstractButton button) {
-				setSelection(btn, view);
+				setSelection(button, view);
 			}
 		});
 
 		final View itemView = btn.createView(this);
 		final ViewParent parent = itemView.getParent();
-		if (parent != null)
+		if (parent != null) {
 			((ViewGroup) parent).removeView(itemView);
-
+		}
 		view.addView(itemView);
 
 		layout.addView(view);
@@ -581,11 +597,9 @@ public final class FBReader extends ZLAndroidActivity {
 
 	private void stopEdit() {
 		findViewById(R.id.root_edit_view).setVisibility(View.GONE);
-		removeSelection();
 		for (AbstractButton btn : myButtons) {
 			btn.stopEdit();
 		}
-		saveChanges();
 	}
 
 	private void setSelection(AbstractButton btn, ViewGroup view) {
@@ -622,5 +636,50 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 		}
 		return -1;
+	}
+
+	private static class AddItemDialog extends Dialog {
+
+		public interface OnAddButtonListener {
+			void onAddButton(AbstractButton button);
+		}
+
+		public AddItemDialog(Context context, List<AbstractButton> buttons,
+				final OnAddButtonListener listener) {
+			super(context, android.R.style.Theme_Translucent_NoTitleBar);
+			setContentView(R.layout.add_button);
+
+			final AbstractButton.OnButtonSelectedListener buttonListener = new AbstractButton.OnButtonSelectedListener() {
+				public void onButtonSelected(AbstractButton button) {
+					if (listener != null) {
+						listener.onAddButton(button);
+					}
+					AddItemDialog.this.dismiss();
+				}
+			};
+
+			final LinearLayout apps = (LinearLayout)findViewById(R.id.apps);
+			apps.removeAllViews();
+			for (AbstractButton btn: buttons) {
+				final View itemView = btn.createView(context);
+				final ViewParent parent = itemView.getParent();
+				if (parent != null) {
+					((ViewGroup) parent).removeView(itemView);
+				}
+				apps.addView(itemView);
+				btn.startEdit();
+				btn.setItemSelectedListener(buttonListener);
+				btn.setStartEditListener(null);
+			}
+
+			((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					AddItemDialog.this.cancel();
+				}
+			});
+
+			final TextView tip = (TextView)findViewById(R.id.tip);
+			tip.setText(FBReader.getResource().getResource("addButtonTip").getValue());
+		}
 	}
 }

@@ -50,7 +50,7 @@ public class RotatedStringDrawable extends Drawable {
 		myTextPaint.setColor(hilighted ? Color.rgb(0xF0, 0x68, 0) : Color.rgb(0xF0, 0xF0, 0xF0));
 		myTextPaint.setTextAlign(Paint.Align.LEFT);
 		myTextPaint.setTextSize(28);
-		myTextPaint.setShadowLayer(2.0f, 1.0f, 1.0f, Color.rgb(0x55, 0x55, 0x55));
+		myTextPaint.setShadowLayer(2.0f, 1.0f, 1.0f, Color.rgb(0x70, 0x70, 0x70));
 		myTextPaint.measureText("M");
 
 		myString = string;

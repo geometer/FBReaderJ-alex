@@ -87,7 +87,6 @@ public final class SQLiteButtonsDatabase {
 
 
 	public void loadButtons(List<AbstractButton> buttons) {
-		buttons.clear();
 		final Cursor c = myDatabase.rawQuery("SELECT btn_type, btn_data FROM Buttons", null);
 		while (c.moveToNext()) {
 			final String type = c.getString(0);

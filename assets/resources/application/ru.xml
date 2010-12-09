@@ -4,6 +4,8 @@
 		<node name="pageChange" value="Смена страницы"/>
 		<node name="noCover" value="Обложка недоступна"/>
 		<node name="rotationButton" value="Абв"/>
+		<node name="buttonsLimit" value="Нет смысла держать менее %s кнопок на экране." />
+		<node name="addButtonTip" value="ВЫБЕРИТЕ КНОПКУ, КОТОРУЮ ВЫ ХОТИТЕ ДОБАВИТЬ НА ЭКРАН" />
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>

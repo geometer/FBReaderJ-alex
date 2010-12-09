@@ -5,6 +5,8 @@
 		<node name="pageChange" toBeTranslated="true" value="Page change"/>
 		<node name="noCover" toBeTranslated="true" value="Cover is not available"/>
 		<node name="rotationButton" toBeTranslated="true" value="Abc"/>
+		<node name="buttonsLimit" toBeTranslated="true" value="There is no sense to have less than %s buttons at the screen." />
+		<node name="addButtonTip" toBeTranslated="true" value="SELECT BUTTON FOR ADDING TO THE SCREEN" />
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Autore sconosciuto"/>

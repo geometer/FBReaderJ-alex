@@ -4,6 +4,8 @@
 		<node name="pageChange" value="Page change"/>
 		<node name="noCover" value="Cover is not available"/>
 		<node name="rotationButton" value="Abc"/>
+		<node name="buttonsLimit" value="There is no sense to have less than %s buttons at the screen." />
+		<node name="addButtonTip" value="SELECT BUTTON FOR ADDING TO THE SCREEN" />
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Unknown author"/>
