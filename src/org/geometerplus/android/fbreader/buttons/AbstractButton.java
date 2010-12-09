@@ -29,7 +29,6 @@ public abstract class AbstractButton {
 	public static final String FBREADER_ACTION = "fbReaderAction";
 	public static final String FBREADER_ACTION_DECORATOR = "fbReaderActionDecorator";
 
-
 	public static AbstractButton createButton(String type, String data) {
 		if (type == null) {
 			return null;

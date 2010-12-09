@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Dialog;
@@ -37,6 +38,7 @@ import android.widget.*;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidActivity;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
@@ -54,8 +56,6 @@ import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
 public final class FBReader extends ZLAndroidActivity {
 	final static int REPAINT_CODE = 1;
 
-	public static final String ACTION_START_SEARCH = "org.geometerplus.android.fbreader.FBReader.START_SEARCH";
-
 	static FBReader Instance;
 
 	private ArrayList<AbstractButton> myButtons = new ArrayList<AbstractButton>();
@@ -68,24 +68,16 @@ public final class FBReader extends ZLAndroidActivity {
 		return ZLResource.resource("fbreader");
 	}
 
-	private static class TextSearchButtonPanel implements ZLApplication.ButtonPanel {
-		boolean Visible;
-		ControlPanel ControlPanel;
-
-		public void hide() {
-			Visible = false;
-			if (ControlPanel != null) {
-				ControlPanel.hide(false);
-			}
-		}
-
-		public void updateStates() {
-			if (ControlPanel != null) {
-				ControlPanel.updateStates();
-			}
+	private static class TextSearchButtonPanel extends ControlButtonPanel {
+		@Override
+		public void onHide() {
+			final ZLTextView textView = (ZLTextView)ZLApplication.Instance().getCurrentView();
+			textView.clearFindResults();
 		}
 	}
-	private static TextSearchButtonPanel myPanel;
+
+	private static TextSearchButtonPanel myTextSearchPanel;
+	private static ControlButtonPanel myFontSizeButtonPanel;
 
 
 	private static class ReadingEPDView extends EPDView {
@@ -140,9 +132,13 @@ public final class FBReader extends ZLAndroidActivity {
 		getWindow().setFlags(
 			WindowManager.LayoutParams.FLAG_FULLSCREEN, myFullScreenFlag
 		);*/
-		if (myPanel == null) {
-			myPanel = new TextSearchButtonPanel();
-			ZLApplication.Instance().registerButtonPanel(myPanel);
+		if (myTextSearchPanel == null) {
+			myTextSearchPanel = new TextSearchButtonPanel();
+			myTextSearchPanel.register();
+		}
+		if (myFontSizeButtonPanel == null) {
+			myFontSizeButtonPanel = new ControlButtonPanel();
+			myFontSizeButtonPanel.register();
 		}
 
 		final FBReaderApp fbReader = (FBReaderApp)ZLApplication.Instance();
@@ -157,6 +153,7 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SEARCH, new SearchAction(this, fbReader));
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
+		fbReader.addAction(ActionCode.FONT_SIZE, new FontSizeAction(this, fbReader));
 
 		if (mySelector == null) {
 			mySelector = new ImageView(this);
@@ -184,53 +181,43 @@ public final class FBReader extends ZLAndroidActivity {
 			startActivity(new Intent(this, this.getClass()));
 		}*/
 
-		if (myPanel.ControlPanel == null) {
-			myPanel.ControlPanel = new ControlPanel(this);
+		final RelativeLayout root = (RelativeLayout)findViewById(R.id.panels_layout);
+		if (!myTextSearchPanel.hasControlPanel()) {
+			final ControlPanel panel = new ControlPanel(this);
 
-			myPanel.ControlPanel.addButton(ActionCode.FIND_PREVIOUS, false, R.drawable.text_search_previous);
-			myPanel.ControlPanel.addButton(ActionCode.CLEAR_FIND_RESULTS, true, R.drawable.text_search_close);
-			myPanel.ControlPanel.addButton(ActionCode.FIND_NEXT, false, R.drawable.text_search_next);
+			panel.addButton(ActionCode.FIND_PREVIOUS, false, R.drawable.text_search_previous);
+			panel.addButton(ActionCode.CLEAR_FIND_RESULTS, true, R.drawable.text_search_close);
+			panel.addButton(ActionCode.FIND_NEXT, false, R.drawable.text_search_next);
 
-			RelativeLayout root = (RelativeLayout)findViewById(R.id.panels_layout);
-			RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-			p.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			p.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			root.addView(myPanel.ControlPanel, p);
+			myTextSearchPanel.setControlPanel(panel, root, false);
+		}
+		if (!myFontSizeButtonPanel.hasControlPanel()) {
+			final ControlPanel panel = new ControlPanel(this);
+
+			final String string = getResource().getResource("rotationButton").getValue();
+			panel.addButton(ActionCode.DECREASE_FONT, false,
+				RotatedStringDrawable.create(string, ZLAndroidApplication.ROTATE_0, 28));
+			panel.addButton(null, true, R.drawable.text_search_close);
+			panel.addButton(ActionCode.INCREASE_FONT, false,
+				RotatedStringDrawable.create(string, ZLAndroidApplication.ROTATE_0, 44));
+
+			myFontSizeButtonPanel.setControlPanel(panel, root, false);
 		}
 
 		setupRotation();
 	}
 
-	//private PowerManager.WakeLock myWakeLock;
-
 	@Override
 	public void onResume() {
 		super.onResume();
 		myEPDView.onResume();
-		if (myPanel.ControlPanel != null) {
-			myPanel.ControlPanel.setVisibility(myPanel.Visible ? View.VISIBLE : View.GONE);
-		}
-		/*if (ZLAndroidApplication.Instance().DontTurnScreenOffOption.getValue()) {
-			myWakeLock =
-				((PowerManager)getSystemService(POWER_SERVICE)).
-					newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "FBReader");
-			myWakeLock.acquire();
-		} else {
-			myWakeLock = null;
-		}*/
+		ControlButtonPanel.restoreVisibilities();
 		myReadMode = true;
 	}
 
 	@Override
 	public void onPause() {
-		/*if (myWakeLock != null) {
-			myWakeLock.release();
-		}*/
-		if (myPanel.ControlPanel != null) {
-			myPanel.Visible = myPanel.ControlPanel.getVisibility() == View.VISIBLE;
-		}
+		ControlButtonPanel.saveVisibilities();
 		myReadMode = false;
 		myEPDView.onPause();
 		super.onPause();
@@ -238,20 +225,10 @@ public final class FBReader extends ZLAndroidActivity {
 
 	@Override
 	public void onStop() {
-		if (myPanel.ControlPanel != null) {
-			myPanel.ControlPanel.hide(false);
-			myPanel.ControlPanel = null;
-		}
+		ControlButtonPanel.removeControlPanels();
 		super.onStop();
 	}
 
-	@Override
-	public void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		if (ACTION_START_SEARCH.equals(intent.getAction())) {
-			onSearchRequested();
-		}
-	}
 
 	protected ZLApplication createApplication(String fileName) {
 		if (SQLiteBooksDatabase.Instance() == null) {
@@ -278,29 +255,25 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	void showTextSearchControls(boolean show) {
-		if (myPanel.ControlPanel != null) {
-			if (show) {
-				myPanel.ControlPanel.show(true);
-			} else {
-				myPanel.ControlPanel.hide(false);
-			}
+		if (show) {
+			myTextSearchPanel.show(true);
+		} else {
+			myTextSearchPanel.hide(false);
 		}
 	}
 
 	@Override
 	public boolean onSearchRequested() {
-		if (myPanel.ControlPanel != null) {
-			final boolean visible = myPanel.ControlPanel.getVisibility() == View.VISIBLE;
-			myPanel.ControlPanel.hide(false);
-			SearchManager manager = (SearchManager)getSystemService(SEARCH_SERVICE);
-			manager.setOnCancelListener(new SearchManager.OnCancelListener() {
-				public void onCancel() {
-					if ((myPanel.ControlPanel != null) && visible) {
-						myPanel.ControlPanel.show(false);
-					}
-				}
-			});
-		}
+		final LinkedList<Boolean> visibilities = new LinkedList<Boolean>();
+		ControlButtonPanel.saveVisibilitiesTo(visibilities);
+		ControlButtonPanel.hideAllPendingNotify();
+		final SearchManager manager = (SearchManager)getSystemService(SEARCH_SERVICE);
+		manager.setOnCancelListener(new SearchManager.OnCancelListener() {
+			public void onCancel() {
+				ControlButtonPanel.restoreVisibilitiesFrom(visibilities);
+				manager.setOnCancelListener(null);
+			}
+		});
 		final FBReaderApp fbreader = (FBReaderApp)ZLApplication.Instance();
 		startSearch(fbreader.TextSearchPatternOption.getValue(), true, null, false);
 		return true;
@@ -348,6 +321,10 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void onFontSizeRequested() {
+		myFontSizeButtonPanel.show(true);
 	}
 
 	// --- Code from launcher ---

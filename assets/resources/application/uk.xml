@@ -177,6 +177,7 @@
 		<node name="toggleFullscreen" value="На весь екран"/>
 		<node name="bookmarks" value="Закладки"/>
 		<node name="gotoPage" value="На сторінку"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

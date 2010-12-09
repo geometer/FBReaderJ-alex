@@ -180,6 +180,7 @@
 		<node name="toggleFullscreen" value="Plein écran"/>
 		<node name="bookmarks" value="Marque-pages"/>
 		<node name="gotoPage" value="Aller à la Page"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

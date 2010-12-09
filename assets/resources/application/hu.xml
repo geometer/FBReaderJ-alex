@@ -177,6 +177,7 @@
 		<node name="toggleFullscreen" value="Teljes kijelző"/>
 		<node name="bookmarks" value="Könyvjelzők"/>
 		<node name="gotoPage" value="Ugrás oldalszámra"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

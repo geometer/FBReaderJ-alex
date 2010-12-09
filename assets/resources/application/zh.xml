@@ -177,6 +177,7 @@
 		<node name="toggleFullscreen" value="全屏" />
 		<node name="bookmarks" value="书签" />
 		<node name="gotoPage" toBeTranslated="true" value="Go to page"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

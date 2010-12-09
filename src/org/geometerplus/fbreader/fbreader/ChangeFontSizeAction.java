@@ -30,6 +30,14 @@ class ChangeFontSizeAction extends FBAction {
 		myDelta = delta;
 	}
 
+	@Override
+	public boolean isEnabled() {
+		ZLIntegerRangeOption option =
+			ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
+		final int nextValue = option.getValue() + myDelta;
+		return option.MinValue <= nextValue && nextValue <= option.MaxValue;
+	}
+
 	public void run() {
 		ZLIntegerRangeOption option =
 			ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;

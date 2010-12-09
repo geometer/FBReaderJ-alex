@@ -27,14 +27,22 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+
 public class RotatedStringDrawable extends Drawable {
 
 	public static Drawable create(String string, int angle) {
-		final Drawable normal = new RotatedStringDrawable(string, angle, false);
-		final Drawable pressed = new RotatedStringDrawable(string, angle, true);
+		return create(string, angle, 28);
+	}
+
+	public static Drawable create(String string, int angle, int fontSize) {
+		final Drawable disabled = new RotatedStringDrawable(string, angle, fontSize, Color.rgb(0x55, 0x55, 0x55));
+		final Drawable normal = new RotatedStringDrawable(string, angle, fontSize, Color.rgb(0xF0, 0xF0, 0xF0));
+		final Drawable pressed = new RotatedStringDrawable(string, angle, fontSize, Color.rgb(0xF0, 0x68, 0));
 		android.graphics.drawable.StateListDrawable image = new StateListDrawable();
-		image.addState(new int[]{-android.R.attr.state_pressed}, normal);
+		image.addState(new int[]{-android.R.attr.state_enabled}, disabled);
 		image.addState(new int[]{android.R.attr.state_pressed}, pressed);
+		image.addState(new int[]{}, normal);
 		return image;
 	}
 
@@ -42,14 +50,14 @@ public class RotatedStringDrawable extends Drawable {
 	private final String myString;
 	private final int myAngle;
 
-	private RotatedStringDrawable(String string, int angle, boolean hilighted) {
+	private RotatedStringDrawable(String string, int angle, int fontSize, int color) {
 		myTextPaint.setLinearText(false);
 		myTextPaint.setAntiAlias(true);
 		myTextPaint.setSubpixelText(false);
 		myTextPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
-		myTextPaint.setColor(hilighted ? Color.rgb(0xF0, 0x68, 0) : Color.rgb(0xF0, 0xF0, 0xF0));
+		myTextPaint.setColor(color);
 		myTextPaint.setTextAlign(Paint.Align.LEFT);
-		myTextPaint.setTextSize(28);
+		myTextPaint.setTextSize(fontSize);
 		myTextPaint.setShadowLayer(2.0f, 1.0f, 1.0f, Color.rgb(0x70, 0x70, 0x70));
 		myTextPaint.measureText("M");
 
@@ -71,14 +79,14 @@ public class RotatedStringDrawable extends Drawable {
 		final int h = getStringHeight();
 		canvas.save();
 		switch (myAngle) {
-		case 90:
+		case ZLAndroidApplication.ROTATE_90:
 			canvas.rotate(90.0f);
 			canvas.translate(0.0f, -h);
 			break;
-		case 180:
+		case ZLAndroidApplication.ROTATE_180:
 			canvas.rotate(180.0f, w / 2.0f, h / 2.0f);
 			break;
-		case 270:
+		case ZLAndroidApplication.ROTATE_270:
 			canvas.rotate(-90.0f);
 			canvas.translate(-w, 0.0f);
 			break;
@@ -94,7 +102,8 @@ public class RotatedStringDrawable extends Drawable {
 
 	@Override
 	public int getIntrinsicWidth() {
-		if (myAngle == 90 || myAngle == 270) {
+		if (myAngle == ZLAndroidApplication.ROTATE_90 ||
+				myAngle == ZLAndroidApplication.ROTATE_270) {
 			return getStringHeight();
 		}
 		return getStringWidth();
@@ -102,7 +111,8 @@ public class RotatedStringDrawable extends Drawable {
 
 	@Override
 	public int getIntrinsicHeight() {
-		if (myAngle == 90 || myAngle == 270) {
+		if (myAngle == ZLAndroidApplication.ROTATE_90 ||
+				myAngle == ZLAndroidApplication.ROTATE_270) {
 			return getStringWidth();
 		}
 		return getStringHeight();

@@ -177,6 +177,7 @@
 		<node name="toggleFullscreen" value="Na celou obrazovku"/>
 		<node name="bookmarks" value="Záložky"/>
 		<node name="gotoPage" value="Přejít na stránku"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

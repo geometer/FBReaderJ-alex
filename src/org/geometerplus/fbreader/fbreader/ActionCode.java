@@ -51,4 +51,5 @@ public interface ActionCode {
 	String ROTATE = "rotate";
 
 	String GOTO_PAGE = "gotoPage";
+	String FONT_SIZE = "fontSize";
 };

@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import android.os.Handler;
 import android.os.Message;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.*;
 
@@ -60,17 +62,29 @@ public class ControlPanel extends LinearLayout implements View.OnClickListener {
 		myPlateLayout = (LinearLayout)findViewById(R.id.tools_plate);
 	}
 
-	public void addButton(String actionId, boolean isCloseButton, int imageId) {
+	private ActionButton addButton(String actionId, boolean isCloseButton) {
 		final ActionButton button = new ActionButton(getContext(), actionId, isCloseButton);
-		button.setImageResource(imageId);
+		button.setLayoutParams(new ViewGroup.LayoutParams(84, 44));
+		button.setScaleType(ImageView.ScaleType.CENTER);
 		button.setOnClickListener(this);
 		myPlateLayout.addView(button);
 		myButtons.add(button);
+		return button;
+	}
+
+	public void addButton(String actionId, boolean isCloseButton, int imageId) {
+		addButton(actionId, isCloseButton).setImageResource(imageId);
+	}
+
+	public void addButton(String actionId, boolean isCloseButton, Drawable imageDrawable) {
+		addButton(actionId, isCloseButton).setImageDrawable(imageDrawable);
 	}
 
 	public void onClick(View view) {
 		final ActionButton button = (ActionButton)view;
-		ZLApplication.Instance().doAction(button.ActionId);
+		if (button.ActionId != null) {
+			ZLApplication.Instance().doAction(button.ActionId);
+		}
 		if (button.IsCloseButton) {
 			hide(true);
 		}
@@ -125,7 +139,8 @@ public class ControlPanel extends LinearLayout implements View.OnClickListener {
 	public void updateStates() {
 		final ZLApplication application = ZLApplication.Instance();
 		for (ActionButton button : myButtons) {
-			button.setEnabled(application.isActionEnabled(button.ActionId));
+			button.setEnabled(button.ActionId == null ? true :
+				application.isActionEnabled(button.ActionId));
 		}
 	}
 	
@@ -137,5 +152,12 @@ public class ControlPanel extends LinearLayout implements View.OnClickListener {
 			}
 		}
 		return false;
+	}
+
+	public void setExtension(View view) {
+		if (view != null) {
+			myPlateLayout.removeAllViews();
+			myPlateLayout.addView(view);
+		}
 	}
 }

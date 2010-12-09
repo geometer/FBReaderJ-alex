@@ -177,6 +177,7 @@
 		<node name="toggleFullscreen" value="Tutto schermo"/>
 		<node name="bookmarks" value="Segnalibri"/>
 		<node name="gotoPage" value="Vai a Pagine"/>
+		<node name="fontSize" toBeTranslated="true" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">

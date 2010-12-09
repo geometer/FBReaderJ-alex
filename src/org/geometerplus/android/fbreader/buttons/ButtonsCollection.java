@@ -54,13 +54,14 @@ public class ButtonsCollection {
 		// TODO: dictionary button
 		myButtons.add(new FBActionButton("settings_fbreader", ActionCode.SHOW_PREFERENCES));
 		// TODO: font button(s)
+		myButtons.add(new FBActionButton("fonts", ActionCode.FONT_SIZE));
 		myButtons.add(new FBActionButton("browser", ActionCode.SHOW_NETWORK_BROWSER));
 		myButtons.add(new FBActionButton("lib", ActionCode.SHOW_LIBRARY));
 		myButtons.add(new FBActionButton("lib_network", ActionCode.SHOW_NETWORK_LIBRARY));
 		myButtons.add(new FBActionDecorator("day_night", ActionCode.SWITCH_TO_NIGHT_PROFILE,
 				new FBActionButton("day_night", ActionCode.SWITCH_TO_DAY_PROFILE)));
 		myButtons.add(new FBActionButton("info", ActionCode.SHOW_BOOK_INFO));
-}
+	}
 
 	private void collectDefaultButtons(List<AbstractButton> buttons) {
 		createButtons();

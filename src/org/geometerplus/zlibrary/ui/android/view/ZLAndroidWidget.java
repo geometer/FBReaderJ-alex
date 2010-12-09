@@ -73,7 +73,8 @@ public class ZLAndroidWidget extends View {
 	}
 
 	private final ZLPaintContext createContext(ZLView view, Canvas canvas) {
-		final boolean rotated = myRotationAngle == 90 || myRotationAngle == 270;
+		final boolean rotated = myRotationAngle == ZLAndroidApplication.ROTATE_90 ||
+			myRotationAngle == ZLAndroidApplication.ROTATE_270;
 		return new ZLAndroidPaintContext(
 			canvas,
 			rotated ? getHeight() : getWidth(),

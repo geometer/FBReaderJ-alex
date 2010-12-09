@@ -176,6 +176,7 @@
 		<node name="toggleFullscreen" value="Full Screen"/>
 		<node name="bookmarks" value="Bookmarks"/>
 		<node name="gotoPage" value="Go to page"/>
+		<node name="fontSize" value="Font size" />
 	</node>
 	<node name="dialog">
 		<node name="button">
