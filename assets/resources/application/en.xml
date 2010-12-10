@@ -54,6 +54,19 @@
 			<node name="back" value="Back"/>
 		</node>
 	</node>
+	
+	<node name="fmanagerView">
+		<node name="root" value="Root"/>
+		<node name="sdcard" value="Sdcard"/>
+		<node name="books" value="Books directory"/>
+
+		<node name="progress_dialog">
+			<node name="title" value="Please wait..."/>
+			<node name="message" value="Retrieving data ..."/>
+		</node>
+		<node name="permission_denied" value="Permission denied..." />
+	</node>
+	
 	<node name="networkView">
 		<node name="openCatalog" value="Open catalog"/>
 		<node name="showResults" value="Show results"/>

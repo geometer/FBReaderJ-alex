@@ -52,6 +52,7 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.library.Library;
 
+import org.geometerplus.android.fbreader.library.FileManager;
 import org.geometerplus.android.fbreader.buttons.AbstractButton;
 import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
 import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
