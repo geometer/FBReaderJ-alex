@@ -36,6 +36,8 @@
 		</node>
 		<node name="openBook" value="Open book"/>
 		<node name="deleteBook" value="Delete book"/>
+		<node name="addToFavorites" value="Add to favorites"/>
+		<node name="removeFromFavorites" value="Remove from favorites"/>
 	</node>
 	<node name="browser">
 		<node name="errorText" value="Error: %s"/>
