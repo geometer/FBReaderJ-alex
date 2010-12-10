@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
@@ -52,8 +51,8 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 		if (SQLiteBooksDatabase.Instance() == null) {
 			new SQLiteBooksDatabase(this, "LIBRARY_NG");
 		}
-		if (Library == null) {
-			Library = new Library();
+		if (LibraryInstance == null) {
+			LibraryInstance = new Library();
 			startService(new Intent(getApplicationContext(), InitializationService.class));
 		}
 
@@ -94,7 +93,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 
 	@Override
 	public void onDestroy() {
-		Library = null;
+		LibraryInstance = null;
 		super.onDestroy();
 	}
 

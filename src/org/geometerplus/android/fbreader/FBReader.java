@@ -22,7 +22,6 @@ package org.geometerplus.android.fbreader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.io.File;
 
 import android.app.Dialog;
 import android.app.SearchManager;
@@ -50,9 +49,7 @@ import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.ActionCode;
-import org.geometerplus.fbreader.library.Library;
 
-import org.geometerplus.android.fbreader.library.FileManager;
 import org.geometerplus.android.fbreader.buttons.AbstractButton;
 import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
 import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
@@ -122,13 +119,13 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 	private EPDView myEPDView = new ReadingEPDView(this);
 
-	private String fileNameFromUri(Uri uri) {
+	/*private String fileNameFromUri(Uri uri) {
 		if (uri.equals(Uri.parse("file:///"))) {
 			return Library.getHelpFile().getPath();
 		} else {
 			return uri.getPath();
 		}
-	}
+	}*/
 
 	@Override
 	protected ZLFile fileFromIntent(Intent intent) {
