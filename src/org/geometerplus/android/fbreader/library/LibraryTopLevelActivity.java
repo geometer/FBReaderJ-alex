@@ -41,6 +41,7 @@ import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 
 public class LibraryTopLevelActivity extends LibraryBaseActivity {
 	public static final String SHOW_PATH_KEY = "org.geometerplus.android.fbreader.library.SHOW_PATH";
+	private String myShowPath;
 
 	private LinkedList<FBTree> myItems;
 	private TopLevelTree mySearchResultsItem;
@@ -131,16 +132,17 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 		} else if (ACTION_FOUND.equals(intent.getAction())) {
 			setSearchResults(intent);
 		}
+		myShowPath = intent.getStringExtra(SHOW_PATH_KEY);
+		intent.removeExtra(SHOW_PATH_KEY);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		final Intent intent = getIntent();
-		final String showPath = intent.getStringExtra(SHOW_PATH_KEY);
-		if (showPath != null) {
-			intent.removeExtra(SHOW_PATH_KEY);
-			new OpenTreeRunnable(showPath, mySelectedBookPath).run();
+		if (myShowPath != null) {
+			final Runnable runnable = new OpenTreeRunnable(myShowPath, mySelectedBookPath);
+			myShowPath = null;
+			runnable.run();
 		}
 	}
 
