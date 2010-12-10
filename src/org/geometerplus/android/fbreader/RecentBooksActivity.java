@@ -19,7 +19,10 @@
 
 package org.geometerplus.android.fbreader;
 
+import org.geometerplus.android.fbreader.library.LibraryTopLevelActivity;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class RecentBooksActivity extends Activity {
@@ -28,12 +31,11 @@ public class RecentBooksActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		/*startActivity(
-			new Intent(getApplicationContext(), LibraryTabActivity.class)
-				.putExtra(LibraryTabActivity.SELECTED_TAG_KEY, LibraryTabActivity.TAG_RECENT)
-				//.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
+		startActivity(
+			new Intent(getApplicationContext(), LibraryTopLevelActivity.class)
+				.putExtra(LibraryTopLevelActivity.SHOW_PATH_KEY, LibraryTopLevelActivity.PATH_RECENT)
 				.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP)
-		);*/
+		);
 
 		finish();
 	}

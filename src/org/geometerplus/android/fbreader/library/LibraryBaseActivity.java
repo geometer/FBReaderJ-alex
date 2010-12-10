@@ -51,11 +51,11 @@ abstract class LibraryBaseActivity extends ListActivity {
 	static final String TREE_PATH_KEY = "TreePath";
 	static final String PARAMETER_KEY = "Parameter";
 
-	static final String PATH_FAVORITES = "favorites";
-	static final String PATH_SEARCH_RESULTS = "searchResults";
-	static final String PATH_RECENT = "recent";
-	static final String PATH_BY_AUTHOR = "byAuthor";
-	static final String PATH_BY_TAG = "byTag";
+	public static final String PATH_FAVORITES = "favorites";
+	public static final String PATH_SEARCH_RESULTS = "searchResults";
+	public static final String PATH_RECENT = "recent";
+	public static final String PATH_BY_AUTHOR = "byAuthor";
+	public static final String PATH_BY_TAG = "byTag";
 
 	static Library LibraryInstance;
 

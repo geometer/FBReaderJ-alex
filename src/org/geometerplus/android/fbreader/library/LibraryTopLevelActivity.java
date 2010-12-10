@@ -40,6 +40,8 @@ import org.geometerplus.android.fbreader.SQLiteBooksDatabase;
 import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 
 public class LibraryTopLevelActivity extends LibraryBaseActivity {
+	public static final String SHOW_PATH_KEY = "org.geometerplus.android.fbreader.library.SHOW_PATH";
+
 	private LinkedList<FBTree> myItems;
 	private TopLevelTree mySearchResultsItem;
 
@@ -130,7 +132,18 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			setSearchResults(intent);
 		}
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		final Intent intent = getIntent();
+		final String showPath = intent.getStringExtra(SHOW_PATH_KEY);
+		if (showPath != null) {
+			intent.removeExtra(SHOW_PATH_KEY);
+			new OpenTreeRunnable(showPath, mySelectedBookPath).run();
+		}
+	}
+
 	private void runFileManager(){
 		Log.v(FileManager.LOG, "runFileManager()");
 		Intent i = new Intent(this, FileManager.class);
