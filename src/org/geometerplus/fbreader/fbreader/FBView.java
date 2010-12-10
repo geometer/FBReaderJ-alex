@@ -25,7 +25,6 @@ import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.*;
 
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
-import org.geometerplus.fbreader.bookmodel.TOCTree;
 
 public final class FBView extends ZLTextView {
 	private FBReaderApp myReader;

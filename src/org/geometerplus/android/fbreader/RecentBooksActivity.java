@@ -20,7 +20,6 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 public class RecentBooksActivity extends Activity {

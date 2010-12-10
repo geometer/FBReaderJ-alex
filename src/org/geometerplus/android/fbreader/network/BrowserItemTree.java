@@ -19,10 +19,8 @@
 
 package org.geometerplus.android.fbreader.network;
 
-import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 import org.geometerplus.fbreader.network.*;
