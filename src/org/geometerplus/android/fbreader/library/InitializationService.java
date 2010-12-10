@@ -17,12 +17,32 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.formats.fb2;
+package org.geometerplus.android.fbreader.library;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 
-public class FB2CoverReader {
-	public FB2CoverImage readCover(ZLFile file) {
-		return new FB2CoverImage(file);
+public class InitializationService extends Service {
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
 	}
+
+	@Override
+	public void onStart(Intent intent, int startId) {
+		final Thread libraryInitializer = new Thread(new Runnable() {
+			public void run() {
+				LibraryTopLevelActivity.Library.synchronize();
+			}
+		});
+		libraryInitializer.setPriority(Thread.MIN_PRIORITY);
+		libraryInitializer.start();
+	}
+
+	/*@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		onStart(intent, startId);
+		return 0;
+	}*/
 }

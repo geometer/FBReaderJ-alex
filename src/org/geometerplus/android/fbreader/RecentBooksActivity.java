@@ -29,12 +29,12 @@ public class RecentBooksActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		startActivity(
+		/*startActivity(
 			new Intent(getApplicationContext(), LibraryTabActivity.class)
 				.putExtra(LibraryTabActivity.SELECTED_TAG_KEY, LibraryTabActivity.TAG_RECENT)
 				//.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
 				.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP)
-		);
+		);*/
 
 		finish();
 	}

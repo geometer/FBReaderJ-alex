@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,36 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.zlibrary.ui.android.image;
+package org.geometerplus.zlibrary.core.image;
 
 import org.geometerplus.zlibrary.core.constants.MimeTypes;
-import org.geometerplus.zlibrary.core.image.*;
 
-public final class ZLAndroidImageManager extends ZLImageManager {
-	public ZLAndroidImageData getImageData(ZLImage image) {
-		if (image instanceof ZLAndroidImageData) {
-			return (ZLAndroidImageData)image;
-		} else if (image instanceof ZLSingleImage) {
-			ZLSingleImage singleImage = (ZLSingleImage)image;
-			if (MimeTypes.MIME_IMAGE_PALM.equals(singleImage.mimeType())) {
-				return null;
-			}
-			byte[] array = singleImage.byteData();
-			if (array == null) {
-				return null;
-			}
-			return new ZLAndroidArrayBasedImageData(array);
-		} else {
-			//TODO
-			return null;
-		}
+public abstract class ZLImageProxy extends ZLLoadableImage {
+	private ZLSingleImage myImage;
+
+	public ZLImageProxy(String mimeType) {
+		super(mimeType);
+	}
+
+	public ZLImageProxy() {
+		this(MimeTypes.MIME_IMAGE_AUTO);
+	}
+
+	public abstract ZLSingleImage getRealImage();
+
+	@Override
+	public final byte[] byteData() {
+		return myImage != null ? myImage.byteData() : null;
+	}
+
+	@Override
+	public final synchronized void synchronize() {
+		myImage = getRealImage();
+		setSynchronized();
+	}
+
+	@Override
+	public final void synchronizeFast() {
+		setSynchronized();
 	}
 }
