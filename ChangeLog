@@ -1,11 +1,11 @@
 ===== 0.7.18 (??? ??, 2010) =====
+* Main window has been rewritten to be like launcher
 * Local library activity has been moved to a separate process
 * French resources have been updated (by Mathias Monnerville)
 * German resources have been updated (by Ingolf Kübler)
 * Font directory option is only shown if external fonts are supported
 * Options dialog has been changed to be more androidish
 * Dependent options
-* Color picker dialog (idea was taken from http://www.anddev.org/announce_color_picker_dialog-t10771.html)
 * Network library: language filter has been added
 
 ===== 0.7.17 (Nov 14, 2010) =====
