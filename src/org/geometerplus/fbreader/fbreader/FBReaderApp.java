@@ -69,7 +69,6 @@ public final class FBReaderApp extends ZLApplication {
 
 	public FBReaderApp(String arg) {
 		myArg0 = arg;
-		addAction(ActionCode.QUIT, new QuitAction(this));
 
 		addAction(ActionCode.INCREASE_FONT, new ChangeFontSizeAction(this, +2));
 		addAction(ActionCode.DECREASE_FONT, new ChangeFontSizeAction(this, -2));

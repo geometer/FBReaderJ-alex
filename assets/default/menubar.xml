@@ -9,6 +9,8 @@
 	<item id="night"/>
 	<item id="day"/>
 	<item id="search"/>
+	<item id="scrollingMode">
+	<item id="dictionaryMode">
 	<item id="preferences"/>
 	<item id="networkBrowser"/>
 	<item id="bookInfo"/>
