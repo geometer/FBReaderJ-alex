@@ -40,14 +40,6 @@ public final class FBView extends ZLTextView {
 		super.setModel(model);
 	}
 
-	final void doShortScroll(boolean forward) {
-		if (!moveRegionPointer(forward)) {
-			scrollPage(forward, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
-		}
-
-		myReader.repaintView();
-	}
-
 	/*@Override
 	public void onScrollingFinished(int viewPage) {
 		super.onScrollingFinished(viewPage);
@@ -192,11 +184,13 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public boolean onTrackballRotated(int diffX, int diffY) {
-		if (diffY > 0) {
-			myReader.doAction(ActionCode.TRACKBALL_SCROLL_FORWARD);
-		} else if (diffY < 0) {
-			myReader.doAction(ActionCode.TRACKBALL_SCROLL_BACKWARD);
+		final boolean forward = diffY > 0;
+		if (!moveRegionPointer(forward)) {
+			scrollPage(forward, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 		}
+
+		myReader.repaintView();
+
 		return true;
 	}
 
