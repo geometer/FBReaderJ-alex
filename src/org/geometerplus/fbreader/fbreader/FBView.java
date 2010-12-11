@@ -41,7 +41,7 @@ public final class FBView extends ZLTextView {
 	}
 
 	final void doShortScroll(boolean forward) {
-		if (!moveHyperlinkPointer(forward)) {
+		if (!moveRegionPointer(forward)) {
 			scrollPage(forward, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 		}
 
@@ -198,6 +198,11 @@ public final class FBView extends ZLTextView {
 			myReader.doAction(ActionCode.TRACKBALL_SCROLL_BACKWARD);
 		}
 		return true;
+	}
+
+	@Override
+	public int getMode() {
+		return myReader.TextModeOption.getValue();
 	}
 
 	@Override
