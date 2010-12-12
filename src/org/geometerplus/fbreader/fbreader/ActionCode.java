@@ -50,9 +50,9 @@ public interface ActionCode {
 	String CLEAR_SELECTION = "clearSelection";
 	String TRANSLATE = "translate";
 
-	String FOLLOW_HYPERLINK = "followHyperlink";
+	String PROCESS_HYPERLINK = "processHyperlink";
 	String ROTATE = "rotate";
 
 	String GOTO_PAGE = "gotoPage";
 	String FONT_SIZE = "fontSize";
-};
+}

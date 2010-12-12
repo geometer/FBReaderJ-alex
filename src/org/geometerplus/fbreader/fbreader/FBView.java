@@ -50,17 +50,6 @@ public final class FBView extends ZLTextView {
 		myReader.repaintView();
 	}
 
-	void followHyperlink(ZLTextHyperlink hyperlink) {
-		switch (hyperlink.Type) {
-			case FBHyperlinkType.EXTERNAL:
-				ZLibrary.Instance().openInBrowser(hyperlink.Id);
-				break;
-			case FBHyperlinkType.INTERNAL:
-				myReader.tryOpenFootnote(hyperlink.Id);
-				break;
-		}
-	}
-
 	//private int myStartX;
 	//private int myStartY;
 	//private boolean myIsManualScrollingActive;
@@ -79,7 +68,8 @@ public final class FBView extends ZLTextView {
 		if (hyperlink != null) {
 			selectHyperlink(hyperlink);
 			myReader.repaintView();
-			followHyperlink(hyperlink);
+			myReader.doAction(ActionCode.PROCESS_HYPERLINK);
+			//followHyperlink(hyperlink);
 			return true;
 		}
 
