@@ -1,3 +1,5 @@
+* Integration with ColorDict has been implemented
+
 ===== 0.7.18 (??? ??, 2010) =====
 * Main window has been rewritten to be like launcher
 * Local library activity has been moved to a separate process
