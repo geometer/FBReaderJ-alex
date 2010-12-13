@@ -44,9 +44,8 @@ public class SynchronousActivity extends Activity {
 		}
 
 		@Override
-		public boolean onTogglePressed(int arg1, int arg2) {
+		public void onTogglePressed(int arg1, int arg2) {
 			finishActivity();
-			return true;
 		}
 
 		@Override

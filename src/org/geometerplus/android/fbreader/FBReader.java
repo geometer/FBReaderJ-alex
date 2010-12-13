@@ -87,7 +87,7 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 
 		@Override
-		public boolean onTogglePressed(int arg1, int arg2) {
+		public void onTogglePressed(int arg1, int arg2) {
 			final FBReader fbreader = (FBReader)getActivity();
 			if (!fbreader.myReadMode /*&& SynchronousActivity.Instance == null*/) {
 				changeFont();
@@ -96,7 +96,6 @@ public final class FBReader extends ZLAndroidActivity {
 					new Intent(fbreader.getApplicationContext(), SynchronousActivity.class)
 				);
 			}
-			return true;
 		}
 
 		private final static int FONT_DELTA = 9;

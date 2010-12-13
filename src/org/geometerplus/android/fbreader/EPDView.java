@@ -20,9 +20,12 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
+import android.epd.EpdInterface;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Handler;
-import android.widget.EpdRender;
-import android.widget.LinearLayout;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -35,19 +38,35 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 
-abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListener {
+abstract class EPDView implements EpdInterface.CallBackKeyEvent, ZLAndroidLibrary.EventsListener {
+
+	private static final int EPD_NUMBER = 0;
 
 	private final Activity myActivity;
+
+	private EpdInterface myInterface;
+	private int myEpdId = -1;
+
+
+	private static final int EPD_FINISH = -1;
+	private static final int EPD_UPDATE = 0;
+	private static final int EPD_DO_UPDATE = 1;
 
 	private class ViewHandler extends Handler {
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case 0:
+			case EPD_UPDATE:
 				updateEpdView(0);
 				break;
-			case -1:
+			case EPD_FINISH:
+				if (myInterface != null) {
+					myInterface.Cancel();
+				}
 				myActivity.finish();
+				break;
+			case EPD_DO_UPDATE:
+				updateEpdView();
 				break;
 			}
 		};
@@ -64,43 +83,83 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 	}
 
 	public void notifyApplicationChanges(boolean singleChange) {
-		myHandler.sendEmptyMessage(0);
+		myHandler.sendEmptyMessage(EPD_UPDATE);
 	}
 
 	public void finishActivity() {
-		myHandler.sendEmptyMessage(-1);
+		myHandler.sendEmptyMessage(EPD_FINISH);
 	}
 
 
 	public void onResume() {
-		final LinearLayout view = (LinearLayout) myActivity.findViewById(R.id.epd_layout);
-		if (view == null) {
+		if (myActivity.findViewById(R.id.epd_layout) == null) {
 			throw new RuntimeException("EPDView's activity must be layed out with \"epd_layout\" layout.");
 		}
-		setVdsActive(true);
-		if (getLayout() != view) {
-			bindLayout(view);
-		}
+
+		Log.w("FBREADER", "onResume: " + myActivity.getClass().getSimpleName());
+
+		myInterface = new EpdInterface();
+		myInterface.setCallBack(this);
+
+		myEpdId = myInterface.PondCreateVds(EPD_NUMBER);
+		myInterface.PondSetVdsActive(EPD_NUMBER, myEpdId, 1);
+		myInterface.PondSendMessage(EPD_NUMBER, myEpdId, EpdInterface.EPD_REGISTER_TOGGLEKEY, null);
 		updateEpdViewDelay(200);
 	}
 
 	public void onPause() {
-		setVdsActive(false);
+		Log.w("FBREADER", "onPause: " + myActivity.getClass().getSimpleName());
+
+		myInterface.Cancel();
+		myInterface.PondSetVdsActive(EPD_NUMBER, myEpdId, 0);
+		myInterface.PondDeleteVds(EPD_NUMBER, myEpdId);
+		myEpdId = -1;
+		myInterface = null;
 	}
 
-	@Override
-	public boolean onPageUp(int arg1, int arg2) {
+	public void executeKeyEvent(int keycode, int arg1, int arg2) {
+		switch (keycode) {
+		case EpdInterface.EPD_PAGE_UP:
+			Log.w("FBREADER", "onPageUp: " + myActivity.getClass().getSimpleName());
+			onPageUp(arg1, arg2);
+			break;
+		case EpdInterface.EPD_PAGE_DOWN:
+			Log.w("FBREADER", "onPageDown: " + myActivity.getClass().getSimpleName());
+			onPageDown(arg1, arg2);
+			break;
+		case EpdInterface.EPD_TOGGLE:
+			Log.w("FBREADER", "onTogglePressed: " + myActivity.getClass().getSimpleName());
+			onTogglePressed(arg1, arg2);
+			break;
+		case EpdInterface.EPD_REPAINT:
+			Log.w("FBREADER", "onRepaintEpdWindow: " + myActivity.getClass().getSimpleName());
+			break;
+		case EpdInterface.EPD_FONTSIZE_CHANGE:
+			Log.w("FBREADER", "EPD_FONTSIZE_CHANGE: " + myActivity.getClass().getSimpleName());
+			break;
+		case EpdInterface.EPD_PROJECT:
+			Log.w("FBREADER", "EPD_PROJECT: " + myActivity.getClass().getSimpleName());
+			break;
+		case EpdInterface.EPD_REGISTER_TOGGLEKEY:
+			Log.w("FBREADER", "EPD_REGISTER_TOGGLEKEY: " + myActivity.getClass().getSimpleName());
+			break;
+		}
+	}
+
+	public void onPageUp(int arg1, int arg2) {
 		final int angle = ZLAndroidApplication.Instance().RotationFlag;
 		scrollPage(angle == ZLAndroidApplication.ROTATE_90 || angle == ZLAndroidApplication.ROTATE_180);
-		return true;
 	}
 
-	@Override
-	public boolean onPageDown(int arg1, int arg2) {
+	public void onPageDown(int arg1, int arg2) {
 		final int angle = ZLAndroidApplication.Instance().RotationFlag;
 		scrollPage(angle == ZLAndroidApplication.ROTATE_0 || angle == ZLAndroidApplication.ROTATE_270);
-		return true;
 	}
+
+	public void onTogglePressed(int arg1, int arg2) {
+	}
+
+
 
 	public final void scrollPage(boolean forward) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
@@ -140,5 +199,35 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	public static String makePositionText(int page, int pagesNumber) {
 		return "" + page + " / " + pagesNumber;
+	}
+
+
+	// --- methods from EpdRender ---
+
+	public void updateEpdViewDelay(int delay) {
+		myHandler.sendMessageDelayed(myHandler.obtainMessage(EPD_DO_UPDATE), delay);
+	}
+
+
+	private Bitmap myBitmap;
+
+	public void updateEpdView() {
+		if (myInterface == null) {
+			return;
+		}
+		final int width = myInterface.PondGetDisplayCaps(0, EpdInterface.PONDDC_XPIXEL);
+		final int height = myInterface.PondGetDisplayCaps(0, EpdInterface.PONDDC_YPIXEL);
+		if (myBitmap != null && (myBitmap.getWidth() != width || myBitmap.getHeight() != height)) {
+			myBitmap.recycle();
+			myBitmap = null;
+		}
+		if (myBitmap == null) {
+			myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565); 
+		}
+		final Canvas canvas = new Canvas(myBitmap);
+		final View view = myActivity.findViewById(R.id.epd_layout);
+		view.draw(canvas);
+		myInterface.Cancel();
+		myInterface.PondDrawBitmap565(EPD_NUMBER, myEpdId, myBitmap, 0);
 	}
 }
