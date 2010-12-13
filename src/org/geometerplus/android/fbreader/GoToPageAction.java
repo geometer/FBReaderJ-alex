@@ -19,8 +19,6 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.content.Intent;
-
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBAction;
 
@@ -38,8 +36,6 @@ class GoToPageAction extends FBAction {
 	}
 
 	public void run() {
-		myActivity.startActivity(
-			new Intent(myActivity.getApplicationContext(), NavigationActivity.class)
-		);
+		myActivity.onNavigationRequested();
 	}
 }

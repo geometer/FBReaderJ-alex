@@ -89,12 +89,15 @@ public final class FBReader extends ZLAndroidActivity {
 		@Override
 		public boolean onTogglePressed(int arg1, int arg2) {
 			final FBReader fbreader = (FBReader)getActivity();
-			if (!fbreader.myReadMode /*&& SynchronousActivity.Instance == null*/) {
+			if (!fbreader.myReadMode) {
 				changeFont();
 			} else {
-				fbreader.startActivity(
-					new Intent(fbreader.getApplicationContext(), SynchronousActivity.class)
-				);
+				Dialog dlg = SynchronousDialog.Instance;
+				if (dlg != null) {
+					dlg.dismiss();
+				} else {
+					new SynchronousDialog(getActivity(), this).show();
+				}
 			}
 			return true;
 		}
@@ -109,9 +112,6 @@ public final class FBReader extends ZLAndroidActivity {
 			option.setValue((newValue > FONT_END) ? FONT_START : newValue);
 			((FBReaderApp)ZLApplication.Instance()).clearTextCaches();
 			ZLApplication.Instance().repaintView();
-		}
-
-		public void onEpdRepaintFinished() {
 		}
 	}
 	private EPDView myEPDView = new ReadingEPDView(this);
@@ -327,6 +327,11 @@ public final class FBReader extends ZLAndroidActivity {
 
 	public void onFontSizeRequested() {
 		myFontSizeButtonPanel.show(true);
+	}
+
+	public void onNavigationRequested() {
+		new NavigationDialog(this, myEPDView).show();
+		myEPDView.updateEpdView(200);
 	}
 
 	// --- Code from launcher ---

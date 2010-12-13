@@ -52,8 +52,6 @@
 			</intent-filter>
 			<meta-data android:name="android.app.default_searchable" android:value="org.geometerplus.android.fbreader.TextSearchActivity" />
 		</activity>
-		<activity android:name="org.geometerplus.android.fbreader.SynchronousActivity" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="org.geometerplus.android.fbreader.NavigationActivity" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="org.geometerplus.android.fbreader.BookStatusActivity" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="org.geometerplus.android.fbreader.TextSearchActivity">
 			<intent-filter>

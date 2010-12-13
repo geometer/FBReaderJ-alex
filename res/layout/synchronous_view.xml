@@ -15,5 +15,4 @@
 		android:paddingRight="?android:attr/scrollbarSize"
 		android:paddingBottom="?android:attr/scrollbarSize"
 	/>
-	<include layout="@layout/epd_layout"/>
 </LinearLayout>
