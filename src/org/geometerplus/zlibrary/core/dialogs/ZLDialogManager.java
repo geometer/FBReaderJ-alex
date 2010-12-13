@@ -19,8 +19,6 @@
 
 package org.geometerplus.zlibrary.core.dialogs;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-
 public abstract class ZLDialogManager {
 	protected static ZLDialogManager ourInstance;
 	

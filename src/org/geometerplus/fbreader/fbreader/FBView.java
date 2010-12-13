@@ -20,12 +20,10 @@
 package org.geometerplus.fbreader.fbreader;
 
 import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.*;
 
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
-import org.geometerplus.fbreader.bookmodel.TOCTree;
 
 public final class FBView extends ZLTextView {
 	private FBReaderApp myReader;

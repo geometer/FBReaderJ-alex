@@ -26,26 +26,18 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.res.AssetFileDescriptor;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
-import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.dialogs.ZLAndroidDialogManager;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidResourceBasedImageData;
-
-import org.geometerplus.android.fbreader.network.BookDownloader;
-import org.geometerplus.android.fbreader.network.BookDownloaderService;
-
-import org.geometerplus.fbreader.network.NetworkLibrary;
 
 public final class ZLAndroidLibrary extends ZLibrary {
 	private Activity myActivity;
