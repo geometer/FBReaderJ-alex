@@ -85,7 +85,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			R.drawable.ic_list_library_folder,
 			new Runnable() {
 				public void run() {
-					runFileManager();
+					startActivity(new Intent(LibraryTopLevelActivity.this, FileManager.class));
 				}
 			}
 		));
@@ -144,13 +144,6 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			myShowPath = null;
 			runnable.run();
 		}
-	}
-
-	private void runFileManager(){
-		Log.v(FileManager.LOG, "runFileManager()");
-		Intent i = new Intent(this, FileManager.class);
-		i.putExtra(FileManager.FILE_MANAGER_PATH, ""); 
-		startActivity(i);
 	}
 }
 
