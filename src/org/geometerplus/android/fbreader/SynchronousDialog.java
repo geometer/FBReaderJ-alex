@@ -24,9 +24,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
-import android.view.View;
 
 import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
@@ -36,6 +36,7 @@ public class SynchronousDialog extends Dialog {
 	public static Dialog Instance;
 
 	private ProgressDialog myProgressDialog;
+	private ZLAndroidWidget myWidget;
 
 	public SynchronousDialog(Context context, final EPDView epd) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
@@ -54,6 +55,8 @@ public class SynchronousDialog extends Dialog {
 
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
 		view.setEPDView(epd);
+
+		myWidget = (ZLAndroidWidget)epd.getActivity().findViewById(R.id.main_view_epd);
 
 		myProgressDialog = new ProgressDialog(context);
 		myProgressDialog.setIndeterminate(true);
@@ -95,13 +98,11 @@ public class SynchronousDialog extends Dialog {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		View view = findViewById(R.id.main_view_epd);
-		return ((view != null) && view.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+		return ((myWidget != null) && myWidget.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		View view = findViewById(R.id.main_view_epd);
-		return ((view != null) && view.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
+		return ((myWidget != null) && myWidget.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 }
