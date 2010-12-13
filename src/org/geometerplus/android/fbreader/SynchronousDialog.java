@@ -19,83 +19,58 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.os.Bundle;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 
 import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
+public class SynchronousDialog extends Dialog {
 
-public class SynchronousActivity extends Activity {
+	public static Dialog Instance;
 
 	private ProgressDialog myProgressDialog;
 
-	private static class SyncEPDView extends EPDView {
+	public SynchronousDialog(Context context, final EPDView epd) {
+		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 
-		public SyncEPDView(SynchronousActivity activity) {
-			super(activity);
-		}
+		final EPDView.EventsListener listener = new EPDView.EventsListener() {
+			public void onPageScrolling() {
+				SynchronousDialog.this.showPageProgress();
+			}
+			public void onEpdRepaintFinished() {
+				SynchronousDialog.this.updateImage();
+			}
+		};
+		epd.addEventsListener(listener);
 
-		@Override
-		public boolean onTogglePressed(int arg1, int arg2) {
-			finishActivity();
-			return true;
-		}
-
-		@Override
-		protected void onPageScrolling() {
-			((SynchronousActivity) getActivity()).showPageProgress();
-		}
-
-		public void onEpdRepaintFinished() {
-			((SynchronousActivity) getActivity()).updateImage();
-		}
-	}
-	private EPDView myEPDView = new SyncEPDView(this);
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.synchronous_view);
 
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
-
 		final SynchronousView view = (SynchronousView) findViewById(R.id.synchronous_view);
-		view.setEPDView(myEPDView);
+		view.setEPDView(epd);
 
-		myProgressDialog = new ProgressDialog(this);
+		myProgressDialog = new ProgressDialog(context);
 		myProgressDialog.setIndeterminate(true);
+
+		setOnDismissListener(new OnDismissListener() {
+			public void onDismiss(DialogInterface dialog) {
+				myProgressDialog.cancel();
+				epd.removeEventsListener(listener);
+				Instance = null;
+			}
+		});
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		myEPDView.onResume();
-		updateImage();
-	}
-
-	@Override
-	protected void onPause() {
-		myProgressDialog.cancel();
-		myEPDView.onPause();
-		super.onPause();
+		Instance = this;
 	}
 
 	void updateImage() {

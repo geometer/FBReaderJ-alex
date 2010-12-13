@@ -19,6 +19,8 @@
 
 package org.geometerplus.android.fbreader;
 
+import java.util.LinkedList;
+
 import android.app.Activity;
 import android.os.Handler;
 import android.widget.EpdRender;
@@ -72,6 +74,34 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 	}
 
 
+	public interface EventsListener {
+		void onPageScrolling();
+		void onEpdRepaintFinished();
+	}
+
+	private LinkedList<EventsListener> myListeners = new LinkedList<EventsListener>();
+
+	public void addEventsListener(EventsListener listener) {
+		myListeners.add(listener);
+	}
+
+	public void removeEventsListener(EventsListener listener) {
+		myListeners.remove(listener);
+	}
+
+	protected final void onPageScrolling() {
+		for (EventsListener listener: myListeners) {
+			listener.onPageScrolling();
+		}
+	}
+
+	public final void onEpdRepaintFinished() {
+		for (EventsListener listener: myListeners) {
+			listener.onEpdRepaintFinished();
+		}
+	}
+
+
 	public void onResume() {
 		final LinearLayout view = (LinearLayout) myActivity.findViewById(R.id.epd_layout);
 		if (view == null) {
@@ -109,9 +139,6 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 			((ZLTextView) view).scrollPage(forward, ZLTextView.ScrollingMode.NO_OVERLAPPING, 0);
 			ZLApplication.Instance().repaintView();
 		}
-	}
-
-	protected void onPageScrolling() {
 	}
 
 	public void updateEpdView(int delay) {
