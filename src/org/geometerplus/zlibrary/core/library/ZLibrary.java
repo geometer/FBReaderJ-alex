@@ -39,6 +39,5 @@ public abstract class ZLibrary {
 
 	abstract public String getVersionName();
 	abstract public int getDisplayDPI();
-	abstract public void openInBrowser(String reference);
 	abstract public Collection<String> defaultLanguageCodes();
 }

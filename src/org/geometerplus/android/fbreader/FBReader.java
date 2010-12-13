@@ -173,6 +173,8 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 		fbReader.addAction(ActionCode.FONT_SIZE, new FontSizeAction(this, fbReader));
 
+		fbReader.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, fbReader));
+
 		if (mySelector == null) {
 			mySelector = new ImageView(this);
 			mySelector.setImageResource(R.drawable.selector);
