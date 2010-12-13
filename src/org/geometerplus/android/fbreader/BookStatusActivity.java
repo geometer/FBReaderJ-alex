@@ -37,10 +37,13 @@ import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
+import org.geometerplus.zlibrary.core.image.ZLImageProxy;
+import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageLoader;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 import org.geometerplus.fbreader.bookmodel.BookModel;
@@ -146,27 +149,45 @@ public class BookStatusActivity extends Activity {
 		final int maxHeight = 250; // FIXME: hardcoded constant
 		final int maxWidth = maxHeight * 3 / 4;
 
-		Bitmap coverBitmap = null;
+		coverView.setVisibility(View.GONE);
+		coverView.setImageDrawable(null);
+
 		final FormatPlugin plugin = PluginCollection.Instance().getPlugin(book.File);
 		if (plugin != null) {
 			final ZLImage image = plugin.readCover(book);
 			if (image != null) {
 				final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
-				ZLAndroidImageData data = mgr.getImageData(image);
-				if (data != null) {
-					coverBitmap = data.getBitmap(2 * maxWidth, 2 * maxHeight);
+				final Runnable refreshRunnable = new Runnable() {
+					public void run() {
+						ZLAndroidImageData data = mgr.getImageData(image);
+						if (data != null) {
+							final Bitmap coverBitmap = data.getBitmap(2 * maxWidth, 2 * maxHeight);
+							if (coverBitmap != null) {
+								coverView.setVisibility(View.VISIBLE);
+								coverView.getLayoutParams().width = maxWidth;
+								coverView.getLayoutParams().height = maxHeight;
+								coverView.setImageBitmap(coverBitmap);
+							}
+						}
+					}
+				};
+				if (image instanceof ZLImageProxy) {
+					ZLImageProxy proxy = (ZLImageProxy)image;
+					if (!proxy.isSynchronized()) {
+						proxy.synchronize();
+					}
+					refreshRunnable.run();
+				} else if (image instanceof ZLLoadableImage) {
+					ZLLoadableImage loadable = (ZLLoadableImage)image;
+					if (loadable.isSynchronized()) {
+						refreshRunnable.run();
+					} else {
+						ZLAndroidImageLoader.Instance().startImageLoading(loadable, refreshRunnable);
+					}
+				} else {
+					refreshRunnable.run();
 				}
 			}
-		}
-
-		if (coverBitmap == null) {
-			coverView.setVisibility(View.GONE);
-			coverView.setImageDrawable(null);
-		} else {
-			coverView.setVisibility(View.VISIBLE);
-			coverView.getLayoutParams().width = maxWidth;
-			coverView.getLayoutParams().height = maxHeight;
-			coverView.setImageBitmap(coverBitmap);
 		}
 	}
 

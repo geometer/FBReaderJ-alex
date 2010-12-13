@@ -33,6 +33,8 @@ import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.image.ZLImage;
+import org.geometerplus.zlibrary.core.image.ZLImageProxy;
+import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
@@ -45,6 +47,7 @@ import org.geometerplus.fbreader.library.Book;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageLoader;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
@@ -169,26 +172,39 @@ public class NavigationDialog extends Dialog {
 				}
 				bookAuthors.setText(authors.toString());
 
-				Bitmap coverBitmap = null;
+				bookCover.setImageDrawable(null);
+				bookCover.setVisibility(View.GONE);
+				bookNoCoverLayout.setVisibility(View.VISIBLE);
+
 				final FormatPlugin plugin = PluginCollection.Instance().getPlugin(myViewBook.File);
 				if (plugin != null) {
 					final ZLImage image = plugin.readCover(myViewBook);
 					if (image != null) {
 						final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
-						ZLAndroidImageData data = mgr.getImageData(image);
-						if (data != null) {
-							coverBitmap = data.getBitmap(2 * myCoverWidth, 2 * myCoverHeight);
+						final Runnable refreshRunnable = new Runnable() {
+							public void run() {
+								ZLAndroidImageData data = mgr.getImageData(image);
+								if (data != null) {
+									final Bitmap coverBitmap = data.getBitmap(2 * myCoverWidth, 2 * myCoverHeight);
+									if (coverBitmap != null) {
+										bookCover.setImageBitmap(coverBitmap);
+										bookCover.setVisibility(View.VISIBLE);
+										bookNoCoverLayout.setVisibility(View.GONE);
+									}
+								}
+							}
+						};
+						if (image instanceof ZLLoadableImage) {
+							ZLLoadableImage loadable = (ZLLoadableImage)image;
+							if (loadable.isSynchronized()) {
+								refreshRunnable.run();
+							} else {
+								ZLAndroidImageLoader.Instance().startImageLoading(loadable, refreshRunnable);
+							}
+						} else {
+							refreshRunnable.run();
 						}
 					}
-				}
-				if (coverBitmap != null) {
-					bookCover.setImageBitmap(coverBitmap);
-					bookCover.setVisibility(View.VISIBLE);
-					bookNoCoverLayout.setVisibility(View.GONE);
-				} else {
-					bookCover.setImageDrawable(null);
-					bookCover.setVisibility(View.GONE);
-					bookNoCoverLayout.setVisibility(View.VISIBLE);
 				}
 			}
 			final int angle = ZLAndroidApplication.Instance().RotationFlag;
