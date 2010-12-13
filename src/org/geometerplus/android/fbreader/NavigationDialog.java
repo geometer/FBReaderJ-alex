@@ -19,12 +19,12 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,44 +47,28 @@ import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 
-public class NavigationActivity extends Activity {
+public class NavigationDialog extends Dialog {
 
-	private static class NavigationEPDView extends EPDView {
-
-		public NavigationEPDView(NavigationActivity activity) {
-			super(activity);
-		}
-
-		@Override
-		protected void onPageScrolling() {
-		}
-
-		public void onEpdRepaintFinished() {
-			final NavigationActivity fbreader = (NavigationActivity)getActivity();
-			fbreader.onEpdRepaintFinished();
-		}
-	}
-	private EPDView myEPDView = new NavigationEPDView(this);
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	public NavigationDialog(Context context, final EPDView epd) {
+		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 		setContentView(R.layout.navigation_view);
 
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
+		final EPDView.EventsListener listener = new EPDView.EventsListener() {
+			public void onPageScrolling() {
+			}
+			public void onEpdRepaintFinished() {
+				updateView();
+			}
+		};
+		epd.addEventsListener(listener);
 
-
-		final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
+		//final TextView statusPositionText = (TextView) findViewById(R.id.statusbar_position_text);
 		final TextView bookPositionText = (TextView) findViewById(R.id.book_position_text);
 		final SeekBar bookPositionSlider = (SeekBar) findViewById(R.id.book_position_slider);
 		bookPositionText.setText("");
-		statusPositionText.setText("");
+		//statusPositionText.setText("");
 		bookPositionSlider.setProgress(0);
 		bookPositionSlider.setMax(1);
 		bookPositionSlider.setVisibility(View.INVISIBLE);
@@ -106,7 +90,7 @@ public class NavigationActivity extends Activity {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				gotoPage(seekBar.getProgress() + 1);
-				myEPDView.updateEpdView(0);
+				epd.updateEpdView(0);
 				myInTouch = false;
 			}
 
@@ -121,41 +105,28 @@ public class NavigationActivity extends Activity {
 					bookPositionText.setText(EPDView.makePositionText(page, pagesNumber));
 					if (!myInTouch) {
 						gotoPage(page);
-						myEPDView.updateEpdView(250);
+						epd.updateEpdView(250);
 					}
 				}
 			}
 		});
-	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
+		setOnDismissListener(new OnDismissListener() {
+			public void onDismiss(DialogInterface dialog) {
+				epd.removeEventsListener(listener);
+			}
+		});
 
 		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
 		bookNoCover.setText(ZLResource.resource("fbreader").getResource("noCover").getValue());
-
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		myEPDView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		myEPDView.onPause();
-		super.onPause();
-	}
 
 	private int myCoverWidth;
 	private int myCoverHeight;
 	private Book myViewBook;
 
-	public void onEpdRepaintFinished() {
+	public void updateView() {
 		final FBReaderApp fbreader = (FBReaderApp)FBReaderApp.Instance();
 
 		final TextView bookTitle = (TextView) findViewById(R.id.book_title);

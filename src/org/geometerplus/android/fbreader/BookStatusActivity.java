@@ -42,7 +42,6 @@ import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
@@ -58,21 +57,6 @@ import org.geometerplus.android.fbreader.preferences.BookInfoActivity;
 
 public class BookStatusActivity extends Activity {
 
-	private static class InfoEPDView extends EPDView {
-
-		public InfoEPDView(BookStatusActivity activity) {
-			super(activity);
-		}
-
-		@Override
-		protected void onPageScrolling() {
-		}
-
-		public void onEpdRepaintFinished() {
-		}
-	}
-	private EPDView myEPDView = new InfoEPDView(this);
-
 	private ZLResource myResource = ZLResource.resource("bookInfo");
 
 	@Override
@@ -87,17 +71,11 @@ public class BookStatusActivity extends Activity {
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.book_info);
-
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setEventsListener(myEPDView);
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).setActivity(this);
 
 		final Book book = ((FBReaderApp)FBReaderApp.Instance()).Model.Book; 
 		setupCover(book);
@@ -109,17 +87,6 @@ public class BookStatusActivity extends Activity {
 		root.requestLayout();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		myEPDView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		myEPDView.onPause();
-		super.onPause();
-	}
 
 	protected MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
 		final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
@@ -132,13 +99,6 @@ public class BookStatusActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		addMenuItem(menu, MENU_EDIT, "edit", android.R.drawable.ic_menu_edit);
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-		//menu.findItem(MENU_EDIT).setEnabled(true);
 		return true;
 	}
 
