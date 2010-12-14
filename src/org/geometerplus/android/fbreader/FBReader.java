@@ -28,6 +28,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,6 +54,7 @@ import org.geometerplus.fbreader.library.Library;
 import org.geometerplus.android.fbreader.buttons.AbstractButton;
 import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
 import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
+import org.geometerplus.android.util.UIUtil;
 
 public final class FBReader extends ZLAndroidActivity {
 	final static int REPAINT_CODE = 1;
@@ -165,10 +168,23 @@ public final class FBReader extends ZLAndroidActivity {
 		}
 
 		setupEditMode();
+		initializeButtons();
+	}
 
+	private final void initializeButtons() {
 		myButtons.clear();
-		ButtonsCollection.Instance().loadButtons(myButtons);
-		updateButtons();
+		final Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				updateButtons();
+			}
+		};
+		UIUtil.wait("loadingButtons", new Runnable() {
+			public void run() {
+				ButtonsCollection.Instance().loadButtons(myButtons);
+				handler.sendEmptyMessage(0);
+			}
+		}, this);
 	}
 
 	@Override
