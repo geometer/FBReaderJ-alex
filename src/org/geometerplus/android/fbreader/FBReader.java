@@ -175,6 +175,7 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 		fbReader.addAction(ActionCode.FONT_SIZE, new FontSizeAction(this, fbReader));
+		fbReader.addAction(ActionCode.DICTIONARY, new DictionaryAction(this, fbReader));
 
 		fbReader.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, fbReader));
 
@@ -366,6 +367,10 @@ public final class FBReader extends ZLAndroidActivity {
 	public void onNavigationRequested() {
 		new NavigationDialog(this, myEPDView).show();
 		myEPDView.updateEpdView(200);
+	}
+
+	public void onDictionaryRequested() {
+		new DictionaryDialog(this, myEPDView).show();
 	}
 
 	// --- Code from launcher ---

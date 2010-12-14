@@ -54,4 +54,5 @@ public interface ActionCode {
 
 	String GOTO_PAGE = "gotoPage";
 	String FONT_SIZE = "fontSize";
+	String DICTIONARY = "dictionary";
 }

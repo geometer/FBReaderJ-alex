@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ff000000"
+>
+	<Button
+		android:id="@+id/translate"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/dictionary_center"
+		android:layout_centerInParent="true"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+	/>
+	<ImageButton
+		android:id="@+id/turnUp"
+		android:src="@drawable/launcher_up_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/translate"
+		android:layout_centerHorizontal="true"
+		android:padding="7px"
+		android:background="@android:color/transparent"
+	/>
+	<ImageButton
+		android:id="@+id/turnDown"
+		android:src="@drawable/launcher_down_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/translate"
+		android:layout_centerHorizontal="true"
+		android:padding="7px"
+		android:background="@android:color/transparent"
+	/>
+	<ImageButton
+		android:id="@+id/turnLeft"
+		android:src="@drawable/launcher_left_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/translate"
+		android:layout_centerVertical="true"
+		android:padding="7px"
+		android:background="@android:color/transparent"
+	/>
+	<ImageButton
+		android:id="@+id/turnRight"
+		android:src="@drawable/launcher_right_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/translate"
+		android:layout_centerVertical="true"
+		android:padding="7px"
+		android:background="@android:color/transparent"
+	/>
+</RelativeLayout>
