@@ -24,7 +24,7 @@ import java.util.*;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 
 class ZLTextHorizontalConvexHull {
-	private final LinkedList<Rectangle> myRectangles = new LinkedList<Rectangle>();
+	private final LinkedList<ZLRect> myRectangles = new LinkedList<ZLRect>();
 
 	ZLTextHorizontalConvexHull(List<ZLTextElementArea> textAreas) {
 		for (ZLTextElementArea area : textAreas) {
@@ -35,13 +35,13 @@ class ZLTextHorizontalConvexHull {
 
 	private void addArea(ZLTextElementArea area) {
 		if (myRectangles.isEmpty()) {
-			myRectangles.add(new Rectangle(area.XStart, area.XEnd, area.YStart, area.YEnd));
+			myRectangles.add(new ZLRect(area.XStart, area.XEnd, area.YStart, area.YEnd));
 			return;
 		}
 		final int top = area.YStart;
 		final int bottom = area.YEnd;
-		for (ListIterator<Rectangle> iter = myRectangles.listIterator(); iter.hasNext(); ) {
-			Rectangle r = iter.next();
+		for (ListIterator<ZLRect> iter = myRectangles.listIterator(); iter.hasNext(); ) {
+			ZLRect r = iter.next();
 			if (r.Bottom <= top) {
 				continue;
 			}
@@ -49,7 +49,7 @@ class ZLTextHorizontalConvexHull {
 				break;
 			}
 			if (r.Top < top) {
-				final Rectangle before = new Rectangle(r);
+				final ZLRect before = new ZLRect(r);
 				before.Bottom = top;
 				r.Top = top;
 				iter.previous();
@@ -57,7 +57,7 @@ class ZLTextHorizontalConvexHull {
 				iter.next();
 			}
 			if (r.Bottom > bottom) {
-				final Rectangle after = new Rectangle(r);
+				final ZLRect after = new ZLRect(r);
 				after.Top = bottom;
 				r.Bottom = bottom;
 				iter.add(after);
@@ -66,21 +66,21 @@ class ZLTextHorizontalConvexHull {
 			r.Right = Math.max(r.Right, area.XEnd);
 		}
 
-		final Rectangle first = myRectangles.getFirst();
+		final ZLRect first = myRectangles.getFirst();
 		if (top < first.Top) {
-			myRectangles.add(0, new Rectangle(area.XStart, area.XEnd, top, Math.min(bottom, first.Top)));
+			myRectangles.add(0, new ZLRect(area.XStart, area.XEnd, top, Math.min(bottom, first.Top)));
 		}
 
-		final Rectangle last = myRectangles.getLast();
+		final ZLRect last = myRectangles.getLast();
 		if (bottom > last.Bottom) {
-			myRectangles.add(new Rectangle(area.XStart, area.XEnd, Math.max(top, last.Bottom), bottom));
+			myRectangles.add(new ZLRect(area.XStart, area.XEnd, Math.max(top, last.Bottom), bottom));
 		}
 	}
 
 	private void normalize() {
-		Rectangle previous = null;
-		for (ListIterator<Rectangle> iter = myRectangles.listIterator(); iter.hasNext(); ) {
-			final Rectangle current = iter.next();
+		ZLRect previous = null;
+		for (ListIterator<ZLRect> iter = myRectangles.listIterator(); iter.hasNext(); ) {
+			final ZLRect current = iter.next();
 			if (previous != null) {
 				if ((previous.Left == current.Left) && (previous.Right == current.Right)) {
 					previous.Bottom = current.Bottom;
@@ -91,7 +91,7 @@ class ZLTextHorizontalConvexHull {
 					(current.Left <= previous.Right) &&
 					(previous.Left <= current.Right)) {
 					iter.previous();
-					iter.add(new Rectangle(
+					iter.add(new ZLRect(
 						Math.max(previous.Left, current.Left),
 						Math.min(previous.Right, current.Right),
 						previous.Bottom,
@@ -106,7 +106,7 @@ class ZLTextHorizontalConvexHull {
 
 	int distanceTo(int x, int y) {
 		int distance = Integer.MAX_VALUE;
-		for (Rectangle r : myRectangles) {
+		for (ZLRect r : myRectangles) {
 			final int xd = (r.Left > x) ? r.Left - x : ((r.Right < x) ? x - r.Right : 0);
 			final int yd = (r.Top > y) ? r.Top - y : ((r.Bottom < y) ? y - r.Bottom : 0);
 			distance = Math.min(distance, Math.max(xd, yd));
@@ -117,13 +117,38 @@ class ZLTextHorizontalConvexHull {
 		return distance;
 	}
 
+	ZLRect getRect() {
+		if (myRectangles.isEmpty()) {
+			return null;
+		}
+		int left = Integer.MAX_VALUE;
+		int right = Integer.MIN_VALUE;
+		int top = Integer.MAX_VALUE;
+		int bottom = Integer.MIN_VALUE;
+		for (ZLRect r : myRectangles) {
+			if (r.Left < left) {
+				left = r.Left;
+			}
+			if (r.Right > right) {
+				right = r.Right;
+			}
+			if (r.Top < top) {
+				top = r.Top;
+			}
+			if (r.Bottom > bottom) {
+				bottom = r.Bottom;
+			}
+		}
+		return new ZLRect(left - 3, right + 5, top - 3, bottom + 5);
+	}
+
 	void draw(ZLPaintContext context) {
-		final LinkedList<Rectangle> rectangles = new LinkedList<Rectangle>(myRectangles);
+		final LinkedList<ZLRect> rectangles = new LinkedList<ZLRect>(myRectangles);
 		while (!rectangles.isEmpty()) {
-			final LinkedList<Rectangle> connected = new LinkedList<Rectangle>();
-			Rectangle previous = null;
-			for (final Iterator<Rectangle> iter = rectangles.iterator(); iter.hasNext(); ) {
-				final Rectangle current = iter.next();
+			final LinkedList<ZLRect> connected = new LinkedList<ZLRect>();
+			ZLRect previous = null;
+			for (final Iterator<ZLRect> iter = rectangles.iterator(); iter.hasNext(); ) {
+				final ZLRect current = iter.next();
 				if ((previous != null) &&
 					((previous.Left > current.Right) || (current.Left > previous.Right))) {
 					break;
@@ -137,8 +162,8 @@ class ZLTextHorizontalConvexHull {
 			final LinkedList<Integer> yList = new LinkedList<Integer>();
 			int x = 0, xPrev = 0;
 
-			final ListIterator<Rectangle> iter = connected.listIterator();
-			Rectangle r = iter.next();
+			final ListIterator<ZLRect> iter = connected.listIterator();
+			ZLRect r = iter.next();
 			x = r.Right + 2;
 			xList.add(x); yList.add(r.Top);
 			while (iter.hasNext()) {
@@ -179,27 +204,6 @@ class ZLTextHorizontalConvexHull {
 				ys[count++] = yy;
 			}
 			context.drawOutline(xs, ys);
-		}
-	}
-
-	private static final class Rectangle {
-		int Left;
-		int Right;
-		int Top;
-		int Bottom;
-
-		Rectangle(int left, int right, int top, int bottom) {
-			Left = left;
-			Right = right;
-			Top = top;
-			Bottom = bottom;
-		}
-
-		Rectangle(Rectangle orig) {
-			Left = orig.Left;
-			Right = orig.Right;
-			Top = orig.Top;
-			Bottom = orig.Bottom;
 		}
 	}
 }

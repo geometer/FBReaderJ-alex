@@ -180,15 +180,29 @@ public final class FBView extends ZLTextView {
 			(diffY > 0 ? Direction.DOWN : Direction.UP) :
 			(diffX > 0 ? Direction.RIGHT : Direction.LEFT);
 
+		ZLRect rect = getSelectedRegion();
+
 		if (!moveRegionPointer(direction)) {
 			if (direction == Direction.DOWN) {
 				scrollPage(true, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 			} else if (direction == Direction.UP) {
 				scrollPage(false, ZLTextView.ScrollingMode.SCROLL_LINES, 1);
 			}
+			rect = null;
+		} else {
+			ZLRect newRect = getSelectedRegion();
+			if (rect == null) {
+				rect = newRect;
+			} else {
+				rect.merge(newRect);
+			}
 		}
 
-		myReader.repaintView();
+		if (rect != null) {
+			myReader.repaintView(rect);
+		} else {
+			myReader.repaintView();
+		}
 
 		return true;
 	}

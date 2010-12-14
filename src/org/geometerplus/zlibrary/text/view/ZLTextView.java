@@ -1343,6 +1343,11 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		mySelectedRegion = null;
 	}
 
+	protected ZLRect getSelectedRegion() {
+		final ZLTextElementRegion area = getCurrentElementRegion(myCurrentPage);
+		return area != null ? area.getRect() : null;
+	}
+
 	protected interface Direction {
 		int LEFT = 0;
 		int RIGHT = 1;

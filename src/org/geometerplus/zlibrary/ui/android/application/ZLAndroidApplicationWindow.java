@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 
+import org.geometerplus.zlibrary.text.view.ZLRect;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
@@ -121,5 +122,9 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 
 	public void notifyApplicationChanges(boolean singleChange) {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).notifyApplicationChanges(singleChange);
+	}
+
+	public void notifyApplicationChanges(ZLRect rect) {
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).notifyApplicationChanges(rect);
 	}
 }

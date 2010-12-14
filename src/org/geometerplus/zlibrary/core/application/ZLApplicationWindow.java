@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.application;
 
+import org.geometerplus.zlibrary.text.view.ZLRect;
+
 abstract public class ZLApplicationWindow {
 	private ZLApplication myApplication;
 
@@ -44,6 +46,7 @@ abstract public class ZLApplicationWindow {
 	abstract protected void close();
 
 	abstract protected void notifyApplicationChanges(boolean singleChange);
+	abstract protected void notifyApplicationChanges(ZLRect rect);
 
 	abstract protected void onEpdRepaintFinished();
 }

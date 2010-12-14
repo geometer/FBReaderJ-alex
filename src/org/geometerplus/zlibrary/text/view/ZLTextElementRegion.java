@@ -68,6 +68,10 @@ abstract class ZLTextElementRegion {
 		return convexHull().distanceTo(x, y);
 	}
 
+	public ZLRect getRect() {
+		return convexHull().getRect();
+	}
+
 	public boolean isAtRightOf(ZLTextElementRegion other) {
 		return
 			other == null ||
