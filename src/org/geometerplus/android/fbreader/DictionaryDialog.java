@@ -24,13 +24,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
 
@@ -41,8 +41,10 @@ public class DictionaryDialog extends Dialog {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 		setContentView(R.layout.dictionary);
 
-		final Button translate = (Button)findViewById(R.id.translate);
-		translate.setText(ZLResource.resource("fbreader").getResource("translate").getValue());
+		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
+		final String text = ZLResource.resource("fbreader").getResource("translate").getValue();
+		final int rotation = ZLAndroidApplication.Instance().RotationFlag;
+		translate.setImageDrawable(RotatedStringDrawable.create(text, rotation, 16));
 		translate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				ZLApplication.Instance().doAction(ActionCode.PROCESS_HYPERLINK);

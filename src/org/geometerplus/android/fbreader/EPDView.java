@@ -22,6 +22,8 @@ package org.geometerplus.android.fbreader;
 import java.util.LinkedList;
 
 import android.app.Activity;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.widget.EpdRender;
 import android.widget.LinearLayout;
@@ -30,11 +32,13 @@ import android.widget.TextView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
+import org.geometerplus.zlibrary.text.view.ZLRect;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 
 abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListener {
@@ -47,6 +51,9 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 			switch (msg.what) {
 			case 0:
 				updateEpdView(0);
+				break;
+			case 1:
+				updateEpdRegion((ZLRect)msg.obj);
 				break;
 			case -1:
 				myActivity.finish();
@@ -67,6 +74,10 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	public void notifyApplicationChanges(boolean singleChange) {
 		myHandler.sendEmptyMessage(0);
+	}
+
+	public void notifyApplicationChanges(ZLRect rect) {
+		myHandler.sendMessage(myHandler.obtainMessage(1, rect));
 	}
 
 	public void finishActivity() {
@@ -148,6 +159,39 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		} else {
 			updateEpdViewDelay(delay);
 		}
+	}
+
+	private void updateEpdRegion(ZLRect rect) {
+		final ZLAndroidWidget widget = (ZLAndroidWidget)myActivity.findViewById(R.id.main_view_epd);
+
+		final Canvas canvas = getEpdCanvas();
+		widget.draw(canvas);
+
+		final Rect region = widget.convertRect(rect);
+
+		final int minLeft = 3;
+		final int maxRight = widget.getWidth() - 4;
+		final int minTop = 3;
+		final int maxBottom = widget.getHeight() - 1;
+
+		region.left = Math.max(region.left, minLeft);
+		region.top = Math.max(region.top, minTop);
+		region.right = Math.min(region.right, maxRight);
+		region.bottom = Math.min(region.bottom, maxBottom);
+
+		final int minWidth = 160;
+		if (region.width() < minWidth) {
+			final int dx = (minWidth + 1 - region.width()) / 2;
+			if (region.left < minLeft + dx) {
+				region.right += 2 * dx;
+			} else if (region.right > maxRight - dx) {
+				region.left -= 2 * dx;
+			} else {
+				region.left -= dx;
+				region.right += dx;
+			}
+		}
+		partialUpdateEpdView(region);
 	}
 
 	private void updateEpdStatusbar() {

@@ -27,6 +27,7 @@ import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
+import org.geometerplus.zlibrary.text.view.ZLRect;
 
 public abstract class ZLApplication {
 	public static ZLApplication Instance() {
@@ -81,8 +82,13 @@ public abstract class ZLApplication {
 
 	public final void repaintView() {
 		if (myWindow != null) {
-			//myWindow.repaintView();
 			myWindow.notifyApplicationChanges(false);
+		}
+	}
+
+	public final void repaintView(ZLRect rect) {
+		if (myWindow != null) {
+			myWindow.notifyApplicationChanges(rect);
 		}
 	}
 

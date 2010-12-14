@@ -326,7 +326,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 	private void setupRotationButton(String string, int id, final int angle) {
 		final ImageButton btn = (ImageButton)findViewById(id);
-		btn.setImageDrawable(RotatedStringDrawable.create(string, angle));
+		btn.setImageDrawable(RotatedStringDrawable.create(string, angle, 28));
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).rotate(angle);

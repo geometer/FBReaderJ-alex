@@ -30,6 +30,7 @@ import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 
+import org.geometerplus.zlibrary.text.view.ZLRect;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidKeyUtil;
 
@@ -141,6 +142,44 @@ public class ZLAndroidWidget extends View {
 		return myMainBitmap;
 	}
 
+	public final Rect convertRect(ZLRect rect) {
+		final int w = myMainBitmap.getWidth();
+		final int h = myMainBitmap.getHeight();
+		switch (myRotationAngle) {
+		case ZLAndroidApplication.ROTATE_90:
+			return new Rect(w - rect.Bottom, rect.Left, w - rect.Top, rect.Right);
+		case ZLAndroidApplication.ROTATE_180:
+			return new Rect(w - rect.Right, h - rect.Bottom, w - rect.Left, h - rect.Top);
+		case ZLAndroidApplication.ROTATE_270:
+			return new Rect(rect.Top, h - rect.Right, rect.Bottom, h - rect.Left);
+		}
+		return new Rect(rect.Left, rect.Top, rect.Right, rect.Bottom);
+	}
+
+	private int getDPadKey(int keyCode) {
+		if (myRotationAngle == ZLAndroidApplication.ROTATE_0) {
+			return keyCode;
+		}
+		int offset = 0;
+		switch (myRotationAngle) {
+		case ZLAndroidApplication.ROTATE_90:
+			offset = 3;
+			break;
+		case ZLAndroidApplication.ROTATE_180:
+			offset = 2;
+			break;
+		case ZLAndroidApplication.ROTATE_270:
+			offset = 1;
+			break;
+		}
+		final int codes[] = {KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_LEFT};
+		for (int i = 0; i < codes.length; ++i) {
+			if (codes[i] == keyCode) {
+				return codes[(i + offset) % codes.length];
+			}
+		}
+		return keyCode;
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -148,17 +187,24 @@ public class ZLAndroidWidget extends View {
 			case KeyEvent.KEYCODE_BACK:
 				return ZLApplication.Instance().doActionByKey(ZLAndroidKeyUtil.getKeyNameByCode(keyCode));
 			case KeyEvent.KEYCODE_DPAD_LEFT:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(-1, 0);
-				return true;
 			case KeyEvent.KEYCODE_DPAD_RIGHT:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(1, 0);
-				return true;
 			case KeyEvent.KEYCODE_DPAD_DOWN:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(0, 1);
-				return true;
 			case KeyEvent.KEYCODE_DPAD_UP:
-				ZLApplication.Instance().getCurrentView().onTrackballRotated(0, -1);
-				return true;
+				final int dpadKey = getDPadKey(keyCode);
+				switch (dpadKey) {
+				case KeyEvent.KEYCODE_DPAD_LEFT:
+					ZLApplication.Instance().getCurrentView().onTrackballRotated(-1, 0);
+					return true;
+				case KeyEvent.KEYCODE_DPAD_RIGHT:
+					ZLApplication.Instance().getCurrentView().onTrackballRotated(1, 0);
+					return true;
+				case KeyEvent.KEYCODE_DPAD_DOWN:
+					ZLApplication.Instance().getCurrentView().onTrackballRotated(0, 1);
+					return true;
+				case KeyEvent.KEYCODE_DPAD_UP:
+					ZLApplication.Instance().getCurrentView().onTrackballRotated(0, -1);
+					return true;
+				}
 			default:
 				return false;
 		}

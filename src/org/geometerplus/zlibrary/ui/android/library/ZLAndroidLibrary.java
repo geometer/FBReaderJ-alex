@@ -33,6 +33,7 @@ import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 
+import org.geometerplus.zlibrary.text.view.ZLRect;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.dialogs.ZLAndroidDialogManager;
@@ -51,6 +52,7 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		 * another changes in near future.  
 		 */
 		void notifyApplicationChanges(boolean singleChange);
+		void notifyApplicationChanges(ZLRect rect);
 		void onEpdRepaintFinished();
 	}
 
@@ -88,6 +90,12 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	public void notifyApplicationChanges(boolean singleChange) {
 		if (myEventsListener != null) {
 			myEventsListener.notifyApplicationChanges(singleChange);
+		}
+	}
+
+	public void notifyApplicationChanges(ZLRect rect) {
+		if (myEventsListener != null) {
+			myEventsListener.notifyApplicationChanges(rect);
 		}
 	}
 

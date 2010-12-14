@@ -6,6 +6,7 @@
 		<node name="rotationButton" value="Абв"/>
 		<node name="buttonsLimit" value="Нет смысла держать менее %s кнопок на экране." />
 		<node name="addButtonTip" value="ВЫБЕРИТЕ КНОПКУ, КОТОРУЮ ВЫ ХОТИТЕ ДОБАВИТЬ НА ЭКРАН" />
+		<node name="translate" value="Перевод"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>
@@ -562,6 +563,7 @@
 		<node name="bookNotFound" value="Нет подходящих книг"/>
 		<node name="bookmarkNotFound" value="Нет подходящих закладок"/>
 		<node name="cannotOpenBook" value="Не удается открыть книгу"/>
+		<node name="dictNotInstalled" value="Не установлен поддерживаемый словарь"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="браузере"/>
