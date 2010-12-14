@@ -485,6 +485,9 @@
 			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" value="Завантаження інформації з каталогу. Зачекайте, будь ласка..." />
 			<node name="updatingCatalogsList" value="Оновлюється список каталогів. Зачекайте, будь ласка..."/>
+			<node name="creatingButtonsDatabase" toBeTranslated="true" value="Creating buttons database. Please, wait..."/>
+			<node name="updatingButtonsDatabase" toBeTranslated="true" value="Updating buttons database. Please, wait..."/>
+			<node name="loadingButtons" toBeTranslated="true" value="Loading buttons. Please, wait..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Внутрішня помилка сервера" />

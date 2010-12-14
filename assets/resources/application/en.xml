@@ -513,6 +513,9 @@
 			<node name="loadingBrowser" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" value="Loading catalog information. Please, wait..." />
 			<node name="updatingCatalogsList" value="Updating catalogs list. Please, wait..."/>
+			<node name="creatingButtonsDatabase" value="Creating buttons database. Please, wait..."/>
+			<node name="updatingButtonsDatabase" value="Updating buttons database. Please, wait..."/>
+			<node name="loadingButtons" value="Loading buttons. Please, wait..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Internal server error" />
