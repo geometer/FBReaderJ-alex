@@ -155,6 +155,8 @@
 		<node name="night" value="Éjjeli"/>
 		<node name="networkLibrary" value="Internetes könyvtár"/>
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
+		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
+		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
 		<node name="navigate" value="Navigáció">
 			<node name="toc" value="Tartalomegyzék"/>
 			<node name="gotoHome" value="A dokumentum elejére"/>
@@ -179,6 +181,7 @@
 		<node name="bookmarks" value="Könyvjelzők"/>
 		<node name="gotoPage" value="Ugrás oldalszámra"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
+		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -564,6 +567,7 @@
 		<node name="bookNotFound" value="A keresett könyv sajnos nem található meg a könyvtárban"/>
 		<node name="bookmarkNotFound" value="Sajnos nem találhatóak könyvjelzők"/>
 		<node name="cannotOpenBook" value="A könyv sajnos jelenleg nem nyitható meg"/>
+		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Böngésző"/>

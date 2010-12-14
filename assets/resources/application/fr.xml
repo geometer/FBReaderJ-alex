@@ -158,6 +158,8 @@
 		<node name="night" value="Nuit"/>
 		<node name="networkLibrary" value="Bibliothèque réseau"/>
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
+		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
+		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
 		<node name="navigate" value="Naviguer">
 			<node name="toc" value="Table des Matières"/>
 			<node name="gotoHome" value="Aller au début du document"/>
@@ -182,6 +184,7 @@
 		<node name="bookmarks" value="Marque-pages"/>
 		<node name="gotoPage" value="Aller à la Page"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
+		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -567,6 +570,7 @@
 		<node name="bookNotFound" value="Aucun livre correspondant dans la bibliothèque"/>
 		<node name="bookmarkNotFound" value="Aucun marque-page correspondant"/>
 		<node name="cannotOpenBook" value="Impossible d'ouvrir le livre"/>
+		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Navigateur"/>
