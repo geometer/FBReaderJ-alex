@@ -32,6 +32,8 @@ import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import org.geometerplus.fbreader.Paths;
+import org.geometerplus.fbreader.library.Book;
+import org.geometerplus.fbreader.library.Library;
 
 import org.geometerplus.android.fbreader.FBReader;
 
@@ -39,9 +41,9 @@ import org.geometerplus.android.fbreader.FBReader;
 public final class FileManager extends ListActivity {
 	public static String FILE_MANAGER_PATH = "FileManagerPath";
 	public static String LOG = "FileManager";
-
+	public static Library LibraryInstance;
 	private final ZLResource myResource = ZLResource.resource("fileManagerView");
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.v(LOG, "onCreate()");
@@ -64,6 +66,7 @@ public final class FileManager extends ListActivity {
 			new Thread(filter).start();
 		}
 			
+		getListView().setOnCreateContextMenuListener(adapter);
 		getListView().setTextFilterEnabled(true);
 		getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,20 +82,19 @@ public final class FileManager extends ListActivity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		Log.v(FileManager.LOG, "onContextItemSelected");
-		
 		final int position = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
 		FileItem fileItem = ((FManagerAdapter)getListAdapter()).getItem(position);
-		if (fileItem.getCover() != null) {
+		if (fileItem.getBook() != null) {
+			Book book = fileItem.getBook(); 
 			switch (item.getItemId()) {
 				case OPEN_BOOK_ITEM_ID:
-					openBook(fileItem.myFile.getPath());
+					openBook(fileItem.getBook().File.getPath());
 					return true;
 				case ADD_TO_FAVORITES_ITEM_ID:
-					//LibraryInstance.addBookToFavorites(bookTree.Book);
+					LibraryInstance.addBookToFavorites(book);
 					return true;
 				case REMOVE_FROM_FAVORITES_ITEM_ID:
-					//LibraryInstance.removeBookFromFavorites(bookTree.Book);
+					LibraryInstance.removeBookFromFavorites(book);
 					getListView().invalidateViews();
 					return true;
 				case DELETE_BOOK_ITEM_ID:
