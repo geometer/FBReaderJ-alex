@@ -485,6 +485,9 @@
 			<node name="loadingBrowser" toBeTranslated="true" value="Opening browser. Please, wait..." />
 			<node name="loadingCatalogInfo" toBeTranslated="true" value="Loading catalog information. Please, wait..." />
 			<node name="updatingCatalogsList" toBeTranslated="true" value="Updating catalogs list. Please, wait..."/>
+			<node name="creatingButtonsDatabase" toBeTranslated="true" value="Creating buttons database. Please, wait..."/>
+			<node name="updatingButtonsDatabase" toBeTranslated="true" value="Updating buttons database. Please, wait..."/>
+			<node name="loadingButtons" toBeTranslated="true" value="Loading buttons. Please, wait..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="内部服务器出错" />
