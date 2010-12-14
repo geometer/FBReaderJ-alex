@@ -155,6 +155,8 @@
 		<node name="night" value="Ніч"/>
 		<node name="networkLibrary" value="Мережева бібліотека"/>
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
+		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
+		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
 		<node name="navigate" value="Перехід">
 			<node name="toc" value="Зміст"/>
 			<node name="gotoHome" value="В початок книги"/>
@@ -179,6 +181,7 @@
 		<node name="bookmarks" value="Закладки"/>
 		<node name="gotoPage" value="На сторінку"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
+		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -564,6 +567,7 @@
 		<node name="bookNotFound" value="Немає відповідних книг"/>
 		<node name="bookmarkNotFound" value="Нема відповідних закладок"/>
 		<node name="cannotOpenBook" value="Невдається відкрити книгу"/>
+		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="браузері"/>

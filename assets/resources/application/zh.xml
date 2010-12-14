@@ -155,6 +155,8 @@
 		<node name="night" value="黑底白字" />
 		<node name="networkLibrary" value="在线书库" />
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
+		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
+		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
 		<node name="navigate" value="导航">
 			<node name="toc" value="内容目录" />
 			<node name="gotoHome" value="翻到图书开始" />
@@ -179,6 +181,7 @@
 		<node name="bookmarks" value="书签" />
 		<node name="gotoPage" toBeTranslated="true" value="Go to page"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
+		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -564,6 +567,7 @@
 		<node name="bookNotFound" value="对不起，书库中找不到需要的书籍" />
 		<node name="bookmarkNotFound" value="对不起，找不到对应的书签" />
 		<node name="cannotOpenBook" value="对不起，无法开启本书" />
+		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="浏览器" />

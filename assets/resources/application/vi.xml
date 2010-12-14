@@ -155,6 +155,8 @@
 		<node name="night" value="Đêm"/>
 		<node name="networkLibrary" value="Thư viện mạng"/>
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
+		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
+		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
 		<node name="navigate" value="Định hướng">
 			<node name="toc" value="Mục Lục"/>
 			<node name="gotoHome" value="Đến đầu Tài liệu"/>
@@ -179,6 +181,7 @@
 		<node name="bookmarks" value="Đánh dấu"/>
 		<node name="gotoPage" value="Đến trang"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
+		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -564,6 +567,7 @@
 		<node name="bookNotFound" value="Xin lỗi, không có quyển nào thích hợp trong thư viện"/>
 		<node name="bookmarkNotFound" value="Xin lỗi, không có đánh dấu thích hợp"/>
 		<node name="cannotOpenBook" value="Xin lỗi, không thể mở sách vào lúc này"/>
+		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Trình duyệt"/>
