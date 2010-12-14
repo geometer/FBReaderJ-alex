@@ -6,6 +6,7 @@
 		<node name="rotationButton" value="Abc"/>
 		<node name="buttonsLimit" value="There is no sense to have less than %s buttons at the screen." />
 		<node name="addButtonTip" value="SELECT BUTTON FOR ADDING TO THE SCREEN" />
+		<node name="translate" value="Translate"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Unknown author"/>
@@ -179,6 +180,7 @@
 		<node name="bookmarks" value="Bookmarks"/>
 		<node name="gotoPage" value="Go to page"/>
 		<node name="fontSize" value="Font size" />
+		<node name="dictionary" value="Dictionary" />
 	</node>
 	<node name="dialog">
 		<node name="button">
