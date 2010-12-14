@@ -7,6 +7,7 @@
 		<node name="rotationButton" toBeTranslated="true" value="Abc"/>
 		<node name="buttonsLimit" toBeTranslated="true" value="There is no sense to have less than %s buttons at the screen." />
 		<node name="addButtonTip" toBeTranslated="true" value="SELECT BUTTON FOR ADDING TO THE SCREEN" />
+		<node name="translate" toBeTranslated="true" value="Translate"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Neznámý autor"/>
