@@ -21,23 +21,19 @@ package org.geometerplus.android.fbreader.library;
 
 import java.util.LinkedList;
 
+import org.geometerplus.android.fbreader.SQLiteBooksDatabase;
+import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
+import org.geometerplus.fbreader.library.Library;
+import org.geometerplus.fbreader.tree.FBTree;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
-
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-
-import org.geometerplus.fbreader.tree.FBTree;
-import org.geometerplus.fbreader.library.Library;
-
-import org.geometerplus.zlibrary.ui.android.R;
-
-import org.geometerplus.android.fbreader.SQLiteBooksDatabase;
-import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 
 public class LibraryTopLevelActivity extends LibraryBaseActivity {
 	public static final String SHOW_PATH_KEY = "org.geometerplus.android.fbreader.library.SHOW_PATH";
@@ -85,7 +81,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			R.drawable.ic_list_library_folder,
 			new Runnable() {
 				public void run() {
-					runFileManager();
+					startActivity(new Intent(LibraryTopLevelActivity.this, FileManager.class));
 				}
 			}
 		));
@@ -144,13 +140,6 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			myShowPath = null;
 			runnable.run();
 		}
-	}
-
-	private void runFileManager(){
-		Log.v(FileManager.LOG, "runFileManager()");
-		Intent i = new Intent(this, FileManager.class);
-		i.putExtra(FileManager.FILE_MANAGER_PATH, ""); 
-		startActivity(i);
 	}
 }
 
