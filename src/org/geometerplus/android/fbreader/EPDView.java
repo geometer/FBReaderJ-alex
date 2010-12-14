@@ -167,16 +167,17 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		final Canvas canvas = getEpdCanvas();
 		widget.draw(canvas);
 
-		final int minLeft = 3;
-		final int maxRight = getEpdScreenWidth() - 4;
-		final int minTop = 3;
-		final int maxBottom = getEpdScreenHeight() - 4;
+		final Rect region = widget.convertRect(rect);
 
-		final Rect region = new Rect();
-		region.left = Math.max(rect.Left, minLeft);
-		region.top = Math.max(rect.Top, minTop);
-		region.right = Math.min(rect.Right, maxRight);
-		region.bottom = Math.min(rect.Bottom, maxBottom);
+		final int minLeft = 3;
+		final int maxRight = widget.getWidth() - 4;
+		final int minTop = 3;
+		final int maxBottom = widget.getHeight() - 1;
+
+		region.left = Math.max(region.left, minLeft);
+		region.top = Math.max(region.top, minTop);
+		region.right = Math.min(region.right, maxRight);
+		region.bottom = Math.min(region.bottom, maxBottom);
 
 		final int minWidth = 160;
 		if (region.width() < minWidth) {
