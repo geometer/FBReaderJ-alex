@@ -31,10 +31,6 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 public class RotatedStringDrawable extends Drawable {
 
-	public static Drawable create(String string, int angle) {
-		return create(string, angle, 28);
-	}
-
 	public static Drawable create(String string, int angle, int fontSize) {
 		final Drawable disabled = new RotatedStringDrawable(string, angle, fontSize, Color.rgb(0x55, 0x55, 0x55));
 		final Drawable normal = new RotatedStringDrawable(string, angle, fontSize, Color.rgb(0xF0, 0xF0, 0xF0));

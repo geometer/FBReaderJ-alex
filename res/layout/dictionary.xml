@@ -5,13 +5,12 @@
 	android:layout_height="fill_parent"
 	android:background="#ff000000"
 >
-	<Button
+	<ImageButton
 		android:id="@+id/translate"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="@drawable/dictionary_center"
+		android:background="@drawable/center_square"
 		android:layout_centerInParent="true"
-		android:textAppearance="?android:attr/textAppearanceLarge"
 	/>
 	<ImageButton
 		android:id="@+id/turnUp"
