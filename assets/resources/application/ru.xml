@@ -484,6 +484,9 @@
 			<node name="loadingBrowser" value="Открывается браузер. Подождите, пожалуйста..." />
 			<node name="loadingCatalogInfo" value="Загрузка информации из каталога. Подождите, пожалуйста..." />
 			<node name="updatingCatalogsList" value="Обновляется список каталогов. Подождите, пожалуйста..."/>
+			<node name="creatingButtonsDatabase" value="Создается база кнопок. Подождите, пожалуйста..."/>
+			<node name="updatingButtonsDatabase" value="Обновляется база кнопок. Подождите, пожалуйста..."/>
+			<node name="loadingButtons" value="Загрузка кнопок. Подождите, пожалуйста..."/>
 		</node>
 		<node name="networkError">
 			<node name="internalError" value="Внутренняя ошибка сервера" />
