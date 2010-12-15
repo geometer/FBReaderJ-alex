@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.EpdRender;
 import android.widget.LinearLayout;
@@ -157,7 +156,6 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 			final int bottom = top + bar.getHeight();
 			final Rect rect = new Rect(left + bar.getPaddingLeft(), top + bar.getPaddingTop(),
 				right + bar.getPaddingRight(), bottom + bar.getPaddingBottom());
-			Log.w("FBREADER", "rect: " + rect + " / " + rect.width() + " x " + rect.height());
 			partialUpdateEpdView(rect);
 		}
 	}
