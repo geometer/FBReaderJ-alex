@@ -90,7 +90,7 @@ public class NavigationDialog extends Dialog {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				gotoPage(seekBar.getProgress() + 1);
-				epd.updateEpdView(0);
+				epd.updateEpdDisplay();
 				myInTouch = false;
 			}
 
@@ -105,7 +105,7 @@ public class NavigationDialog extends Dialog {
 					bookPositionText.setText(EPDView.makePositionText(page, pagesNumber));
 					if (!myInTouch) {
 						gotoPage(page);
-						epd.updateEpdView(250);
+						epd.updateEpdDisplay();
 					}
 				}
 			}
@@ -119,6 +119,12 @@ public class NavigationDialog extends Dialog {
 
 		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
 		bookNoCover.setText(ZLResource.resource("fbreader").getResource("noCover").getValue());
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FBReaderApp.Instance().repaintView();
 	}
 
 

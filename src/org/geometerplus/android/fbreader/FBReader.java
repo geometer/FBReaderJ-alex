@@ -345,7 +345,6 @@ public final class FBReader extends ZLAndroidActivity {
 
 	public void onNavigationRequested() {
 		new NavigationDialog(this, myEPDView).show();
-		myEPDView.updateEpdView(200);
 	}
 
 	// --- Code from launcher ---
