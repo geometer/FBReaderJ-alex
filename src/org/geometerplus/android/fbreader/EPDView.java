@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.view.View;
 import android.widget.EpdRender;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				updateEpdView(0);
+				updateEpdDisplay();
 				break;
 			case 1:
 				updateEpdRegion((ZLRect)msg.obj);
@@ -122,7 +123,7 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		if (getLayout() != view) {
 			bindLayout(view);
 		}
-		updateEpdViewDelay(200);
+		notifyApplicationChanges(true);
 	}
 
 	public void onPause() {
@@ -152,12 +153,20 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		}
 	}
 
-	public void updateEpdView(int delay) {
+	public void updateEpdDisplay() {
 		updateEpdStatusbar();
-		if (delay <= 0) {
-			updateEpdView();
-		} else {
-			updateEpdViewDelay(delay);
+		updateEpdView();
+
+		final View bar = myActivity.findViewById(R.id.statusbar_layout);
+
+		if (bar.getWidth() != 0 && bar.getHeight() != 0) {
+			final int left = bar.getLeft();
+			final int top = bar.getTop();
+			final int right = left + bar.getWidth();
+			final int bottom = top + bar.getHeight();
+			final Rect rect = new Rect(left + bar.getPaddingLeft(), top + bar.getPaddingTop(),
+				right + bar.getPaddingRight(), bottom + bar.getPaddingBottom());
+			partialUpdateEpdView(rect);
 		}
 	}
 

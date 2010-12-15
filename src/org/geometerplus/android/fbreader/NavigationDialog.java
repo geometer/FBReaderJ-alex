@@ -32,6 +32,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.image.ZLImageProxy;
 import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
@@ -93,7 +94,7 @@ public class NavigationDialog extends Dialog {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				gotoPage(seekBar.getProgress() + 1);
-				epd.updateEpdView(0);
+				epd.updateEpdDisplay();
 				myInTouch = false;
 			}
 
@@ -108,7 +109,7 @@ public class NavigationDialog extends Dialog {
 					bookPositionText.setText(EPDView.makePositionText(page, pagesNumber));
 					if (!myInTouch) {
 						gotoPage(page);
-						epd.updateEpdView(250);
+						epd.updateEpdDisplay();
 					}
 				}
 			}
@@ -122,6 +123,13 @@ public class NavigationDialog extends Dialog {
 
 		final TextView bookNoCover = (TextView) findViewById(R.id.book_no_cover_text);
 		bookNoCover.setText(ZLResource.resource("fbreader").getResource("noCover").getValue());
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		myViewBook = null;
+		FBReaderApp.Instance().repaintView();
 	}
 
 
@@ -157,11 +165,15 @@ public class NavigationDialog extends Dialog {
 
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			if (fbreader.Model.Book != myViewBook) {
-				myViewBook = fbreader.Model.Book; 
-				bookTitle.setText(myViewBook.getTitle());
+				myViewBook = fbreader.Model.Book;
+
+				final ZLFile bookFile = ((FBReaderApp)FBReaderApp.Instance()).Model.Book.File;
+				final Book book = Book.getByFile(bookFile);
+
+				bookTitle.setText(book.getTitle());
 				int count = 0;
 				final StringBuilder authors = new StringBuilder();
-				for (Author a: myViewBook.authors()) {
+				for (Author a: book.authors()) {
 					if (count++ > 0) {
 						authors.append(",  ");
 					}

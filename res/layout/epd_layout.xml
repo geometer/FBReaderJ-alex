@@ -15,6 +15,7 @@
 		android:scrollbars="none"
 	/>
 	<LinearLayout
+		android:id="@+id/statusbar_layout"
 		android:layout_width="336px"
 		android:layout_height="28px"
 		android:background="@drawable/statusbar"
