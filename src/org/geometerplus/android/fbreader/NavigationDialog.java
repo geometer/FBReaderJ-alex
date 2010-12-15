@@ -32,6 +32,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLView;
@@ -124,6 +125,7 @@ public class NavigationDialog extends Dialog {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		myViewBook = null;
 		FBReaderApp.Instance().repaintView();
 	}
 
@@ -160,11 +162,15 @@ public class NavigationDialog extends Dialog {
 
 		if (fbreader.Model != null && fbreader.Model.Book != null) {
 			if (fbreader.Model.Book != myViewBook) {
-				myViewBook = fbreader.Model.Book; 
-				bookTitle.setText(myViewBook.getTitle());
+				myViewBook = fbreader.Model.Book;
+
+				final ZLFile bookFile = ((FBReaderApp)FBReaderApp.Instance()).Model.Book.File;
+				final Book book = Book.getByFile(bookFile);
+
+				bookTitle.setText(book.getTitle());
 				int count = 0;
 				final StringBuilder authors = new StringBuilder();
-				for (Author a: myViewBook.authors()) {
+				for (Author a: book.authors()) {
 					if (count++ > 0) {
 						authors.append(",  ");
 					}

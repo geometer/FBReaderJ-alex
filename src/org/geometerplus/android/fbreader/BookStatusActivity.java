@@ -77,7 +77,8 @@ public class BookStatusActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 
-		final Book book = ((FBReaderApp)FBReaderApp.Instance()).Model.Book; 
+		final ZLFile bookFile = ((FBReaderApp)FBReaderApp.Instance()).Model.Book.File;
+		final Book book = Book.getByFile(bookFile); 
 		setupCover(book);
 		setupBookInfo(book);
 		setupFileInfo(book);
