@@ -64,6 +64,10 @@ public class ZLAndroidWidget extends View {
 
 	public void setRotation(int angle) {
 		myRotationAngle = angle;
+		resetContext();
+	}
+
+	public void resetContext() {
 		final ZLApplication app = ZLApplication.Instance();
 		if (app != null) {
 			final ZLView view = app.getCurrentView();

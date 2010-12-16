@@ -33,6 +33,7 @@ import android.widget.TextView;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
+import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.ZLRect;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 
@@ -107,6 +108,7 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		}
 	}
 
+
 	public final void onEpdRepaintFinished() {
 		for (EventsListener listener: myListeners) {
 			listener.onEpdRepaintFinished();
@@ -123,7 +125,7 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		if (getLayout() != view) {
 			bindLayout(view);
 		}
-		notifyApplicationChanges(true);
+		myHandler.sendEmptyMessageDelayed(0, 200);
 	}
 
 	public void onPause() {
@@ -205,17 +207,22 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 
 	private void updateEpdStatusbar() {
 		final TextView statusPositionText = (TextView) myActivity.findViewById(R.id.statusbar_position_text);
+		String positionText = "";
 		final ZLView view = ZLApplication.Instance().getCurrentView();
-		if (view instanceof ZLTextView
-				&& ((ZLTextView) view).getModel() != null
-				&& ((ZLTextView) view).getModel().getParagraphsNumber() != 0) {
+		if (view instanceof ZLTextView) {
 			ZLTextView textView = (ZLTextView) view;
-			final int page = textView.computeCurrentPage();
-			final int pagesNumber = textView.computePageNumber();
-			statusPositionText.setText(makePositionText(page, pagesNumber));
-		} else {
-			statusPositionText.setText("");
+			ZLTextModel model = textView.getModel();
+			if (model != null && model.getParagraphsNumber() != 0) {
+				if (textView.getContext().getWidth() == 0
+						|| textView.getContext().getHeight() == 0) {
+					((ZLAndroidWidget)myActivity.findViewById(R.id.main_view_epd)).resetContext();
+				}
+				final int page = textView.computeCurrentPage();
+				final int pagesNumber = textView.computePageNumber();
+				positionText = makePositionText(page, pagesNumber);
+			}
 		}
+		statusPositionText.setText(positionText);
 	}
 
 	public static String makePositionText(int page, int pagesNumber) {

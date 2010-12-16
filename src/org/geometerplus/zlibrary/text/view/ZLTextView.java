@@ -27,6 +27,7 @@ import org.geometerplus.zlibrary.text.model.*;
 import org.geometerplus.zlibrary.text.hyphenation.*;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
+
 public abstract class ZLTextView extends ZLTextViewBase {
 	public interface ScrollingMode {
 		int NO_OVERLAPPING = 0;
@@ -424,7 +425,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		final int effectiveHeight = (int) (textHeight - (getTextStyle().getSpaceBefore()
 				+ getTextStyle().getSpaceAfter()) / charsPerParagraph);
 		final int linesPerPage = effectiveHeight / strHeight;
-
 		return charsPerLine * linesPerPage;
 	}
 
@@ -435,6 +435,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 		final float factor = 1.0f / computeCharsPerPage();
 		final float pages = textSize * factor;
+
 		return Math.max((int) (pages + 1.0f - 0.5f * factor), 1);
 	}
 

@@ -63,6 +63,7 @@ public abstract class ZLApplication {
 	protected final void setView(ZLView view) {
 		if (view != null) {
 			myView = view;
+			repaintView();
 			onViewChanged();
 		}
 	}
@@ -111,9 +112,6 @@ public abstract class ZLApplication {
 	}
 
 	public final void onViewChanged() {
-		if (myWindow != null) {
-			myWindow.notifyApplicationChanges(true);
-		}
 		for (ButtonPanel panel : myPanels) {
 			panel.hide();
 		}
