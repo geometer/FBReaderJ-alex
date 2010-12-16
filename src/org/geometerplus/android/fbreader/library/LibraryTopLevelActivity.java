@@ -83,7 +83,10 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			R.drawable.ic_list_library_folder,
 			new Runnable() {
 				public void run() {
-					startActivity(new Intent(LibraryTopLevelActivity.this, FileManager.class));
+					startActivity(
+						new Intent(LibraryTopLevelActivity.this, FileManager.class)
+							.putExtra(SELECTED_BOOK_PATH_KEY, mySelectedBookPath)
+					);
 				}
 			}
 		));
