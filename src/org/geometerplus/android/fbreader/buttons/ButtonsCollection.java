@@ -19,6 +19,7 @@
 
 package org.geometerplus.android.fbreader.buttons;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class ButtonsCollection {
 		myButtons.add(new FBActionButton("dictionary", ActionCode.DICTIONARY));
 		myButtons.add(new FBActionButton("settings_fbreader", ActionCode.SHOW_PREFERENCES));
 		myButtons.add(new FBActionButton("fonts", ActionCode.FONT_SIZE));
-		myButtons.add(new FBActionButton("browser", ActionCode.SHOW_NETWORK_BROWSER));
 		myButtons.add(new FBActionButton("lib", ActionCode.SHOW_LIBRARY));
 		myButtons.add(new FBActionButton("lib_network", ActionCode.SHOW_NETWORK_LIBRARY));
 		myButtons.add(new FBActionDecorator("day_night", ActionCode.SWITCH_TO_NIGHT_PROFILE,
@@ -75,6 +75,15 @@ public class ButtonsCollection {
 		SQLiteButtonsDatabase.Instance().loadButtons(buttons);
 		if (buttons.isEmpty()) {
 			collectDefaultButtons(buttons);
+			return;
+		}
+		createButtons();
+		final Iterator<AbstractButton> it = buttons.iterator();
+		while (it.hasNext()) {
+			final AbstractButton b = it.next();
+			if (!myButtons.contains(b)) {
+				it.remove();
+			}
 		}
 	}
 
