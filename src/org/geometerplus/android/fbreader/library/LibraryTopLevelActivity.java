@@ -136,7 +136,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 	protected void onResume() {
 		super.onResume();
 		if (myShowPath != null) {
-			final Runnable runnable = new OpenTreeRunnable(myShowPath, mySelectedBookPath);
+			final Runnable runnable = new OpenTreeRunnable(myShowPath);
 			myShowPath = null;
 			runnable.run();
 		}
