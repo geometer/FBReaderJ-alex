@@ -34,7 +34,7 @@ public class ZLAndroidApplication extends Application {
 	//public final ZLBooleanOption AutoOrientationOption = new ZLBooleanOption("LookNFeel", "AutoOrientation", false);
 	//public final ZLBooleanOption ShowStatusBarOption = new ZLBooleanOption("LookNFeel", "ShowStatusBar", false);
 	//public final ZLBooleanOption DontTurnScreenOffOption = new ZLBooleanOption("LookNFeel", "DontTurnScreenOff", true);
-	public final ZLBooleanOption NetworkLibraryEnabled = new ZLBooleanOption("Library", "NetworkLibraryEnabled", false);
+	public final ZLBooleanOption NetworkLibraryEnabled = new ZLBooleanOption("Library", "NetworkLibraryEnabled", true);
 
 	public static final int ROTATE_0 = 0;
 	public static final int ROTATE_90 = 90;
