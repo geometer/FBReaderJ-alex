@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public final class FBReader extends ZLAndroidActivity {
 	static FBReader Instance;
 
 	private ArrayList<AbstractButton> myButtons = new ArrayList<AbstractButton>();
+	private LinkedHashMap<AbstractButton, Integer> myHiddenButtons = new LinkedHashMap<AbstractButton, Integer>();
+
 	private ImageView mySelector;
 	private AbstractButton mySelectedButton;
 
@@ -90,6 +93,18 @@ public final class FBReader extends ZLAndroidActivity {
 
 		public ReadingEPDView(FBReader activity) {
 			super(activity);
+			addEventsListener(new EventsListener() {
+				public void onPageScrolling() {
+				}
+				
+				public void onEpdRepaintFinished() {					
+					FBReader activity = (FBReader)getActivity();
+					synchronized (activity.myHiddenButtons) {
+						activity.updateButtonsModel();
+					}
+					activity.updateButtons();
+				}
+			});
 		}
 
 		@Override
@@ -189,7 +204,6 @@ public final class FBReader extends ZLAndroidActivity {
 	}
 
 	private final void initializeButtons() {
-		myButtons.clear();
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -198,7 +212,9 @@ public final class FBReader extends ZLAndroidActivity {
 		};
 		UIUtil.wait("loadingButtons", new Runnable() {
 			public void run() {
-				ButtonsCollection.Instance().loadButtons(myButtons);
+				synchronized (myHiddenButtons) {
+					reloadButtonsModel();
+				}
 				handler.sendEmptyMessage(0);
 			}
 		}, this);
@@ -373,6 +389,59 @@ public final class FBReader extends ZLAndroidActivity {
 
 	// --- Code from launcher ---
 
+	// must be called from
+	// synchronized (myHiddenButtons) {...}
+	// due to lazy buttons initialization
+	private void reloadButtonsModel() {
+		myButtons.clear();
+		myHiddenButtons.clear();
+		ButtonsCollection.Instance().loadButtons(myButtons);
+		updateButtonsModel();
+	}
+
+	// must be called from
+	// synchronized (myHiddenButtons) {...}
+	// due to lazy buttons initialization
+	private void updateButtonsModel() {
+		for (AbstractButton btn: myHiddenButtons.keySet()) {
+			final int index = myHiddenButtons.get(btn);
+			if (index <= myButtons.size()) {
+				myButtons.add(index, btn);
+			} else {
+				myButtons.add(btn);
+			}
+		}
+		myHiddenButtons.clear();
+		for (int index = 0; index < myButtons.size(); ++index) {
+			final AbstractButton btn = myButtons.get(index);
+			if (!btn.isVisible()) {
+				myHiddenButtons.put(btn, index);
+			}
+		}
+		myButtons.removeAll(myHiddenButtons.keySet());
+	}
+
+	private void saveChanges() {
+		final ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(myButtons);
+		for (AbstractButton btn: myHiddenButtons.keySet()) {
+			final int index = myHiddenButtons.get(btn);
+			if (index <= buttons.size()) {
+				buttons.add(index, btn);
+			} else {
+				buttons.add(btn);
+			}
+		}
+		ButtonsCollection.Instance().saveButtons(buttons);
+		myHiddenButtons.clear();
+		for (int index = 0; index < buttons.size(); ++index) {
+			final AbstractButton btn = buttons.get(index);
+			if (!myButtons.contains(btn)) {
+				myHiddenButtons.put(btn, index);
+			}
+		}
+	}
+
+
 	private void setupEditMode() {
 		((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -385,8 +454,9 @@ public final class FBReader extends ZLAndroidActivity {
 		((ImageButton)findViewById(R.id.refresh)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				removeSelection();
-				myButtons.clear();
-				ButtonsCollection.Instance().loadButtons(myButtons);
+				synchronized (myHiddenButtons) {
+					reloadButtonsModel();
+				}
 				updateButtons();
 				startEdit();
 			}
@@ -519,28 +589,33 @@ public final class FBReader extends ZLAndroidActivity {
 			public void onClick(View view) {
 				final AddItemDialog.OnAddButtonListener listener = new AddItemDialog.OnAddButtonListener() {
 					public void onAddButton(AbstractButton button) {
-						final LinearLayout topDock = (LinearLayout)findViewById(R.id.topDock);
-						final LinearLayout bottomDock = (LinearLayout)findViewById(R.id.bottomDock);
-						final LinearLayout layout;
-						if (topDock.getChildCount() <= bottomDock.getChildCount()) {
-							layout = topDock;
+						if (button.isVisible()) {
+							final LinearLayout topDock = (LinearLayout)findViewById(R.id.topDock);
+							final LinearLayout bottomDock = (LinearLayout)findViewById(R.id.bottomDock);
+							final LinearLayout layout;
+							if (topDock.getChildCount() <= bottomDock.getChildCount()) {
+								layout = topDock;
+							} else {
+								layout = bottomDock;
+							}
+							addItemView(button, layout);
+							final int resultIndex;
+							if (layout == topDock) {
+								resultIndex = layout.getChildCount() * 2 - 2;
+							} else {
+								resultIndex = layout.getChildCount() * 2 - 1;
+							}
+							myButtons.add(resultIndex, button);
 						} else {
-							layout = bottomDock;
+							myHiddenButtons.put(button, Integer.MAX_VALUE);
 						}
-						addItemView(button, layout);
-						final int resultIndex;
-						if (layout == topDock) {
-							resultIndex = layout.getChildCount() * 2 - 2;
-						} else {
-							resultIndex = layout.getChildCount() * 2 - 1;
-						}
-						myButtons.add(resultIndex, button);
 						saveChanges();
 					}
 				};
 				ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>();
 				ButtonsCollection.Instance().loadAllButtons(buttons);
 				buttons.removeAll(myButtons);
+				buttons.removeAll(myHiddenButtons.keySet());
 				new AddItemDialog(FBReader.this, buttons, listener).show();
 			}
 		});
@@ -558,7 +633,14 @@ public final class FBReader extends ZLAndroidActivity {
 						return;
 					}
 					((LinearLayout)selectedView.getParent()).removeView(selectedView);
-					myButtons.remove(mySelectedButton);
+					final int index = myButtons.indexOf(mySelectedButton);
+					myButtons.remove(index);
+					for (AbstractButton btn: myHiddenButtons.keySet()) {
+						final int btnIndex = myHiddenButtons.get(btn);
+						if (btnIndex > index) {
+							myHiddenButtons.put(btn, btnIndex - 1);
+						}
+					}
 					removeSelection();
 					saveChanges();
 					updateButtons();
@@ -579,7 +661,6 @@ public final class FBReader extends ZLAndroidActivity {
 			} else {
 				addItemView(btn, bottomDock);
 			}
-
 		}
 	}
 
@@ -635,10 +716,6 @@ public final class FBReader extends ZLAndroidActivity {
 		if (parent != null) {
 			((ViewGroup)parent).removeView(mySelector);
 		}
-	}
-
-	private void saveChanges() {
-		ButtonsCollection.Instance().saveButtons(myButtons);
 	}
 
 	private void focusScroll(View view) {

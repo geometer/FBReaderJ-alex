@@ -34,7 +34,7 @@ class FBActionDecorator extends FBActionButton {
 
 	@Override
 	public final String getCaption() {
-		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+		if (FBReaderApp.Instance().isActionVisible(myActionId)) {
 			return super.getCaption();
 		}
 		return myButton.getCaption();
@@ -47,7 +47,7 @@ class FBActionDecorator extends FBActionButton {
 
 	@Override
 	protected String getImageId() {
-		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+		if (FBReaderApp.Instance().isActionVisible(myActionId)) {
 			return super.getImageId();
 		}
 		return myButton.getImageId();
@@ -60,11 +60,19 @@ class FBActionDecorator extends FBActionButton {
 
 	@Override
 	public void onAction(Context context) {
-		if (FBReaderApp.Instance().isActionEnabled(myActionId)) {
+		if (FBReaderApp.Instance().isActionVisible(myActionId)) {
 			super.onAction(context);
 		} else {
 			myButton.onAction(context);
 		}
 		updateView();
+	}
+
+	@Override
+	public boolean isVisible() {
+		if (super.isVisible()) {
+			return true;
+		}
+		return myButton.isVisible();
 	}
 }

@@ -79,6 +79,8 @@ public abstract class AbstractButton {
 
 	public abstract void onAction(Context context);
 
+	public abstract boolean isVisible();
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof AbstractButton)) {

@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader.buttons;
 
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import android.content.Context;
@@ -57,5 +58,10 @@ class FBActionButton extends SimpleButton {
 	@Override
 	public void onAction(Context context) {
 		FBReaderApp.Instance().doAction(myActionId);
+	}
+
+	@Override
+	public boolean isVisible() {
+		return ZLApplication.Instance().isActionVisible(myActionId);
 	}
 }
