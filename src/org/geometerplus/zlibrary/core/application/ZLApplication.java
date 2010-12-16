@@ -83,13 +83,13 @@ public abstract class ZLApplication {
 
 	public final void repaintView() {
 		if (myWindow != null) {
-			myWindow.notifyApplicationChanges(false);
+			myWindow.repaintView();
 		}
 	}
 
 	public final void repaintView(ZLRect rect) {
 		if (myWindow != null) {
-			myWindow.notifyApplicationChanges(rect);
+			myWindow.repaintView(rect);
 		}
 	}
 
@@ -107,7 +107,7 @@ public abstract class ZLApplication {
 			panel.updateStates();
 		}
 		if (myWindow != null) {
-			myWindow.onEpdRepaintFinished();
+			myWindow.onViewRepaintFinished();
 		}
 	}
 

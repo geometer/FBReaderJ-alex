@@ -41,12 +41,8 @@ abstract public class ZLApplicationWindow {
 	abstract protected void refreshMenu();
 	
 	abstract protected void repaintView();
-	//abstract protected void startViewAutoScrolling(int viewPage);
+	abstract protected void repaintView(ZLRect rect);
+	abstract protected void onViewRepaintFinished();
 
 	abstract protected void close();
-
-	abstract protected void notifyApplicationChanges(boolean singleChange);
-	abstract protected void notifyApplicationChanges(ZLRect rect);
-
-	abstract protected void onEpdRepaintFinished();
 }

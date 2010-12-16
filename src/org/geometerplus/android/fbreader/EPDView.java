@@ -74,11 +74,11 @@ abstract class EPDView extends EpdRender implements ZLAndroidLibrary.EventsListe
 		return myActivity;
 	}
 
-	public void notifyApplicationChanges(boolean singleChange) {
+	public void repaintEpd() {
 		myHandler.sendEmptyMessage(0);
 	}
 
-	public void notifyApplicationChanges(ZLRect rect) {
+	public void repaintEpdRect(ZLRect rect) {
 		myHandler.sendMessage(myHandler.obtainMessage(1, rect));
 	}
 

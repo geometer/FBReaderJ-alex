@@ -28,7 +28,6 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 
 import org.geometerplus.zlibrary.text.view.ZLRect;
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import org.geometerplus.zlibrary.ui.android.R;
@@ -93,38 +92,20 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 		// TODO: implement
 	}
 
-	/*private ZLAndroidViewWidget myViewWidget;
-	protected ZLAndroidViewWidget getViewWidget() {
-		if (myViewWidget == null) {
-			myViewWidget = new ZLAndroidViewWidget();
-		}
-		return myViewWidget;
-	}*/
 
 	protected void repaintView() {
-		final ZLAndroidWidget widget = 
-			((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).getWidget();
-		// I'm not sure about threads, so postInvalidate() is used instead of invalidate()
-		widget.postInvalidate();
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).repaintEpd();
 	}
 
-	/*protected void startViewAutoScrolling(int viewPage) {
-		getViewWidget().startAutoScrolling(viewPage);
-	}*/
+	public void repaintView(ZLRect rect) {
+		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).repaintEpdRect(rect);
+	}
 
-	public void onEpdRepaintFinished() {
+	public void onViewRepaintFinished() {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).onEpdRepaintFinished();
 	}
 
 	public void close() {
 		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).finish();
-	}
-
-	public void notifyApplicationChanges(boolean singleChange) {
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).notifyApplicationChanges(singleChange);
-	}
-
-	public void notifyApplicationChanges(ZLRect rect) {
-		((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).notifyApplicationChanges(rect);
 	}
 }

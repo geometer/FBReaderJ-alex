@@ -44,15 +44,8 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	private ZLAndroidWidget myWidget;
 
 	public interface EventsListener {
-		/*
-		 * singleChange parameter must be <code>true</code> if there will 
-		 * be no changes in near future;
-		 * 
-		 * singleChange parameter must be <code>false</code> if there can be
-		 * another changes in near future.  
-		 */
-		void notifyApplicationChanges(boolean singleChange);
-		void notifyApplicationChanges(ZLRect rect);
+		void repaintEpd();
+		void repaintEpdRect(ZLRect rect);
 		void onEpdRepaintFinished();
 	}
 
@@ -87,15 +80,15 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		}
 	}
 
-	public void notifyApplicationChanges(boolean singleChange) {
+	public void repaintEpd() {
 		if (myEventsListener != null) {
-			myEventsListener.notifyApplicationChanges(singleChange);
+			myEventsListener.repaintEpd();
 		}
 	}
 
-	public void notifyApplicationChanges(ZLRect rect) {
+	public void repaintEpdRect(ZLRect rect) {
 		if (myEventsListener != null) {
-			myEventsListener.notifyApplicationChanges(rect);
+			myEventsListener.repaintEpdRect(rect);
 		}
 	}
 
