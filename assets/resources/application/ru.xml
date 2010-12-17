@@ -135,7 +135,7 @@
 		<node name="series" value="Серия:" />
 		<node name="indexInSeries" value="Номер в серии:" />
 		<node name="tags" value="Категории:" />
-		<node name="name" value="Имя:" />
+		<node name="name" value="Название:" />
 		<node name="type" value="Тип:" />
 		<node name="size" value="Размер:" />
 		<node name="time" value="Последнее изменение:" />
