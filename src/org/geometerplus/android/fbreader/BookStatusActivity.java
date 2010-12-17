@@ -165,13 +165,7 @@ public class BookStatusActivity extends Activity {
 						}
 					}
 				};
-				if (image instanceof ZLImageProxy) {
-					ZLImageProxy proxy = (ZLImageProxy)image;
-					if (!proxy.isSynchronized()) {
-						proxy.synchronize();
-					}
-					refreshRunnable.run();
-				} else if (image instanceof ZLLoadableImage) {
+				if (image instanceof ZLLoadableImage) {
 					ZLLoadableImage loadable = (ZLLoadableImage)image;
 					if (loadable.isSynchronized()) {
 						refreshRunnable.run();
