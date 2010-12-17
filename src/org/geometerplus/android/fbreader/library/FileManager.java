@@ -21,28 +21,29 @@ package org.geometerplus.android.fbreader.library;
 
 import java.util.*;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
 
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.library.Book;
-import org.geometerplus.fbreader.library.Library;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 
-import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.util.UIUtil;
 
 public final class FileManager extends BaseActivity {
 	public static String FILE_MANAGER_PATH = "FileManagerPath";
