@@ -60,5 +60,4 @@
 			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>
-	<include layout="@layout/epd_layout"/>
 </LinearLayout>
