@@ -147,36 +147,33 @@ public class BookStatusActivity extends Activity {
 		coverView.setImageDrawable(null);
 
 		final FormatPlugin plugin = PluginCollection.Instance().getPlugin(book.File);
-		if (plugin != null) {
-			final ZLImage image = plugin.readCover(book);
-			if (image != null) {
-				final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
-				final Runnable refreshRunnable = new Runnable() {
-					public void run() {
-						ZLAndroidImageData data = mgr.getImageData(image);
-						if (data != null) {
-							final Bitmap coverBitmap = data.getBitmap(2 * maxWidth, 2 * maxHeight);
-							if (coverBitmap != null) {
-								coverView.setVisibility(View.VISIBLE);
-								coverView.getLayoutParams().width = maxWidth;
-								coverView.getLayoutParams().height = maxHeight;
-								coverView.setImageBitmap(coverBitmap);
-							}
-						}
-					}
-				};
-				if (image instanceof ZLLoadableImage) {
-					ZLLoadableImage loadable = (ZLLoadableImage)image;
-					if (loadable.isSynchronized()) {
-						refreshRunnable.run();
-					} else {
-						loadable.startSynchronization(refreshRunnable);
-					}
-				} else {
-					refreshRunnable.run();
-				}
-			}
+		if (plugin == null) {
+			return;
 		}
+
+		final ZLImage image = plugin.readCover(book);
+		if (image == null) {
+			return;
+		}
+
+		if (image instanceof ZLLoadableImage) {
+			((ZLLoadableImage)image).synchronize();
+		}
+		final ZLAndroidImageData data =
+			((ZLAndroidImageManager)ZLAndroidImageManager.Instance()).getImageData(image);
+		if (data == null) {
+			return;
+		}
+
+		final Bitmap coverBitmap = data.getBitmap(2 * maxWidth, 2 * maxHeight);
+		if (coverBitmap == null) {
+			return;
+		}
+
+		coverView.setVisibility(View.VISIBLE);
+		coverView.getLayoutParams().width = maxWidth;
+		coverView.getLayoutParams().height = maxHeight;
+		coverView.setImageBitmap(coverBitmap);
 	}
 
 	private void setupBookInfo(Book book) {
