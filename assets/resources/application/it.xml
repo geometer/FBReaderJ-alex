@@ -182,8 +182,8 @@
 		<node name="night" value="Notte"/>
 		<node name="networkLibrary" value="Biblioteca di rete"/>
 		<node name="networkBrowser" toBeTranslated="true" value="Browser"/>
-		<node name="hyperlinksOnlyMode" toBeTranslated="true" value="Standard mode"/>
-		<node name="dictionaryMode" toBeTranslated="true" value="Dictionary mode"/>
+		<node name="hyperlinksOnlyMode" value="Standard mode" toBeTranslated="true"/>
+		<node name="dictionaryMode" value="Dictionary mode" toBeTranslated="true"/>
 		<node name="navigate" value="Naviga">
 			<node name="toc" value="Indice"/>
 			<node name="gotoHome" value="Vai all'inizio del Documento"/>
