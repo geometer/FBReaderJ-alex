@@ -140,11 +140,7 @@ public class ZLNetworkManager {
 			ex.printStackTrace();
 			throw new ZLNetworkException(ZLNetworkException.ERROR_SOMETHING_WRONG, ZLNetworkUtil.hostFromUrl(request.URL));
 		} finally {
-			if (success) {
-				request.doAfterOnSuccess();
-			} else {
-				request.doAfterOnError();
-			}
+			request.doAfter(success);
 		}
 	}
 
