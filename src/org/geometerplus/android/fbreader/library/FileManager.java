@@ -21,6 +21,8 @@ package org.geometerplus.android.fbreader.library;
 
 import java.util.*;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -29,20 +31,25 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.library.Library;
 import org.geometerplus.fbreader.formats.PluginCollection;
+
+import org.geometerplus.android.util.UIUtil;
 
 
 public final class FileManager extends BaseActivity {
@@ -117,8 +124,8 @@ public final class FileManager extends BaseActivity {
 					
 					return true;
 				case RENAME_FILE_ITEM_ID:
-					fileItem.getFile().getPhysicalFile().rename("bac1ca.zip");
-					adapter.notifyDataSetChanged();
+					RenameDialog d = new RenameDialog(this, fileItem.getFile());
+					d.show();
 					return true;
 				case DELETE_FILE_ITEM_ID:
 					adapter.remove(fileItem);
@@ -374,4 +381,70 @@ public final class FileManager extends BaseActivity {
 			return f0.getShortName().compareToIgnoreCase(f1.getShortName());
 		}
 	}
+	
+	class RenameDialog extends Dialog{
+		private ZLFile myFile;
+		private Context myContext;
+		
+		private EditText myEditText; 
+		
+		
+		RenameDialog(Context context, ZLFile file) {
+			super(context);
+			myFile = file;
+			myContext = context;
+			
+			setTitle(myResource.getResource("renameFile").getValue());
+			fill();
+		}
+
+		private void fill(){
+	    	LinearLayout ll = new LinearLayout(myContext);
+	        ll.setOrientation(LinearLayout.VERTICAL);
+	         
+	        myEditText = new EditText(myContext);
+	        myEditText.setText(myFile.getShortName());
+	        ll.addView(myEditText);
+	
+	        LinearLayout btnLayout = new LinearLayout(myContext);
+	        btnLayout.setOrientation(LinearLayout.HORIZONTAL);
+	        ll.addView(btnLayout, LayoutParams.FILL_PARENT);
+	        
+	        Button ok = new Button(myContext);
+	        ok.setText(myResource.getResource("renameBtn").getValue());
+	        ok.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					okAction();
+				}
+			});
+	        
+	        Button cancel = new Button(myContext);
+	        cancel.setText(myResource.getResource("cancelBtn").getValue());
+	        cancel.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					cancelAction();
+				}
+			});
+	        
+	        
+	        btnLayout.addView(ok, LayoutParams.WRAP_CONTENT);
+	        btnLayout.addView(cancel, LayoutParams.FILL_PARENT);
+	        btnLayout.setGravity(0x11);
+	        setContentView(ll);
+		}
+		
+		protected void cancelAction(){
+			cancel();
+		}
+		
+		public void okAction()  {
+			String newName = myEditText.getText().toString();
+			if (!myFile.getShortName().equals(newName)){
+				myFile.getPhysicalFile().rename(newName);
+				getListView().invalidateViews();
+			}
+			cancel();
+		}
+	}
+	
 }
