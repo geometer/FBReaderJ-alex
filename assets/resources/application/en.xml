@@ -55,6 +55,7 @@
 		
 		<node name="moveFile" value="Move file"/>
 		<node name="deleteFile" value="Delete file"/>
+		<node name="fileExists" value="File already exists"/>
 	</node>
 	<node name="browser">
 		<node name="errorText" value="Error: %s"/>
