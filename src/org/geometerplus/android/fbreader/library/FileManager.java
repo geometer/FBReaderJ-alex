@@ -19,26 +19,23 @@
 
 package org.geometerplus.android.fbreader.library;
 
+import java.io.IOException;
 import java.util.*;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
@@ -56,12 +53,15 @@ import org.geometerplus.android.util.UIUtil;
 public final class FileManager extends BaseActivity {
 	public static String LOG = "FileManager";
 	
+	public static String FILE_MANAGER_INSERT_MODE = "FileManagerInsertMode";
+	
 	private static final int DELETE_FILE_ITEM_ID = 10;
 	private static final int RENAME_FILE_ITEM_ID = 11;
 	private static final int MOVE_FILE_ITEM_ID = 12;
 	public static String FILE_MANAGER_PATH = "FileManagerPath";
 	
 	private String myPath;
+	private String myInsertPath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,8 @@ public final class FileManager extends BaseActivity {
 		setListAdapter(adapter);
 
 		myPath = getIntent().getStringExtra(FILE_MANAGER_PATH);
-
+		myInsertPath = getIntent().getStringExtra(FILE_MANAGER_INSERT_MODE);
+		
 		if (myPath == null) {
 			setTitle(myResource.getResource("fileTree").getValue());
 			addItem(Paths.BooksDirectoryOption().getValue(), "fileTreeLibrary");
@@ -118,22 +119,30 @@ public final class FileManager extends BaseActivity {
 		final FileItem fileItem = adapter.getItem(position);
 		final Book book = fileItem.getBook(); 
 		if (book != null) {
-			return onContextItemSelected(item.getItemId(), book);
-		}else{
-			switch (item.getItemId()) {
-				case MOVE_FILE_ITEM_ID:
-					
-					return true;
-				case RENAME_FILE_ITEM_ID:
-					new RenameDialog(this, fileItem.getFile()).show();
-					return true;
-				case DELETE_FILE_ITEM_ID:
-					adapter.remove(fileItem);
-					adapter.notifyDataSetChanged();
-					deleteFileItem(fileItem);
-					return true;
-				}
+			onContextItemSelected(item.getItemId(), book);
 		}
+		
+		switch (item.getItemId()) {
+			case MOVE_FILE_ITEM_ID:
+				adapter.remove(fileItem);
+				adapter.notifyDataSetChanged();
+				Log.v(LOG, "MOVE_FILE_ITEM_ID");
+				startActivityForResult(
+						new Intent(this, FileManager.class)
+							.putExtra(FILE_MANAGER_INSERT_MODE, fileItem.getFile().getPath()),
+						FileManager.CHILD_LIST_REQUEST
+				);
+				return true;
+			case RENAME_FILE_ITEM_ID:
+				new RenameDialog(this, fileItem.getFile()).show();
+				return true;
+			case DELETE_FILE_ITEM_ID:
+				adapter.remove(fileItem);
+				adapter.notifyDataSetChanged();
+				deleteFileItem(fileItem);
+				return true;
+		}
+	
 		return super.onContextItemSelected(item);
 	}
 
@@ -157,12 +166,14 @@ public final class FileManager extends BaseActivity {
 		if (book != null) {
 			showBookInfo(book);
 		} else if (file.isDirectory() || file.isArchive()) {
-			startActivityForResult(
-				new Intent(this, FileManager.class)
-					.putExtra(SELECTED_BOOK_PATH_KEY, mySelectedBookPath)
-					.putExtra(FILE_MANAGER_PATH, file.getPath()),
-				CHILD_LIST_REQUEST
-			);
+			Intent i = new Intent(this, FileManager.class)
+			.putExtra(SELECTED_BOOK_PATH_KEY, mySelectedBookPath)
+			.putExtra(FILE_MANAGER_PATH, file.getPath())
+			.putExtra(FILE_MANAGER_INSERT_MODE, myInsertPath);
+			if (myInsertPath != null){
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			}
+			startActivityForResult(i,CHILD_LIST_REQUEST);
 		}
 	}
 
@@ -178,9 +189,15 @@ public final class FileManager extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if (!(myPath == null)){
-            addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
-            addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
+        // TODO
+        if (myPath != null){
+            if (myInsertPath != null) {
+            	addMenuItem(menu, 0, "insert", R.drawable.ic_menu_sorting);
+            }else{
+               	addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
+                addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
+                addMenuItem(menu, 3, "view", R.drawable.ic_menu_sorting);
+            }
         }
         return true;
     }
@@ -195,17 +212,35 @@ public final class FileManager extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+	    	case 0:
+	    		try {
+	    			// TODO
+	    			FileUtil.moveFile(myInsertPath, myPath);
+	    			myInsertPath = null;
+	    			finish();
+					runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(FileManager.this, "file is moving", Toast.LENGTH_SHORT).show();
+						}
+					});
+	    			
+	    		} catch (IOException e) {
+    				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    			}
+	    		return true;
         	case 1:
-        		Log.v(LOG, "mkdir");
         		new MkDirDialog(this, myPath).show();
         		return true;
         	case 2:
-        		Log.v(LOG, "onOptionsItemSelected");
+	            return true;
+        	case 3:
 	            return true;
         	default:
         		return super.onOptionsItemSelected(item);
         }
     }
+    
+    
 	
 	private final class FileListAdapter extends BaseAdapter implements View.OnCreateContextMenuListener {
 		private List<FileItem> myItems = new ArrayList<FileItem>();
