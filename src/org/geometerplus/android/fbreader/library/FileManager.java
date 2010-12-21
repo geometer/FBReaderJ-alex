@@ -91,6 +91,18 @@ public final class FileManager extends BaseActivity {
 			}
 		});
 	}
+	
+	
+	
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (myPath != null){
+			((FileListAdapter)getListAdapter()).clear();
+			startUpdate();
+		}
+	}
 
 	private void startUpdate() {
 		new Thread(
@@ -189,7 +201,6 @@ public final class FileManager extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        // TODO
         if (myPath != null){
             if (myInsertPath != null) {
             	addMenuItem(menu, 0, "insert", R.drawable.ic_menu_sorting);
@@ -209,21 +220,24 @@ public final class FileManager extends BaseActivity {
         return item;
     }
     
+    
+    private Runnable messFileMoved = new Runnable() {
+		public void run() {
+			Toast.makeText(FileManager.this,
+					myResource.getResource("messFileMoved").getValue(), 
+					Toast.LENGTH_SHORT).show();
+		}
+	};
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 	    	case 0:
 	    		try {
-	    			// TODO
 	    			FileUtil.moveFile(myInsertPath, myPath);
 	    			myInsertPath = null;
 	    			finish();
-					runOnUiThread(new Runnable() {
-						public void run() {
-							Toast.makeText(FileManager.this, "file is moving", Toast.LENGTH_SHORT).show();
-						}
-					});
-	    			
+					runOnUiThread(messFileMoved);
 	    		} catch (IOException e) {
     				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     			}
