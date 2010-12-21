@@ -125,8 +125,7 @@ public final class FileManager extends BaseActivity {
 					
 					return true;
 				case RENAME_FILE_ITEM_ID:
-					Dialog d = new RenameDialog(this, fileItem);
-					d.show();
+					new RenameDialog(this, fileItem.getFile()).show();
 					return true;
 				case DELETE_FILE_ITEM_ID:
 					adapter.remove(fileItem);
@@ -179,9 +178,10 @@ public final class FileManager extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
-        addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
-
+        if (!(myPath == null)){
+            addMenuItem(menu, 1, "mkdir", R.drawable.ic_menu_mkdir);
+            addMenuItem(menu, 2, "sorting", R.drawable.ic_menu_sorting);
+        }
         return true;
     }
 
@@ -196,8 +196,9 @@ public final class FileManager extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         	case 1:
-        		Log.v(LOG, "onOptionsItemSelected");
-	            return true;
+        		Log.v(LOG, "mkdir");
+        		new MkDirDialog(this, myPath).show();
+        		return true;
         	case 2:
         		Log.v(LOG, "onOptionsItemSelected");
 	            return true;
@@ -243,10 +244,15 @@ public final class FileManager extends BaseActivity {
 		}
 
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+			if (myPath == null)
+				return;
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
 			final FileItem item = getItem(position);
 
-			if (!item.getFile().isDirectory()){
+			if (item.getFile().isDirectory()){
+				menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("renameDir").getValue());
+				menu.add(0, DELETE_FILE_ITEM_ID, 0, myResource.getResource("deleteDir").getValue());
+			}else{
 				final Book book = item.getBook();
 				if (book != null) {
 					createBookContextMenu(menu, book); 
@@ -365,10 +371,6 @@ public final class FileManager extends BaseActivity {
 
 		public Book getBook() {
 			return Book.getByFile(myFile);
-		}
-		
-		public void update(){
-			myName = myFile.getShortName();
 		}
 	}
 
