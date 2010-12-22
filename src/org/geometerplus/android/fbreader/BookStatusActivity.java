@@ -43,7 +43,6 @@ import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
-import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageLoader;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 import org.geometerplus.fbreader.bookmodel.BookModel;
@@ -177,7 +176,7 @@ public class BookStatusActivity extends Activity {
 					if (loadable.isSynchronized()) {
 						refreshRunnable.run();
 					} else {
-						ZLAndroidImageLoader.Instance().startImageLoading(loadable, refreshRunnable);
+						loadable.startSynchronization(refreshRunnable);
 					}
 				} else {
 					refreshRunnable.run();
