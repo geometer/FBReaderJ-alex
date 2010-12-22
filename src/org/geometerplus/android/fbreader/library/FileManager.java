@@ -22,6 +22,8 @@ package org.geometerplus.android.fbreader.library;
 import java.io.IOException;
 import java.util.*;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -148,8 +150,6 @@ public final class FileManager extends BaseActivity {
 				new RenameDialog(this, fileItem.getFile()).show();
 				return true;
 			case DELETE_FILE_ITEM_ID:
-				adapter.remove(fileItem);
-				adapter.notifyDataSetChanged();
 				deleteFileItem(fileItem);
 				return true;
 		}
@@ -157,11 +157,36 @@ public final class FileManager extends BaseActivity {
 		return super.onContextItemSelected(item);
 	}
 
-	private void deleteFileItem(FileItem fileItem){
-		ZLFile file = fileItem.getFile();
-		if(file != null){
-			file.getPhysicalFile().delete();
+	private class FileDeleter implements DialogInterface.OnClickListener {
+		private final FileItem myFileItem;
+
+		FileDeleter(FileItem fileItem) {
+			myFileItem = fileItem;
 		}
+
+		public void onClick(DialogInterface dialog, int which) {
+			FileListAdapter adapter = (FileListAdapter)getListAdapter();
+			adapter.remove(myFileItem);
+			adapter.notifyDataSetChanged();
+			ZLFile file = myFileItem.getFile();
+			if(file != null){
+				file.getPhysicalFile().delete();
+			}
+		}
+	}
+	
+	private void deleteFileItem(FileItem fileItem){
+		final ZLResource dialogResource = ZLResource.resource("dialog");
+		final ZLResource buttonResource = dialogResource.getResource("button");
+		final ZLResource boxResource = dialogResource.getResource("deleteFileBox");
+		new AlertDialog.Builder(this)
+			.setTitle(fileItem.getName())
+			.setMessage(boxResource.getResource("message").getValue())
+			.setIcon(0)
+			.setPositiveButton(buttonResource.getResource("yes").getValue(), new FileDeleter(fileItem))
+			.setNegativeButton(buttonResource.getResource("no").getValue(), null)
+			.create().show();
+		
 	}
 	
 	@Override
