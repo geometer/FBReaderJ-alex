@@ -41,9 +41,6 @@ import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
-import org.geometerplus.fbreader.bookmodel.BookModel;
-import org.geometerplus.fbreader.formats.FormatPlugin;
-import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.library.*;
 
 import org.geometerplus.android.fbreader.preferences.EditBookInfoActivity;
@@ -92,7 +89,6 @@ public class BookInfoActivity extends Activity {
 			findButton(R.id.book_info_button_open).setVisibility(View.GONE);
 		} else {
 			setupButton(R.id.book_info_button_open, "open", new View.OnClickListener() {
-				@Override
 				public void onClick(View view) {
 					startActivity(
 						new Intent(getApplicationContext(), FBReader.class)
@@ -104,7 +100,6 @@ public class BookInfoActivity extends Activity {
 			});
 		}
 		setupButton(R.id.book_info_button_edit, "edit", new View.OnClickListener() {
-			@Override
 			public void onClick(View view) {
 				startActivity(
 					new Intent(getApplicationContext(), EditBookInfoActivity.class)
@@ -113,7 +108,6 @@ public class BookInfoActivity extends Activity {
 			}
 		});
 		setupButton(R.id.book_info_button_reload, "reload", new View.OnClickListener() {
-			@Override
 			public void onClick(View view) {
 				// TODO: implement
 			}

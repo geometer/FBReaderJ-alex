@@ -188,7 +188,7 @@ public class NavigationDialog extends Dialog {
 
 				final FormatPlugin plugin = PluginCollection.Instance().getPlugin(myViewBook.File);
 				if (plugin != null) {
-					final ZLImage image = plugin.readCover(myViewBook);
+					final ZLImage image = plugin.readCover(myViewBook.File);
 					if (image != null) {
 						final ZLAndroidImageManager mgr = (ZLAndroidImageManager) ZLAndroidImageManager.Instance();
 						final Runnable refreshRunnable = new Runnable() {
