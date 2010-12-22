@@ -16,7 +16,7 @@
 		android:baselineAligned="false"
 	>
 		<LinearLayout
-			android:layout_weight="0.31"
+			android:layout_weight="0.21"
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
@@ -44,7 +44,7 @@
 		/>
 		<LinearLayout
 			android:layout_width="0dip"
-			android:layout_weight="0.31"
+			android:layout_weight="0.21"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
 		/>
@@ -87,6 +87,16 @@
 				<include layout="@layout/book_info_pair" android:id="@+id/book_series_index" />
 				<include layout="@layout/book_info_pair" android:id="@+id/book_tags" />
 			</LinearLayout>
+			<TextView
+				android:id="@+id/book_info_annotation_title"
+				style="?android:attr/listSeparatorTextViewStyle"
+			/>
+			<TextView
+				android:id="@+id/book_info_annotation_body"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+			/>
 			<TextView
 				android:id="@+id/file_info_title"
 				style="?android:attr/listSeparatorTextViewStyle"

@@ -52,7 +52,7 @@ public abstract class NetworkCatalogItem extends NetworkLibraryItem {
 	 * @param cover      cover url. Can be <code>null</code>.
 	 * @param urlByType  map contains URLs and their types. Must be not <code>null</code>.
 	 */
-	public NetworkCatalogItem(INetworkLink link, String title, String summary, String cover, Map<Integer, String> urlByType) {
+	public NetworkCatalogItem(INetworkLink link, String title, String summary, String cover, Map<Integer,String> urlByType) {
 		this(link, title, summary, cover, urlByType, VISIBLE_ALWAYS, CATALOG_OTHER);
 	}
 
@@ -88,6 +88,10 @@ public abstract class NetworkCatalogItem extends NetworkLibraryItem {
 		Visibility = visibility;
 		CatalogType = catalogType;
 		URLByType = new TreeMap<Integer, String>(urlByType);
+	}
+
+	public LinkedHashMap<String,String> extraData() {
+		return null;
 	}
 
 	public abstract void loadChildren(NetworkOperationData.OnNewItemListener listener) throws ZLNetworkException;
