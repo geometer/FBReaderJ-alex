@@ -32,13 +32,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
+import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.library.Book;
 import org.geometerplus.fbreader.formats.FormatPlugin;
@@ -235,7 +235,7 @@ public final class FileManager extends BaseActivity {
 		}
 
 		public String getName() {
-			return myName != null ? myName : myFile.getLongName();
+			return myName != null ? myName : myFile.getShortName();
 		}
 
 		public String getSummary() {

@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.view.*;
 import android.widget.*;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 
 import org.geometerplus.fbreader.tree.FBTree;

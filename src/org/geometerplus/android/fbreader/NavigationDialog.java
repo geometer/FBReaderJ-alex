@@ -47,7 +47,6 @@ import org.geometerplus.fbreader.library.Book;
 
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
-import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageLoader;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
@@ -210,7 +209,7 @@ public class NavigationDialog extends Dialog {
 							if (loadable.isSynchronized()) {
 								refreshRunnable.run();
 							} else {
-								ZLAndroidImageLoader.Instance().startImageLoading(loadable, refreshRunnable);
+								loadable.startSynchronization(refreshRunnable);
 							}
 						} else {
 							refreshRunnable.run();
