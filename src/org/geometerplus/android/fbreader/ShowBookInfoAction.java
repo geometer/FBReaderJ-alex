@@ -24,7 +24,6 @@ import android.content.Intent;
 import org.geometerplus.fbreader.fbreader.FBAction;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
-
 class ShowBookInfoAction extends FBAction {
 	private final FBReader myBaseActivity;
 
@@ -38,9 +37,11 @@ class ShowBookInfoAction extends FBAction {
 	}
 
 	public void run() {
-		final Intent intent = new Intent(myBaseActivity.getApplicationContext(), BookStatusActivity.class);
 		myBaseActivity.startActivityForResult(
-			intent, FBReader.REPAINT_CODE
+			new Intent(myBaseActivity.getApplicationContext(), BookInfoActivity.class)
+				.putExtra(BookInfoActivity.CURRENT_BOOK_PATH_KEY, Reader.Model.Book.File.getPath())
+				.putExtra(BookInfoActivity.HIDE_OPEN_BUTTON_KEY, true),
+			FBReader.REPAINT_CODE
 		);
 	}
 }
