@@ -190,12 +190,10 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ROTATE, new RotateAction(this, fbReader));
 		fbReader.addAction(ActionCode.GOTO_PAGE, new GoToPageAction(this, fbReader));
 		fbReader.addAction(ActionCode.FONT_SIZE, new FontSizeAction(this, fbReader));
-		fbReader.addAction(ActionCode.SHOW_DICTIONARY_DIALOG, new DictionaryAction(this, fbReader, "translate", ActionCode.SET_TEXT_VIEW_MODE_VISIT_ALL_WORDS));
-		fbReader.addAction(ActionCode.SHOW_HYPERLINKS_DIALOG, new DictionaryAction(this, fbReader, "hyperlinks", ActionCode.SET_TEXT_VIEW_MODE_VISIT_HYPERLINKS));
+		fbReader.addAction(ActionCode.SHOW_DICTIONARY_DIALOG, new HyperlinksDialogAction(this, fbReader, "translate", ZLTextViewMode.MODE_VISIT_ALL_WORDS));
+		fbReader.addAction(ActionCode.SHOW_HYPERLINKS_DIALOG, new HyperlinksDialogAction(this, fbReader, "hyperlinks", ZLTextViewMode.MODE_VISIT_HYPERLINKS));
 
 		fbReader.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, fbReader));
-		fbReader.addAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_HYPERLINKS, new SwitchTextViewModeAction(this, fbReader, ZLTextViewMode.MODE_VISIT_HYPERLINKS));
-		fbReader.addAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_ALL_WORDS, new SwitchTextViewModeAction(this, fbReader, ZLTextViewMode.MODE_VISIT_ALL_WORDS));
 
 		if (mySelector == null) {
 			mySelector = new ImageView(this);
@@ -387,8 +385,14 @@ public final class FBReader extends ZLAndroidActivity {
 		new NavigationDialog(this, myEPDView).show();
 	}
 
-	public void onHypelinksDialogRequested(String key, String actionCode) {
-		new HyperlinksDialog(this, myEPDView, key, actionCode).show();
+	public void onHypelinksDialogRequested(String key, int mode) {
+		if (mode == ZLTextViewMode.MODE_VISIT_NOTHING) {
+			return;
+		}
+		if (mode == ZLTextViewMode.MODE_VISIT_ALL_WORDS) {
+			DictionaryUtil.installDictionaryIfNotInstalled(this);
+		}
+		new HyperlinksDialog(this, myEPDView, key, mode).show();
 	}
 
 	// --- Code from launcher ---

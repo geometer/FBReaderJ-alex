@@ -212,6 +212,7 @@
 		<node name="gotoPage" value="Go to page"/>
 		<node name="fontSize" value="Font size" />
 		<node name="dictionary" value="Dictionary" />
+		<node name="hyperlinks" value="Hyperlinks" />
 	</node>
 	<node name="dialog">
 		<node name="button">

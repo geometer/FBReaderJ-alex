@@ -23,16 +23,16 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBAction;
 
 
-class DictionaryAction extends FBAction {
+class HyperlinksDialogAction extends FBAction {
 	private final FBReader myActivity;
 	private final String myKey;
-	private final String myHyperlinksMode;
+	private final int myMode;
 
-	DictionaryAction(FBReader activity, FBReaderApp fbreader, String key, String hyperlinksMode) {
+	HyperlinksDialogAction(FBReader activity, FBReaderApp fbreader, String key, int mode) {
 		super(fbreader);
 		myActivity = activity;
 		myKey = key;
-		myHyperlinksMode = hyperlinksMode;
+		myMode = mode;
 	}
 
 	public boolean isVisible() {
@@ -40,6 +40,6 @@ class DictionaryAction extends FBAction {
 	}
 
 	public void run() {
-		myActivity.onHypelinksDialogRequested(myKey, myHyperlinksMode);
+		myActivity.onHypelinksDialogRequested(myKey, myMode);
 	}
 }

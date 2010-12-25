@@ -213,6 +213,7 @@
 		<node name="gotoPage" value="Vai a Pagine"/>
 		<node name="fontSize" toBeTranslated="true" value="Font size" />
 		<node name="dictionary" toBeTranslated="true" value="Dictionary" />
+		<node name="hyperlinks" toBeTranslated="true" value="Hyperlinks" />
 	</node>
 	<node name="dialog">
 		<node name="button">

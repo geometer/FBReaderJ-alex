@@ -29,21 +29,23 @@ import android.widget.ImageButton;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
+import org.geometerplus.zlibrary.text.view.ZLTextViewMode;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 
 public class HyperlinksDialog extends Dialog {
 
-	private final String myActionCode; 
+	private final int myMode; 
 
-	public HyperlinksDialog(Context context, final EPDView epd, String key, String actionCode) {
+	public HyperlinksDialog(Context context, final EPDView epd, String key, int mode) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 		setContentView(R.layout.hyperlinks);
 
-		myActionCode = actionCode;
+		myMode = mode;
 
 		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
 		final String text = ZLResource.resource("fbreader").getResource(key).getValue();
@@ -78,7 +80,7 @@ public class HyperlinksDialog extends Dialog {
 
 		setOnDismissListener(new OnDismissListener() {
 			public void onDismiss(DialogInterface dialog) {
-				ZLApplication.Instance().doAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_HYPERLINKS);
+				setMode(ZLTextViewMode.MODE_VISIT_NOTHING);
 			}
 		});
 	}
@@ -86,6 +88,19 @@ public class HyperlinksDialog extends Dialog {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		ZLApplication.Instance().doAction(myActionCode);
+		setMode(myMode);
+	}
+
+	private void setMode(int mode) {
+		FBReaderApp reader = (FBReaderApp)FBReaderApp.Instance();
+		reader.TextViewModeOption.setValue(mode);
+		if (mode == ZLTextViewMode.MODE_VISIT_NOTHING) {
+			reader.BookTextView.resetRegionPointer();
+			reader.FootnoteView.resetRegionPointer();
+		} else {
+			reader.BookTextView.centerRegionPointer();
+			reader.FootnoteView.centerRegionPointer();
+		}
+		reader.repaintView();
 	}
 }
