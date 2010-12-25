@@ -52,7 +52,8 @@ public class ButtonsCollection {
 		myButtons.add(new FBActionButton("bookmarks", ActionCode.SHOW_BOOKMARKS));
 		myButtons.add(new FBActionButton("table_of_contents", ActionCode.SHOW_CONTENTS));
 		myButtons.add(new FBActionButton("screen_rotations", ActionCode.ROTATE));
-		myButtons.add(new FBActionButton("dictionary", ActionCode.DICTIONARY));
+		myButtons.add(new FBActionButton("dictionary", ActionCode.SHOW_DICTIONARY_DIALOG));
+		myButtons.add(new FBActionButton("hyperlinks", ActionCode.SHOW_HYPERLINKS_DIALOG));
 		myButtons.add(new FBActionButton("settings_fbreader", ActionCode.SHOW_PREFERENCES));
 		myButtons.add(new FBActionButton("fonts", ActionCode.FONT_SIZE));
 		myButtons.add(new FBActionButton("lib", ActionCode.SHOW_LIBRARY));

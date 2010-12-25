@@ -35,14 +35,18 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 
 
-public class DictionaryDialog extends Dialog {
+public class HyperlinksDialog extends Dialog {
 
-	public DictionaryDialog(Context context, final EPDView epd) {
+	private final String myActionCode; 
+
+	public HyperlinksDialog(Context context, final EPDView epd, String key, String actionCode) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
-		setContentView(R.layout.dictionary);
+		setContentView(R.layout.hyperlinks);
+
+		myActionCode = actionCode;
 
 		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
-		final String text = ZLResource.resource("fbreader").getResource("translate").getValue();
+		final String text = ZLResource.resource("fbreader").getResource(key).getValue();
 		final int rotation = ZLAndroidApplication.Instance().RotationFlag;
 		translate.setImageDrawable(RotatedStringDrawable.create(text, rotation, 16));
 		translate.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +86,6 @@ public class DictionaryDialog extends Dialog {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		ZLApplication.Instance().doAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_ALL_WORDS);
+		ZLApplication.Instance().doAction(myActionCode);
 	}
 }

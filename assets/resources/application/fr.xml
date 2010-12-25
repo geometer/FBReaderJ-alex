@@ -11,6 +11,7 @@
 		<node name="buttonsLimit" toBeTranslated="true" value="There is no sense to have less than %s buttons at the screen." />
 		<node name="addButtonTip" toBeTranslated="true" value="SELECT BUTTON FOR ADDING TO THE SCREEN" />
 		<node name="translate" toBeTranslated="true" value="Translate"/>
+		<node name="hyperlinks" toBeTranslated="true" value="Open link"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Auteur inconnu"/>
