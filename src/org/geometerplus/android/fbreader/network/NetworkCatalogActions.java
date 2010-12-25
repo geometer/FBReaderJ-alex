@@ -33,7 +33,7 @@ import org.geometerplus.zlibrary.core.util.ZLBoolean3;
 import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 
 import org.geometerplus.android.util.UIUtil;
-import org.geometerplus.android.util.PluginUtil;
+import org.geometerplus.android.util.PackageUtil;
 
 import org.geometerplus.fbreader.network.*;
 import org.geometerplus.fbreader.network.tree.NetworkTreeFactory;
@@ -238,7 +238,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 				doExpandCatalog(activity, (NetworkCatalogTree)tree);
 				return true;
 			case OPEN_IN_BROWSER_ITEM_ID:
-				NetworkView.Instance().openInBrowser(
+				Util.openInBrowser(
 					activity,
 					((NetworkCatalogTree)tree).Item.URLByType.get(NetworkCatalogItem.URL_HTML_PAGE)
 				);
@@ -256,7 +256,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 				doSignOut(activity, (NetworkCatalogTree)tree);
 				return true;
 			case REFILL_ACCOUNT_ITEM_ID:
-				NetworkView.Instance().openInBrowser(
+				Util.openInBrowser(
 					activity,
 					((NetworkCatalogTree)tree).Item.Link.authenticationManager().refillAccountLink()
 				);
@@ -402,11 +402,11 @@ class NetworkCatalogActions extends NetworkTreeActions {
 			String message = null;
 			String positiveButtonKey = null;
 			
-			if (!PluginUtil.isPluginInstalled(activity, plugin)) {
+			if (!PackageUtil.isPluginInstalled(activity, plugin)) {
 				dialogKey = "installPlugin";
 				message = pluginData.get("androidPluginInstallMessage");
 				positiveButtonKey = "install";
-			} else if (!PluginUtil.isPluginInstalled(activity, plugin, pluginVersion)) {
+			} else if (!PackageUtil.isPluginInstalled(activity, plugin, pluginVersion)) {
 				dialogKey = "updatePlugin";
 				message = pluginData.get("androidPluginUpdateMessage");
 				positiveButtonKey = "update";
@@ -422,7 +422,7 @@ class NetworkCatalogActions extends NetworkTreeActions {
 						buttonResource.getResource(positiveButtonKey).getValue(),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								PluginUtil.installPackageFromMarket(activity, plugin);
+								PackageUtil.installFromMarket(activity, plugin);
 							}
 						}
 					)

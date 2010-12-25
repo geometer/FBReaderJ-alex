@@ -84,7 +84,7 @@
 		<node name="signOut" value="Вийти (%s)"/>
 		<node name="refillAccount" value="Поповнити рахунок (поточний рахунок: %s)" />
 		<node name="refillTitle" value="Поповнити рахунок"/>
-		<node name="refillViaSms" value="Send an SMS" toBeTranslated="true"/>
+		<node name="refillViaSms" value="Text messages" toBeTranslated="true"/>
 		<node name="refillViaBrowser" value="Open page in browser" toBeTranslated="true"/>
 		<node name="refillSummary" value="Поточний рахунок: %s"/>
 		<node name="alreadyDownloading" value="Книжка завантажується" />
@@ -232,6 +232,10 @@
 		</node>
 		<node name="updatePlugin">
 			<node name="title" value="Update plugin" toBeTranslated="true" />
+		</node>
+		<node name="installDictionary">
+			<node name="title" value="Install dictionary" toBeTranslated="true" />
+			<node name="message" value="Would you like to install %s?" toBeTranslated="true" />
 		</node>
 		<node name="BookInfo">
 			<node name="fileName" value="Файл"/>
@@ -590,11 +594,12 @@
 		</node>
 	</node>
 	<node name="errorMessage">
+		<node name="cannotRunAndroidMarket" value="Cannot access Android Market. Please, install %s manually" toBeTranslated="true"/>
 		<node name="textNotFound" value="У цій книзі нема такого тексту"/>
 		<node name="bookNotFound" value="Немає відповідних книг"/>
 		<node name="bookmarkNotFound" value="Нема відповідних закладок"/>
 		<node name="cannotOpenBook" value="Невдається відкрити книгу"/>
-		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
+		<node name="dictionaryIsNotInstalled" value="Dictionary is not installed, sorry" toBeTranslated="true"/>
 		<node name="permissionDenied" value="Permission denied, sorry" toBeTranslated="true"/>
 		<node name="noFavorites" value="Your favorites list is empty, sorry" toBeTranslated="true"/>
 	</node>

@@ -1,7 +1,8 @@
 0.99:
-* Run 'install ColorDict' dialog
-* Synchronize resources
+DONE Run 'install ColorDict' dialog
+DONE Synchronize resources
 
 After 0.99:
 * More convenient mode changing
+* Installation from the site if AM is not available
 * Integration with other dictionaries

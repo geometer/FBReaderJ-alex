@@ -22,44 +22,41 @@ package org.geometerplus.android.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.ActivityNotFoundException;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
-public abstract class PluginUtil {
+public abstract class PackageUtil {
 	private static Uri marketUri(String pkg) {
 		return Uri.parse("market://details?id=" + pkg);
 	}
 
 	private static Uri homeUri(String pkg) {
-		return Uri.parse("http://data.fbreader.org/packages/" + pkg + ".apk");
+		return Uri.parse("http://data.fbreader.org/android/packages/" + pkg + ".apk");
 	}
 
 	private static Uri homeUri(String pkg, String version) {
-		return Uri.parse("http://data.fbreader.org/packages/" + pkg + ".apk_" + version);
+		return Uri.parse("http://data.fbreader.org/android/packages/" + pkg + ".apk_version_" + version);
 	}
 
 	public static boolean isPluginInstalled(Activity activity, String pkg) {
-		try {
-			activity.startActivity(new Intent(
-				"android.fbreader.action.TEST", homeUri(pkg)
-			));
-			return true;
-		} catch (ActivityNotFoundException e) {
-			return false;
-		}
+		return canBeStarted(
+			activity,
+			new Intent("android.fbreader.action.TEST", homeUri(pkg))
+		);
 	}
 
 	public static boolean isPluginInstalled(Activity activity, String pkg, String version) {
-		try {
-			activity.startActivity(new Intent(
-				"android.fbreader.action.TEST", homeUri(pkg, version)
-			));
-			return true;
-		} catch (ActivityNotFoundException e) {
-			return false;
-		}
+		return canBeStarted(
+			activity,
+			new Intent("android.fbreader.action.TEST", homeUri(pkg, version))
+		);
 	}
 
-	public static boolean installPackageFromMarket(Activity activity, String pkg) {
+	public static boolean canBeStarted(Activity activity, Intent intent) {
+		return activity.getApplicationContext().getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null;
+	}
+
+	public static boolean installFromMarket(Activity activity, String pkg) {
 		try {
 			activity.startActivity(new Intent(
 				Intent.ACTION_VIEW, marketUri(pkg)

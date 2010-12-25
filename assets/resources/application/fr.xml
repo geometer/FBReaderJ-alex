@@ -87,7 +87,7 @@
 		<node name="signOut" value="Déconnexion (%s)"/>
 		<node name="refillAccount" value="Recréditer le compte (actuellement : %s)"/>
 		<node name="refillTitle" value="Recréditer le compte"/>
-		<node name="refillViaSms" value="Send an SMS" toBeTranslated="true"/>
+		<node name="refillViaSms" value="Text messages" toBeTranslated="true"/>
 		<node name="refillViaBrowser" value="Open page in browser" toBeTranslated="true"/>
 		<node name="refillSummary" value="Аctuellement : %s"/>
 		<node name="alreadyDownloading" value="Le livre est en cours de téléchargement" />
@@ -235,6 +235,10 @@
 		</node>
 		<node name="updatePlugin">
 			<node name="title" value="Update plugin" toBeTranslated="true" />
+		</node>
+		<node name="installDictionary">
+			<node name="title" value="Install dictionary" toBeTranslated="true" />
+			<node name="message" value="Would you like to install %s?" toBeTranslated="true" />
 		</node>
 		<node name="BookInfo">
 			<node name="fileName" value="Nom du fichier"/>
@@ -599,11 +603,12 @@
 		</node>
 	</node>
 	<node name="errorMessage">
+		<node name="cannotRunAndroidMarket" value="Cannot access Android Market. Please, install %s manually" toBeTranslated="true"/>
 		<node name="textNotFound" value="Aucune occurence dans le livre"/>
 		<node name="bookNotFound" value="Aucun livre correspondant dans la bibliothèque"/>
 		<node name="bookmarkNotFound" value="Aucun marque-page correspondant"/>
 		<node name="cannotOpenBook" value="Impossible d'ouvrir le livre"/>
-		<node name="dictNotInstalled" toBeTranslated="true" value="Supported dictionary is not installed, sorry"/>
+		<node name="dictionaryIsNotInstalled" value="Dictionary is not installed, sorry" toBeTranslated="true"/>
 		<node name="permissionDenied" value="Permission denied, sorry" toBeTranslated="true"/>
 		<node name="noFavorites" value="Your favorites list is empty, sorry" toBeTranslated="true"/>
 	</node>
