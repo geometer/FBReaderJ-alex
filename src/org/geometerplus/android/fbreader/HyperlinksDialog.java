@@ -29,20 +29,26 @@ import android.widget.ImageButton;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
+import org.geometerplus.zlibrary.text.view.ZLTextViewMode;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 
-public class DictionaryDialog extends Dialog {
+public class HyperlinksDialog extends Dialog {
 
-	public DictionaryDialog(Context context, final EPDView epd) {
+	private final int myMode; 
+
+	public HyperlinksDialog(Context context, final EPDView epd, String key, int mode) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
-		setContentView(R.layout.dictionary);
+		setContentView(R.layout.hyperlinks);
+
+		myMode = mode;
 
 		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
-		final String text = ZLResource.resource("fbreader").getResource("translate").getValue();
+		final String text = ZLResource.resource("fbreader").getResource(key).getValue();
 		final int rotation = ZLAndroidApplication.Instance().RotationFlag;
 		translate.setImageDrawable(RotatedStringDrawable.create(text, rotation, 16));
 		translate.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +80,7 @@ public class DictionaryDialog extends Dialog {
 
 		setOnDismissListener(new OnDismissListener() {
 			public void onDismiss(DialogInterface dialog) {
-				ZLApplication.Instance().doAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_HYPERLINKS);
+				setMode(ZLTextViewMode.MODE_VISIT_NOTHING);
 			}
 		});
 	}
@@ -82,6 +88,19 @@ public class DictionaryDialog extends Dialog {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		ZLApplication.Instance().doAction(ActionCode.SET_TEXT_VIEW_MODE_VISIT_ALL_WORDS);
+		setMode(myMode);
+	}
+
+	private void setMode(int mode) {
+		FBReaderApp reader = (FBReaderApp)FBReaderApp.Instance();
+		reader.TextViewModeOption.setValue(mode);
+		if (mode == ZLTextViewMode.MODE_VISIT_NOTHING) {
+			reader.BookTextView.resetRegionPointer();
+			reader.FootnoteView.resetRegionPointer();
+		} else {
+			reader.BookTextView.centerRegionPointer();
+			reader.FootnoteView.centerRegionPointer();
+		}
+		reader.repaintView();
 	}
 }

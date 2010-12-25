@@ -1395,6 +1395,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			case MODE_VISIT_HYPERLINKS:
 				filter = ZLTextHyperlinkRegion.Filter;
 				break;
+			case MODE_VISIT_NOTHING:
+				return false;
 		}
 
 		switch (direction) {
@@ -1460,5 +1462,50 @@ public abstract class ZLTextView extends ZLTextViewBase {
 				break;
 		}
 		return false;
+	}
+
+	public void centerRegionPointer() {
+		mySelectedRegion = null;
+
+		final ArrayList<ZLTextElementRegion> elementRegions = myCurrentPage.TextElementMap.ElementRegions;
+		if (elementRegions.isEmpty()) {
+			return;
+		}
+
+		final ZLTextElementRegion.Filter filter;
+		switch (getMode()) {
+			default:
+			case MODE_VISIT_ALL_WORDS:
+				filter = ZLTextElementRegion.Filter;
+				break;
+			case MODE_VISIT_HYPERLINKS:
+				filter = ZLTextHyperlinkRegion.Filter;
+				break;
+			case MODE_VISIT_NOTHING:
+				return;
+		}
+
+		int firstIndex = -1;
+		int lastIndex = elementRegions.size();
+		while (firstIndex < lastIndex) {
+			while (--lastIndex >= 0) {
+				final ZLTextElementRegion candidate = elementRegions.get(lastIndex);
+				if (filter.accepts(candidate)) {
+					break;
+				}
+			}
+			if (firstIndex >= lastIndex) {
+				break;
+			}
+			while (++firstIndex < elementRegions.size()) {
+				final ZLTextElementRegion candidate = elementRegions.get(firstIndex);
+				if (filter.accepts(candidate)) {
+					break;
+				}
+			}
+		}
+		if (firstIndex == lastIndex && firstIndex >= 0 && firstIndex < elementRegions.size()) {
+			mySelectedRegion = elementRegions.get(firstIndex); 
+		}
 	}
 }

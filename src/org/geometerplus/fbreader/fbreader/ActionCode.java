@@ -35,9 +35,6 @@ public interface ActionCode {
 	String FIND_NEXT = "findNext";
 	String CLEAR_FIND_RESULTS = "clearFindResults";
 
-	String SET_TEXT_VIEW_MODE_VISIT_HYPERLINKS = "hyperlinksOnlyMode";
-	String SET_TEXT_VIEW_MODE_VISIT_ALL_WORDS = "dictionaryMode";
-
 	String SHOW_NAVIGATION = "navigate";
 	String CANCEL = "cancel";
 	String INCREASE_FONT = "increaseFont";
@@ -53,5 +50,6 @@ public interface ActionCode {
 
 	String GOTO_PAGE = "gotoPage";
 	String FONT_SIZE = "fontSize";
-	String DICTIONARY = "dictionary";
+	String SHOW_DICTIONARY_DIALOG = "dictionary";
+	String SHOW_HYPERLINKS_DIALOG = "hyperlinks";
 }

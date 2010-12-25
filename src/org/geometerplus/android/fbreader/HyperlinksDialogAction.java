@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,35 +19,27 @@
 
 package org.geometerplus.android.fbreader;
 
-import org.geometerplus.zlibrary.text.view.ZLTextViewMode;
-
-import org.geometerplus.fbreader.fbreader.FBAction;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.fbreader.FBAction;
 
-class SwitchTextViewModeAction extends FBAction {
-	private final FBReader myBaseActivity;
+
+class HyperlinksDialogAction extends FBAction {
+	private final FBReader myActivity;
+	private final String myKey;
 	private final int myMode;
 
-	SwitchTextViewModeAction(FBReader baseActivity, FBReaderApp fbreader, int mode) {
+	HyperlinksDialogAction(FBReader activity, FBReaderApp fbreader, String key, int mode) {
 		super(fbreader);
-		myBaseActivity = baseActivity;
+		myActivity = activity;
+		myKey = key;
 		myMode = mode;
 	}
-		
-	@Override
-	public boolean isEnabled() {
-		return Reader.TextViewModeOption.getValue() != myMode;
+
+	public boolean isVisible() {
+		return Reader.Model != null;
 	}
 
-	@Override
 	public void run() {
-		if (myMode == ZLTextViewMode.MODE_VISIT_ALL_WORDS) {
-			DictionaryUtil.installDictionaryIfNotInstalled(myBaseActivity);
-		}
-
-		Reader.TextViewModeOption.setValue(myMode);
-		Reader.BookTextView.resetRegionPointer();
-		Reader.FootnoteView.resetRegionPointer();
-		Reader.repaintView();
+		myActivity.onHypelinksDialogRequested(myKey, myMode);
 	}
 }

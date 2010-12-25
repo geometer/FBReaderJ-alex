@@ -7,6 +7,7 @@
 		<node name="buttonsLimit" value="Нет смысла держать менее %s кнопок на экране." />
 		<node name="addButtonTip" value="ВЫБЕРИТЕ КНОПКУ, КОТОРУЮ ВЫ ХОТИТЕ ДОБАВИТЬ НА ЭКРАН" />
 		<node name="translate" value="Перевод"/>
+		<node name="hyperlinks" value="Перейти"/>
 	</node>
 	<node name="library">
 		<node name="unknownAuthor" value="Автор не указан"/>
@@ -228,6 +229,7 @@
 		<node name="gotoPage" value="На страницу"/>
 		<node name="fontSize" value="Размер шрифта" />
 		<node name="dictionary" value="Словарь" />
+		<node name="hyperlinks" value="Сноски" />
 	</node>
 	<node name="dialog">
 		<node name="button">
