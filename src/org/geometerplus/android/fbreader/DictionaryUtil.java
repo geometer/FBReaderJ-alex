@@ -42,9 +42,9 @@ abstract class DictionaryUtil {
 			.putExtra(SearchManager.QUERY, text);
 	}
 
-	public static void installDictionaryIfNotInstalled(final Activity activity) {
+	public static boolean installDictionaryIfNotInstalled(final Activity activity) {
 		if (PackageUtil.canBeStarted(activity, getDictionaryIntent("test"))) {
-			return;
+			return true;
 		}
 
 		final ZLResource dialogResource = ZLResource.resource("dialog");
@@ -64,6 +64,7 @@ abstract class DictionaryUtil {
 			)
 			.setNegativeButton(buttonResource.getResource("skip").getValue(), null)
 			.create().show();
+		return false;
 	}
 
 	private static void installDictionary(Activity activity) {

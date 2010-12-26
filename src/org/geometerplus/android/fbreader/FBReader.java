@@ -389,10 +389,13 @@ public final class FBReader extends ZLAndroidActivity {
 		if (mode == ZLTextViewMode.MODE_VISIT_NOTHING) {
 			return;
 		}
+		boolean startDialog = true;
 		if (mode == ZLTextViewMode.MODE_VISIT_ALL_WORDS) {
-			DictionaryUtil.installDictionaryIfNotInstalled(this);
+			startDialog = DictionaryUtil.installDictionaryIfNotInstalled(this);
 		}
-		new HyperlinksDialog(this, myEPDView, key, mode).show();
+		if (startDialog) {
+			new HyperlinksDialog(this, myEPDView, key, mode).show();
+		}
 	}
 
 	// --- Code from launcher ---
