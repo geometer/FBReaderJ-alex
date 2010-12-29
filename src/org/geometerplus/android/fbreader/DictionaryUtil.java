@@ -20,17 +20,9 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
-
-
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-
-import org.geometerplus.android.util.UIUtil;
-import org.geometerplus.android.util.PackageUtil;
 
 abstract class DictionaryUtil {
 	public static Intent getDictionaryIntent(String text) {
@@ -43,7 +35,7 @@ abstract class DictionaryUtil {
 	}
 
 	public static boolean installDictionaryIfNotInstalled(final Activity activity) {
-		if (PackageUtil.canBeStarted(activity, getDictionaryIntent("test"))) {
+		/*if (PackageUtil.canBeStarted(activity, getDictionaryIntent("test"))) {
 			return true;
 		}
 
@@ -64,12 +56,13 @@ abstract class DictionaryUtil {
 			)
 			.setNegativeButton(buttonResource.getResource("skip").getValue(), null)
 			.create().show();
-		return false;
+		return false;*/
+		return true;
 	}
 
-	private static void installDictionary(Activity activity) {
+	/*private static void installDictionary(Activity activity) {
 		if (!PackageUtil.installFromMarket(activity, "com.socialnmobile.colordict")) {
 			UIUtil.showErrorMessage(activity, "cannotRunAndroidMarket", "ColorDict");
 		}
-	}
+	}*/
 }
