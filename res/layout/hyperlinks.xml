@@ -52,4 +52,14 @@
 		android:padding="7px"
 		android:background="@android:color/transparent"
 	/>
+	<ImageButton
+		android:id="@+id/exit"
+		android:src="@drawable/launcher_exit_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+		android:padding="7px"
+		android:background="@android:color/transparent"
+	/>
 </RelativeLayout>

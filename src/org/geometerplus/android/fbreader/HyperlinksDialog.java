@@ -39,12 +39,14 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class HyperlinksDialog extends Dialog {
 
-	private final int myMode; 
+	private final int myMode;
+	private final EPDView myEPDView;
 
 	public HyperlinksDialog(Context context, final EPDView epd, String key, int mode) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 		setContentView(R.layout.hyperlinks);
 
+		myEPDView = epd;
 		myMode = mode;
 
 		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
@@ -78,6 +80,12 @@ public class HyperlinksDialog extends Dialog {
 			}
 		});
 
+		((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				HyperlinksDialog.this.cancel();
+			}
+		});
+
 		setOnDismissListener(new OnDismissListener() {
 			public void onDismiss(DialogInterface dialog) {
 				setMode(ZLTextViewMode.MODE_VISIT_NOTHING);
@@ -102,5 +110,17 @@ public class HyperlinksDialog extends Dialog {
 			reader.FootnoteView.centerRegionPointer();
 		}
 		reader.repaintView();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		final View widget = myEPDView.getActivity().findViewById(R.id.main_view_epd);
+		return ((widget != null) && widget.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		final View widget = myEPDView.getActivity().findViewById(R.id.main_view_epd);
+		return ((widget != null) && widget.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 }
