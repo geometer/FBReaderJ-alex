@@ -39,12 +39,14 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class HyperlinksDialog extends Dialog {
 
-	private final int myMode; 
+	private final int myMode;
+	private final EPDView myEPDView;
 
 	public HyperlinksDialog(Context context, final EPDView epd, String key, int mode) {
 		super(context, android.R.style.Theme_Translucent_NoTitleBar);
 		setContentView(R.layout.hyperlinks);
 
+		myEPDView = epd;
 		myMode = mode;
 
 		final ImageButton translate = (ImageButton)findViewById(R.id.translate);
@@ -57,24 +59,47 @@ public class HyperlinksDialog extends Dialog {
 			}
 		});
 
-		((ImageButton)findViewById(R.id.turnUp)).setOnClickListener(new View.OnClickListener() {
+		final ImageButton btnUp = (ImageButton)findViewById(R.id.turnUp);
+		final ImageButton btnDown = (ImageButton)findViewById(R.id.turnDown);
+		final ImageButton btnLeft = (ImageButton)findViewById(R.id.turnLeft);
+		final ImageButton btnRight = (ImageButton)findViewById(R.id.turnRight);
+
+		if (mode != ZLTextViewMode.MODE_VISIT_ALL_WORDS) {
+			if (rotation == ZLAndroidApplication.ROTATE_0 || rotation == ZLAndroidApplication.ROTATE_180) {
+				btnUp.setVisibility(View.GONE);
+				btnDown.setVisibility(View.GONE);
+				translate.setBackgroundResource(R.drawable.center_square_half);
+			} else {
+				btnLeft.setVisibility(View.GONE);
+				btnRight.setVisibility(View.GONE);
+				translate.setBackgroundResource(R.drawable.center_square_vhalf);
+			}
+		}
+
+		btnUp.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_UP, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnDown)).setOnClickListener(new View.OnClickListener() {
+		btnDown.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_DOWN, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnLeft)).setOnClickListener(new View.OnClickListener() {
+		btnLeft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_LEFT, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnRight)).setOnClickListener(new View.OnClickListener() {
+		btnRight.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_RIGHT, null);
+			}
+		});
+
+		((ImageButton)findViewById(R.id.exit)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				HyperlinksDialog.this.cancel();
 			}
 		});
 
@@ -102,5 +127,17 @@ public class HyperlinksDialog extends Dialog {
 			reader.FootnoteView.centerRegionPointer();
 		}
 		reader.repaintView();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		final View widget = myEPDView.getActivity().findViewById(R.id.main_view_epd);
+		return ((widget != null) && widget.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		final View widget = myEPDView.getActivity().findViewById(R.id.main_view_epd);
+		return ((widget != null) && widget.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 }
