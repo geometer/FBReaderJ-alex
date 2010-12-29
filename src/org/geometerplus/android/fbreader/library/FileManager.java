@@ -69,6 +69,11 @@ public final class FileManager extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (DatabaseInstance == null || LibraryInstance == null) {
+			finish();
+			return;
+		}
+
 		FileListAdapter adapter = new FileListAdapter();
 		setListAdapter(adapter);
 

@@ -271,9 +271,9 @@ public class SynchronousView extends View {
 					}
 					if (startX >= 0 && startY >= 0 && stopX >= 0 && stopY >= 0) {
 						final ZLView view = ZLApplication.Instance().getCurrentView();
-						view.onStylusPress(startX, startY);
-						view.onStylusMovePressed(stopX, stopY);
-						view.onStylusRelease(stopX, stopY);
+						view.onFingerPress(startX, startY);
+						view.onFingerMove(stopX, stopY);
+						view.onFingerRelease(stopX, stopY);
 						ZLApplication.Instance().repaintView();
 					}
 				}

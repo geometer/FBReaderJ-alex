@@ -1268,7 +1268,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}*/
 
 	@Override
-	public boolean onStylusMovePressed(int x, int y) {
+	public boolean onFingerMove(int x, int y) {
 		if (mySelectionModel.extendTo(x, y)) {
 			ZLApplication.Instance().repaintView();
 			return true;
@@ -1277,7 +1277,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 
 	@Override
-	public boolean onStylusRelease(int x, int y) {
+	public boolean onFingerRelease(int x, int y) {
 		mySelectionModel.deactivate();
 		return false;
 	}
@@ -1315,29 +1315,24 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return null;
 	}
 
-	protected ZLTextHyperlink findHyperlink(int x, int y, int maxDistance) {
-		ZLTextHyperlinkRegion hyperlinkRegion = null;
+	protected ZLTextElementRegion findRegion(int x, int y, int maxDistance) {
+		final ZLTextElementRegion.Filter filter = getCurrentFilter();
+		ZLTextElementRegion bestRegion = null;
 		int distance = maxDistance + 1;
 		for (ZLTextElementRegion region : myCurrentPage.TextElementMap.ElementRegions) {
-			if (region instanceof ZLTextHyperlinkRegion) {
+			if (filter.accepts(region)) {
 				final int d = region.distanceTo(x, y);
 				if (d < distance) {
-					hyperlinkRegion = (ZLTextHyperlinkRegion)region;
+					bestRegion = region;
 					distance = d;
 				}
 			}
 		}
-		return (hyperlinkRegion != null) ? hyperlinkRegion.Hyperlink : null;
+		return bestRegion;
 	}
 
-	protected void selectHyperlink(ZLTextHyperlink hyperlink) {
-		for (ZLTextElementRegion area : myCurrentPage.TextElementMap.ElementRegions) {
-			if (area instanceof ZLTextHyperlinkRegion &&
-				((ZLTextHyperlinkRegion)area).Hyperlink == hyperlink) {
-				mySelectedRegion = area;
-				break;
-			}
-		}
+	protected void selectRegion(ZLTextElementRegion region) {
+		mySelectedRegion = region;
 	}
 
 	public void resetRegionPointer() {
@@ -1354,6 +1349,18 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		int RIGHT = 1;
 		int UP = 2;
 		int DOWN = 3;
+	}
+
+	private ZLTextElementRegion.Filter getCurrentFilter() {
+		switch (getMode()) {
+			default:
+			case MODE_VISIT_ALL_WORDS:
+				return ZLTextElementRegion.Filter;
+			case MODE_VISIT_HYPERLINKS:
+				return ZLTextHyperlinkRegion.Filter;
+			case MODE_VISIT_NOTHING:
+				return null;
+		}
 	}
 
 	protected boolean moveRegionPointer(int direction) {
@@ -1386,17 +1393,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
 				break;
 		}
 
-		ZLTextElementRegion.Filter filter;
-		switch (getMode()) {
-			default:
-			case MODE_VISIT_ALL_WORDS:
-				filter = ZLTextElementRegion.Filter;
-				break;
-			case MODE_VISIT_HYPERLINKS:
-				filter = ZLTextHyperlinkRegion.Filter;
-				break;
-			case MODE_VISIT_NOTHING:
-				return false;
+		final ZLTextElementRegion.Filter filter = getCurrentFilter();
+		if (filter == null) {
+			return false;
 		}
 
 		switch (direction) {
@@ -1474,17 +1473,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			return;
 		}
 
-		final ZLTextElementRegion.Filter filter;
-		switch (getMode()) {
-			default:
-			case MODE_VISIT_ALL_WORDS:
-				filter = ZLTextElementRegion.Filter;
-				break;
-			case MODE_VISIT_HYPERLINKS:
-				filter = ZLTextHyperlinkRegion.Filter;
-				break;
-			case MODE_VISIT_NOTHING:
-				return;
+		final ZLTextElementRegion.Filter filter = getCurrentFilter();
+		if (filter == null) {
+			return;
 		}
 
 		int firstIndex = -1;

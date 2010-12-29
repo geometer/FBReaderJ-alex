@@ -57,6 +57,7 @@ import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.android.fbreader.buttons.AbstractButton;
 import org.geometerplus.android.fbreader.buttons.ButtonsCollection;
 import org.geometerplus.android.fbreader.buttons.SQLiteButtonsDatabase;
+import org.geometerplus.android.fbreader.library.KillerService;
 import org.geometerplus.android.util.UIUtil;
 
 public final class FBReader extends ZLAndroidActivity {
@@ -264,6 +265,7 @@ public final class FBReader extends ZLAndroidActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		startService(new Intent(getApplicationContext(), KillerService.class));
 		myEPDView.onResume();
 		ControlButtonPanel.restoreVisibilities();
 		myReadMode = true;

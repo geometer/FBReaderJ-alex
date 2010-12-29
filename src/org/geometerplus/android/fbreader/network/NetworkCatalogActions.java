@@ -21,6 +21,7 @@ package org.geometerplus.android.fbreader.network;
 
 import java.util.*;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Message;
@@ -256,11 +257,17 @@ class NetworkCatalogActions extends NetworkTreeActions {
 				doSignOut(activity, (NetworkCatalogTree)tree);
 				return true;
 			case REFILL_ACCOUNT_ITEM_ID:
-				Util.openInBrowser(
-					activity,
-					((NetworkCatalogTree)tree).Item.Link.authenticationManager().refillAccountLink()
-				);
+			{
+				final RefillAccountActions actions = new RefillAccountActions();
+				final NetworkTree refillTree = activity.getDefaultTree();
+				final int refillActionCode = actions.getDefaultActionCode(activity, refillTree);
+				if (refillActionCode == TREE_SHOW_CONTEXT_MENU) {
+					activity.getListView().showContextMenu();
+				} else if (refillActionCode >= 0) {
+					actions.runAction(activity, refillTree, refillActionCode);
+				}
 				return true;
+			}
 			case CUSTOM_CATALOG_EDIT:
 				NetworkDialog.show(activity, NetworkDialog.DIALOG_CUSTOM_CATALOG, ((NetworkCatalogTree)tree).Item.Link, null);
 				return true;
@@ -393,57 +400,9 @@ class NetworkCatalogActions extends NetworkTreeActions {
 		}
 	}
 
-	private void runInstallPluginDialog(final NetworkBaseActivity activity, Map<String,String> pluginData, final Runnable postRunnable) {
-		final String plugin = pluginData.get("androidPlugin");
-		if (plugin != null) {
-			final String pluginVersion = pluginData.get("androidPluginVersion");
-
-			String dialogKey = null;
-			String message = null;
-			String positiveButtonKey = null;
-			
-			if (!PackageUtil.isPluginInstalled(activity, plugin)) {
-				dialogKey = "installPlugin";
-				message = pluginData.get("androidPluginInstallMessage");
-				positiveButtonKey = "install";
-			} else if (!PackageUtil.isPluginInstalled(activity, plugin, pluginVersion)) {
-				dialogKey = "updatePlugin";
-				message = pluginData.get("androidPluginUpdateMessage");
-				positiveButtonKey = "update";
-			}
-			if (dialogKey != null) {
-				final ZLResource dialogResource = ZLResource.resource("dialog");
-				final ZLResource buttonResource = dialogResource.getResource("button");
-				new AlertDialog.Builder(activity)
-					.setTitle(dialogResource.getResource(dialogKey).getResource("title").getValue())
-					.setMessage(message)
-					.setIcon(0)
-					.setPositiveButton(
-						buttonResource.getResource(positiveButtonKey).getValue(),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								PackageUtil.installFromMarket(activity, plugin);
-							}
-						}
-					)
-					.setNegativeButton(
-						buttonResource.getResource("skip").getValue(),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								postRunnable.run();
-							}
-						}
-					)
-					.create().show();
-				return;
-			}
-		}
-		postRunnable.run();
-	}
-
 	private void processExtraData(final NetworkBaseActivity activity, Map<String,String> extraData, final Runnable postRunnable) {
 		if (extraData != null && !extraData.isEmpty()) {
-			runInstallPluginDialog(activity, extraData, postRunnable);
+			PackageUtil.runInstallPluginDialog(activity, extraData, postRunnable);
 		} else {
 			postRunnable.run();
 		}

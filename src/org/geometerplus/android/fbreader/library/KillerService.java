@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,29 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.zlibrary.text.view;
+package org.geometerplus.android.fbreader.library;
 
-import java.util.List;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.os.Process;
 
-public class ZLTextWordRegion extends ZLTextElementRegion {
-	public final ZLTextWord Word;
+import org.geometerplus.fbreader.library.Library;
 
-	ZLTextWordRegion(ZLTextWord word, List<ZLTextElementArea> list, int fromIndex) {
-		super(list, fromIndex);
-		Word = word;
+public class KillerService extends Service {
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
 	}
 
-	public boolean equals(Object other) {
-		if (!(other instanceof ZLTextWordRegion)) {
-			return false;
-		}
-		return Word == ((ZLTextWordRegion)other).Word;
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Process.killProcess(Process.myPid());
 	}
+
+	/*@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		onStart(intent, startId);
+		return 0;
+	}*/
 }
