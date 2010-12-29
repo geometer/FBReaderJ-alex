@@ -55,7 +55,6 @@
 		<node name="addToFavorites" value="Add to favorites"/>
 		<node name="removeFromFavorites" value="Remove from favorites"/>
 		
-		
 		<node name="rename" value="Rename"/>
 		<node name="move" value="Move"/>
 		<node name="moveTitle" value="Move file"/>
