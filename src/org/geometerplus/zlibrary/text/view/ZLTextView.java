@@ -1403,7 +1403,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			case Direction.LEFT:
 				for (; index >= 0; --index) {
 					final ZLTextElementRegion candidate = elementRegions.get(index);
-					if (filter.accepts(candidate) && candidate.isAtLeftOf(mySelectedRegion)) {
+					if (filter.accepts(candidate) &&
+							(candidate.isAtLeftOf(mySelectedRegion) || candidate.isOver(mySelectedRegion))) {
 						mySelectedRegion = candidate;
 						return true;
 					}
@@ -1412,7 +1413,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			case Direction.RIGHT:
 				for (; index < elementRegions.size(); ++index) {
 					final ZLTextElementRegion candidate = elementRegions.get(index);
-					if (filter.accepts(candidate) && candidate.isAtRightOf(mySelectedRegion)) {
+					if (filter.accepts(candidate) &&
+							(candidate.isAtRightOf(mySelectedRegion) || candidate.isUnder(mySelectedRegion))) {
 						mySelectedRegion = candidate;
 						return true;
 					}

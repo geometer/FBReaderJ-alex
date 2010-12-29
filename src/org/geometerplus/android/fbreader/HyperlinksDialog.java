@@ -59,22 +59,39 @@ public class HyperlinksDialog extends Dialog {
 			}
 		});
 
-		((ImageButton)findViewById(R.id.turnUp)).setOnClickListener(new View.OnClickListener() {
+		final ImageButton btnUp = (ImageButton)findViewById(R.id.turnUp);
+		final ImageButton btnDown = (ImageButton)findViewById(R.id.turnDown);
+		final ImageButton btnLeft = (ImageButton)findViewById(R.id.turnLeft);
+		final ImageButton btnRight = (ImageButton)findViewById(R.id.turnRight);
+
+		if (mode != ZLTextViewMode.MODE_VISIT_ALL_WORDS) {
+			if (rotation == ZLAndroidApplication.ROTATE_0 || rotation == ZLAndroidApplication.ROTATE_180) {
+				btnUp.setVisibility(View.GONE);
+				btnDown.setVisibility(View.GONE);
+				translate.setBackgroundResource(R.drawable.center_square_half);
+			} else {
+				btnLeft.setVisibility(View.GONE);
+				btnRight.setVisibility(View.GONE);
+				translate.setBackgroundResource(R.drawable.center_square_vhalf);
+			}
+		}
+
+		btnUp.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_UP, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnDown)).setOnClickListener(new View.OnClickListener() {
+		btnDown.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_DOWN, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnLeft)).setOnClickListener(new View.OnClickListener() {
+		btnLeft.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_LEFT, null);
 			}
 		});
-		((ImageButton)findViewById(R.id.turnRight)).setOnClickListener(new View.OnClickListener() {
+		btnRight.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				epd.getActivity().findViewById(R.id.main_view_epd).onKeyDown(KeyEvent.KEYCODE_DPAD_RIGHT, null);
 			}
