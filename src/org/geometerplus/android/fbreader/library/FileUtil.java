@@ -44,4 +44,13 @@ public class FileUtil {
 		}
 		return false;
 	}
+	
+	public static ZLFile getParent(ZLFile file){
+		if (file.isDirectory()){
+			String path = file.getPath();
+			path = path.substring(0, path.lastIndexOf("/"));
+			return ZLFile.createFileByPath(path);
+		}
+		return ZLFile.createFileByPath(file.getParent().getPath());
+	}
 }

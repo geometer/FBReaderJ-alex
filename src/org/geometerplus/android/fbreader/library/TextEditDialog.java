@@ -144,11 +144,11 @@ class RenameDialog extends TextEditDialog{
 			newName += "." + myFile.getExtension();
 		if (newName.startsWith(".")){
 			ToastMaker.MakeToast(myContext, "messFileIncorrect");
-		} else if (!FileUtil.contain(newName, myFile.getParent())){
+		} else if (!FileUtil.contain(newName, FileUtil.getParent(myFile))){
 			if(myFile.getPhysicalFile().rename(newName)){
 				((Activity) myContext).startActivityForResult(
 						new Intent(myContext, FileManager.class)
-							.putExtra(FileManager.FILE_MANAGER_PATH, myFile.getParent().getPath())
+							.putExtra(FileManager.FILE_MANAGER_PATH, FileUtil.getParent(myFile).getPath())
 							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
 						FileManager.CHILD_LIST_REQUEST
 				);
