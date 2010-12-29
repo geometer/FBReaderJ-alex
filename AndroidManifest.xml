@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.geometerplus.zlibrary.ui.android" android:versionCode="9806" android:versionName="0.98.6">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.geometerplus.zlibrary.ui.android" android:versionCode="9807" android:versionName="0.98.7">
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -71,7 +71,7 @@
 			</intent-filter>
 		</activity>
 		<service android:name="org.geometerplus.android.fbreader.library.InitializationService" android:process=":library" />
-		<service android:name="org.geometerplus.android.fbreader.library.KillerService" android:process=":library" />
+		<receiver android:name="org.geometerplus.android.fbreader.library.KillerCallback" android:process=":library" />
 		<activity android:name="org.geometerplus.android.fbreader.library.LibraryTopLevelActivity" android:launchMode="singleTask" android:process=":library" android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
