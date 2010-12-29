@@ -37,9 +37,9 @@ public class KillerService extends Service {
 		Process.killProcess(Process.myPid());
 	}
 
-	@Override
+	/*@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		onStart(intent, startId);
 		return 0;
-	}
+	}*/
 }
