@@ -32,7 +32,7 @@ public class KillerService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Process.killProcess(Process.myPid());
+		stopSelf();
 	}
 
 	/*@Override
@@ -40,4 +40,10 @@ public class KillerService extends Service {
 		onStart(intent, startId);
 		return 0;
 	}*/
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Process.killProcess(Process.myPid());
+	}
 }
