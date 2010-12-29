@@ -22,14 +22,10 @@ package org.geometerplus.android.util;
 import java.util.Map;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ActivityNotFoundException;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 public abstract class PackageUtil {
 	private static Uri marketUri(String pkg) {
@@ -74,7 +70,7 @@ public abstract class PackageUtil {
 	}
 
 	public static void runInstallPluginDialog(final Activity activity, Map<String,String> pluginData, final Runnable postRunnable) {
-		final String plugin = pluginData.get("androidPlugin");
+		/*final String plugin = pluginData.get("androidPlugin");
 		if (plugin != null) {
 			final String pluginVersion = pluginData.get("androidPluginVersion");
 
@@ -117,7 +113,7 @@ public abstract class PackageUtil {
 					.create().show();
 				return;
 			}
-		}
+		}*/
 		postRunnable.run();
 	}
 }
