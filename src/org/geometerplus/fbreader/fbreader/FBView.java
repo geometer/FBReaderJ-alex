@@ -53,8 +53,8 @@ public final class FBView extends ZLTextView {
 	//private boolean myIsManualScrollingActive;
 
 	@Override
-	public boolean onStylusPress(int x, int y) {
-		if (super.onStylusPress(x, y)) {
+	public boolean onFingerPress(int x, int y) {
+		if (super.onFingerPress(x, y)) {
 			return true;
 		}
 
@@ -62,12 +62,13 @@ public final class FBView extends ZLTextView {
 			return false;
 		}*/
 
-		final ZLTextHyperlink hyperlink = findHyperlink(x, y, 10);
-		if (hyperlink != null) {
-			selectHyperlink(hyperlink);
+		final ZLTextElementRegion region = findRegion(x, y, 10);
+		if (region != null) {
+			selectRegion(region);
 			myReader.repaintView();
-			myReader.doAction(ActionCode.PROCESS_HYPERLINK);
-			//followHyperlink(hyperlink);
+			if (region instanceof ZLTextHyperlinkRegion) {
+				myReader.doAction(ActionCode.PROCESS_HYPERLINK);
+			}
 			return true;
 		}
 
@@ -98,8 +99,8 @@ public final class FBView extends ZLTextView {
 	}
 
 	/*@Override
-	public boolean onStylusMovePressed(int x, int y) {
-		if (super.onStylusMovePressed(x, y)) {
+	public boolean onFingerMove(int x, int y) {
+		if (super.onFingerMove(x, y)) {
 			return true;
 		}
 
@@ -127,8 +128,8 @@ public final class FBView extends ZLTextView {
 	}*/
 
 	/*@Override
-	public boolean onStylusRelease(int x, int y) {
-		if (super.onStylusRelease(x, y)) {
+	public boolean onFingerRelease(int x, int y) {
+		if (super.onFingerRelease(x, y)) {
 			return true;
 		}
 
