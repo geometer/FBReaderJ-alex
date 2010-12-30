@@ -58,7 +58,7 @@ public final class FileManager extends BaseActivity {
 	public static String FILE_MANAGER_INSERT_MODE = "FileManagerInsertMode";
 	
 	private static final int DELETE_FILE_ITEM_ID = 10;
-	private static final int RENAME_FILE_ITEM_ID = 11;
+//	private static final int RENAME_FILE_ITEM_ID = 11; //FIXME delete later
 	private static final int MOVE_FILE_ITEM_ID = 12;
 	public static String FILE_MANAGER_PATH = "FileManagerPath";
 	
@@ -151,9 +151,9 @@ public final class FileManager extends BaseActivity {
 						FileManager.CHILD_LIST_REQUEST
 				);
 				return true;
-			case RENAME_FILE_ITEM_ID:
-				new RenameDialog(this, fileItem.getFile()).show();
-				return true;
+//			case RENAME_FILE_ITEM_ID:
+//				new RenameDialog(this, fileItem.getFile()).show();
+//				return true;
 			case DELETE_FILE_ITEM_ID:
 				deleteFileItem(fileItem);
 				return true;
@@ -329,7 +329,7 @@ public final class FileManager extends BaseActivity {
 			if (item.getFile().isDirectory()){
 				if (ZLFile.createFileByPath(myPath).isArchive())
 					return;
-				menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
+				//menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
 				menu.add(0, DELETE_FILE_ITEM_ID, 0, myResource.getResource("delete").getValue());
 			}else{
 				final Book book = item.getBook();
@@ -338,7 +338,7 @@ public final class FileManager extends BaseActivity {
 				}
 				if (ZLFile.createFileByPath(myPath).isArchive())
 					return;
-				menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
+				//menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
 				menu.add(0, MOVE_FILE_ITEM_ID, 0, myResource.getResource("move").getValue());
 				if (book == null) {
 					menu.add(0, DELETE_FILE_ITEM_ID, 0, myResource.getResource("delete").getValue());
