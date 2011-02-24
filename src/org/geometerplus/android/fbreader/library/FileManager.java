@@ -147,6 +147,12 @@ public final class FileManager extends BaseActivity
 			case DELETE_FILE_ITEM_ID:
 				FileUtil.deleteFileItem(this, fileItem);
 				return true;
+			case SORT_FILE_MANAGER_ID:
+				new SortingDialog(this, myPath).show();
+				return true;
+			case VIEW_FILE_MANAGER_ID:
+				new ViewChangeDialog(this, myPath).show();
+				return true;
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -297,6 +303,9 @@ public final class FileManager extends BaseActivity
 		}
 
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+			menu.add(0, SORT_FILE_MANAGER_ID, 0, "SORT");
+			menu.add(0, VIEW_FILE_MANAGER_ID, 0, "VIEW");
+
 			if (myPath == null)
 				return;
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;

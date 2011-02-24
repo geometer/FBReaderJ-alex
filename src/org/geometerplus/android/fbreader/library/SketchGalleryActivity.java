@@ -202,6 +202,12 @@ public class SketchGalleryActivity extends BaseGalleryActivity
 				FileUtil.deleteFileItem(this, fileItem);
 				myGallery.invalidate();
 				return true;
+			case SORT_FILE_MANAGER_ID:
+				new SortingDialog(this, myPath).show();
+				return true;
+			case VIEW_FILE_MANAGER_ID:
+				new ViewChangeDialog(this, myPath).show();
+				return true;
 		}
 		return super.onContextItemSelected(item);
 	}
@@ -242,7 +248,10 @@ public class SketchGalleryActivity extends BaseGalleryActivity
         
     	@Override
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-			if (myPath == null)
+			menu.add(0, SORT_FILE_MANAGER_ID, 0, "SORT");
+			menu.add(0, VIEW_FILE_MANAGER_ID, 0, "VIEW");
+
+    		if (myPath == null)
 				return;
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
 			final FileItem item = getItem(position);

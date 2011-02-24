@@ -75,6 +75,9 @@ interface HasFileManagerConstants {
 	static final int DELETE_FILE_ITEM_ID = 10;
 //	static final int RENAME_FILE_ITEM_ID = 11; //TODO may be later
 	static final int MOVE_FILE_ITEM_ID = 12;
+	
+	static int SORT_FILE_MANAGER_ID = 21;
+	static int VIEW_FILE_MANAGER_ID = 22;
 }
 
 class LibraryUtil {
