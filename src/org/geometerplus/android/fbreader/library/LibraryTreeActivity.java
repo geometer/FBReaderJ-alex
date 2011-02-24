@@ -34,7 +34,7 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		if (DatabaseInstance == null || LibraryInstance == null) {
+		if (LibraryCommon.DatabaseInstance == null || LibraryCommon.LibraryInstance == null) {
 			finish();
 			return;
 		}
@@ -72,15 +72,15 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 
 		FBTree tree = null;
 		if (PATH_RECENT.equals(path[0])) {
-			tree = LibraryInstance.recentBooks();
+			tree = LibraryCommon.LibraryInstance.recentBooks();
 		} else if (PATH_SEARCH_RESULTS.equals(path[0])) {
-			tree = LibraryInstance.searchResults();
+			tree = LibraryCommon.LibraryInstance.searchResults();
 		} else if (PATH_BY_AUTHOR.equals(path[0])) {
-			tree = LibraryInstance.byAuthor();
+			tree = LibraryCommon.LibraryInstance.byAuthor();
 		} else if (PATH_BY_TAG.equals(path[0])) {
-			tree = LibraryInstance.byTag();
+			tree = LibraryCommon.LibraryInstance.byTag();
 		} else if (PATH_FAVORITES.equals(path[0])) {
-			tree = LibraryInstance.favorites();
+			tree = LibraryCommon.LibraryInstance.favorites();
 		}
         
 		for (int i = 1; i < path.length; ++i) {

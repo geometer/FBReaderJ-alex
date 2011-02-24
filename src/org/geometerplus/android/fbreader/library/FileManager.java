@@ -19,58 +19,64 @@
 
 package org.geometerplus.android.fbreader.library;
 
-import java.util.*;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.image.ZLImage;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.ui.android.R;
+import java.io.IOException;
 
 import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.library.Book;
-import org.geometerplus.fbreader.library.Library;
-import org.geometerplus.fbreader.formats.PluginCollection;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-public final class FileManager extends BaseActivity {
-	public static String FILE_MANAGER_PATH = "FileManagerPath";
-	
+public final class FileManager extends BaseActivity 
+	implements FMBaseAdapter.HasAdapter, HasFileManagerConstants {
 	private String myPath;
-
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
 
-		if (DatabaseInstance == null || LibraryInstance == null) {
+		Log.v(FMCommon.LOG, "FileManager - onCreate(Bundle savedInstanceState)");
+		if (LibraryCommon.DatabaseInstance == null || LibraryCommon.LibraryInstance == null) {
+			Log.v(FMCommon.LOG, "FileManager - LibraryCommon.DatabaseInstance == null || LibraryCommon.LibraryInstance == null");
 			finish();
 			return;
 		}
-
+		myPath = getIntent().getStringExtra(FILE_MANAGER_PATH);
 		FileListAdapter adapter = new FileListAdapter();
 		setListAdapter(adapter);
+		
+		LibraryCommon.SortTypeInstance = SortTypeConf.getSortType();				// TODO move inisialization
+		LibraryCommon.ViewTypeInstance = ViewTypeConf.getViewType(); 				// TODO move inisialization
 
-		myPath = getIntent().getStringExtra(FILE_MANAGER_PATH);
-
+		if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
+			Log.v(FMCommon.LOG, "FileManager - LibraryCommon.ViewTypeInstance == ViewType.SKETCH");
+			SketchGalleryActivity.launchActivity(this, myPath);
+			finish();
+		}
+		
 		if (myPath == null) {
-			setTitle(myResource.getResource("fileTree").getValue());
 			addItem(Paths.BooksDirectoryOption().getValue(), "fileTreeLibrary");
-			addItem("/", "fileTreeRoot");
+//			addItem("/", "fileTreeRoot");	for alex version
 			addItem(Environment.getExternalStorageDirectory().getPath(), "fileTreeCard");
+			adapter.notifyDataSetChanged();
 		} else {
-			setTitle(myPath);
 			startUpdate();
 		}
 
@@ -78,22 +84,40 @@ public final class FileManager extends BaseActivity {
 		getListView().setTextFilterEnabled(true);
 		getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				runItem(((FileListAdapter)getListAdapter()).getItem(position));
+				runItem(getAdapter().getItem(position));
 			}
 		});
 	}
+	
+	@Override
+	protected void onResume() {
+		Log.v(FMCommon.LOG, "FileManager - onResume()");
+
+		super.onResume();
+		if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
+			SketchGalleryActivity.launchActivity(this, myPath);
+			finish();
+			return;
+		}
+
+		if (FMCommon.InsertPath != null) {
+			setTitle(myResource.getResource("moveTitle").getValue());
+		} else if (myPath == null) {
+			setTitle(myResource.getResource("fileTree").getValue());
+		} else {
+			setTitle(myPath);
+		}
+	}
 
 	private void startUpdate() {
-		new Thread(
-			new SmartFilter(ZLFile.createFileByPath(myPath))
-		).start();
+		runOnUiThread(new SmartFilter(this, ZLFile.createFileByPath(myPath)));
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
 		if (requestCode == CHILD_LIST_REQUEST && returnCode == RESULT_DO_INVALIDATE_VIEWS) {
 			if (myPath != null) {
-				((FileListAdapter)getListAdapter()).clear();
+				getAdapter().clear();
 				startUpdate();
 			}
 			getListView().invalidateViews();
@@ -106,33 +130,44 @@ public final class FileManager extends BaseActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		final int position = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
-		final FileItem fileItem = ((FileListAdapter)getListAdapter()).getItem(position);
+		final FileItem fileItem = getAdapter().getItem(position);
 		final Book book = fileItem.getBook(); 
 		if (book != null) {
-			return onContextItemSelected(item.getItemId(), book);
+			onContextItemSelected(item.getItemId(), book);
+		}
+		
+		switch (item.getItemId()) {
+			case MOVE_FILE_ITEM_ID:
+				FMCommon.InsertPath = fileItem.getFile().getPhysicalFile().getPath();
+				FileUtil.refreshActivity(this, myPath);
+				return true;
+//			case RENAME_FILE_ITEM_ID:
+//				new RenameDialog(this, fileItem.getFile()).show();
+//				return true;
+			case DELETE_FILE_ITEM_ID:
+				FileUtil.deleteFileItem(this, fileItem);
+				return true;
 		}
 		return super.onContextItemSelected(item);
 	}
-
+	
 	@Override
 	protected void deleteBook(Book book, int mode) {
 		super.deleteBook(book, mode);
-		((FileListAdapter)getListAdapter()).deleteFile(book.File);
+		getAdapter().deleteFile(book.File);
 		getListView().invalidateViews();
 	}
 
-	private void runItem(FileItem item) {
+	public void runItem(FileItem item) {
 		final ZLFile file = item.getFile();
 		final Book book = item.getBook();
 		if (book != null) {
 			showBookInfo(book);
 		} else if (file.isDirectory() || file.isArchive()) {
-			startActivityForResult(
-				new Intent(this, FileManager.class)
-					.putExtra(SELECTED_BOOK_PATH_KEY, mySelectedBookPath)
-					.putExtra(FILE_MANAGER_PATH, file.getPath()),
-				CHILD_LIST_REQUEST
-			);
+			Intent i = new Intent(this, FileManager.class)
+				.putExtra(SELECTED_BOOK_PATH_KEY, mySelectedBookPath)
+				.putExtra(FILE_MANAGER_PATH, file.getPath());
+			startActivityForResult(i,CHILD_LIST_REQUEST);
 		} else {
 			UIUtil.showErrorMessage(FileManager.this, "permissionDenied");
 		}
@@ -140,59 +175,113 @@ public final class FileManager extends BaseActivity {
 
 	private void addItem(String path, String resourceKey) {
 		final ZLResource resource = myResource.getResource(resourceKey);
-		((FileListAdapter)getListAdapter()).add(new FileItem(
+		getAdapter().add(new FileItem(
 			ZLFile.createFileByPath(path),
 			resource.getValue(),
 			resource.getResource("summary").getValue()
 		));
 	}
 
-	private final class FileListAdapter extends BaseAdapter implements View.OnCreateContextMenuListener {
-		private List<FileItem> myItems = new ArrayList<FileItem>();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	Log.v(FMCommon.LOG, "onCreateOptionsMenu");
+    	super.onCreateOptionsMenu(menu);
+    	LibraryUtil.addMenuItem(menu, 0, myResource, "insert", R.drawable.ic_menu_bookinfo);	//TODO
+    	LibraryUtil.addMenuItem(menu, 1, myResource, "mkdir", R.drawable.ic_menu_bookinfo);		//TODO
+    	LibraryUtil.addMenuItem(menu, 2, myResource, "sorting", R.drawable.ic_menu_bookinfo);	//TODO
+    	LibraryUtil.addMenuItem(menu, 3, myResource, "view", R.drawable.ic_menu_bookinfo);		//TODO
+    	return true;
+    }
 
-		public synchronized void clear() {
-			myItems.clear();
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		if (FMCommon.InsertPath == null){
+			menu.findItem(0).setVisible(false).setEnabled(false);
+			menu.findItem(1).setVisible(false).setEnabled(false);
+        }else{
+        	menu.findItem(0).setVisible(true).setEnabled(true);
+			menu.findItem(1).setVisible(true).setEnabled(true);
+        }
+		return true;
+	}
+
+    private Runnable messFileMoved = new Runnable() {
+		public void run() {
+			ToastMaker.MakeToast(FileManager.this, "messFileMoved");
+		}
+	};
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+	    	case 0:
+	    		try {
+	    			FileUtil.moveFile(FMCommon.InsertPath, myPath);
+	    			FMCommon.InsertPath = null;
+	    			FileUtil.refreshActivity(this, myPath);
+	    			runOnUiThread(messFileMoved);
+	    		} catch (IOException e) {
+    				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    			}
+	    		return true;
+        	case 1:
+        		new MkDirDialog(this, myPath).show();
+        		return true;
+        	case 2:
+        		new SortingDialog(this, myPath).show();
+	            return true;
+        	case 3:
+        		new ViewChangeDialog(this, myPath).show();
+        		return true;
+        	default:
+        		return super.onOptionsItemSelected(item);
+        }
+    }
+    
+	private boolean isItemSelected(FileItem item) {
+		if (mySelectedBookPath == null || !item.isSelectable()) {
+			return false;
 		}
 
-		public synchronized void add(FileItem item){
-			myItems.add(item);
+		final ZLFile file = item.getFile();
+		final String path = file.getPath();
+		if (mySelectedBookPath.equals(path)) {
+			return true;
 		}
 
-		public synchronized void deleteFile(ZLFile file) {
-			for (FileItem item : myItems) {
-				if (file.equals(item.getFile())) {
-					myItems.remove(item);
-					break;
-				}
+		String prefix = path;
+		if (file.isDirectory()) {
+			if (!prefix.endsWith("/")) {
+				prefix += '/';
 			}
+		} else if (file.isArchive()) {
+			prefix += ':';
+		} else {
+			return false;
 		}
+		return mySelectedBookPath.startsWith(prefix);
+	}
 
-		public synchronized int getCount() {
-			return myItems.size();
-		}
-
-		public synchronized FileItem getItem(int position) {
-			return myItems.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
-			final Book book = getItem(position).getBook();
-			if (book != null) {
-				createBookContextMenu(menu, book); 
-			}
-		}
+	@Override 
+	public FMBaseAdapter getAdapter() {
+		return (FMBaseAdapter)getListAdapter();
+	}
+	
+	public static void launchActivity(Context context, String path){
+		Intent i = new Intent(context, FileManager.class)
+			.putExtra(FILE_MANAGER_PATH, path)
+			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		((Activity) context).startActivity(i);
+	}
+	
+	private final class FileListAdapter extends FMBaseAdapter {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
             final FileItem item = getItem(position);
 			final View view = createView(convertView, parent, item.getName(), item.getSummary());
-			if (mySelectedBookPath != null &&
-				mySelectedBookPath.equals(item.getFile().getPath())) {
-				view.setBackgroundColor(0xff808080);
+			if (isItemSelected(item)) {
+				view.setBackgroundColor(0xff555555);
 			} else {
 				view.setBackgroundColor(0);
 			}
@@ -204,139 +293,34 @@ public final class FileManager extends BaseActivity {
 			} else {
 				coverView.setImageResource(item.getIcon());
 			}
-
             return view;
 		}
-	}
 
-	private final class FileItem {
-		private final ZLFile myFile;
-		private final String myName;
-		private final String mySummary;
-
-		private ZLImage myCover = null;
-		private boolean myCoverIsInitialized = false;
-
-		public FileItem(ZLFile file, String name, String summary) {
-			myFile = file;
-			myName = name;
-			mySummary = summary;
-		}
-
-		public FileItem(ZLFile file) {
-			if (file.isArchive() && file.getPath().endsWith(".fb2.zip")) {
-				final List<ZLFile> children = file.children();
-				if (children.size() == 1) {
-					final ZLFile child = children.get(0);
-					if (child.getPath().endsWith(".fb2")) {
-						myFile = child;
-						myName = file.getLongName();
-						mySummary = null;
-						return;
-					}
-				} 
-			}
-			myFile = file;
-			myName = null;
-			mySummary = null;
-		}
-
-		public String getName() {
-			return myName != null ? myName : myFile.getShortName();
-		}
-
-		public String getSummary() {
-			if (mySummary != null) {
-				return mySummary;
-			}
-
-			final Book book = getBook();
-			if (book != null) {
-				return book.getTitle();
-			}
-
-			return null;
-		}
-
-		public int getIcon() {
-			if (getBook() != null) {
-				return R.drawable.ic_list_library_book;
-			} else if (myFile.isDirectory()) {
-				if (myFile.isReadable()) {
-					return R.drawable.ic_list_library_folder;
-				} else {
-					return R.drawable.ic_list_library_permission_denied;
-				}
-			} else if (myFile.isArchive()) {
-				return R.drawable.ic_list_library_zip;
-			} else {
-				System.err.println(
-					"File " + myFile.getPath() +
-					" that is not a directory, not a book and not an archive " +
-					"has been found in getIcon()"
-				);
-				return R.drawable.ic_list_library_permission_denied;
-			}
-		}
-
-		public ZLImage getCover() {
-			if (!myCoverIsInitialized) {
-				myCoverIsInitialized = true;
-				myCover = Library.getCover(myFile);
-			}
-			return myCover;
-		}
-
-		public ZLFile getFile() {
-			return myFile;
-		}
-
-		public Book getBook() {
-			return Book.getByFile(myFile);
-		}
-	}
-
-	private final class SmartFilter implements Runnable {
-		private final ZLFile myFile;
-
-		public SmartFilter(ZLFile file) {
-			myFile = file;
-		}
-
-		public void run() {
-			if (!myFile.isReadable()) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						UIUtil.showErrorMessage(FileManager.this, "permissionDenied");
-					}
-				});
-				finish();
+		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+			if (myPath == null)
 				return;
-			}
+			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
+			final FileItem item = getItem(position);
 
-			final ArrayList<ZLFile> children = new ArrayList<ZLFile>(myFile.children());
-			Collections.sort(children, new FileComparator());
-			for (final ZLFile file : children) {
-				if (Thread.currentThread().isInterrupted()) {
-					break;
+			menu.setHeaderTitle(item.getName());
+			if (item.getFile().isDirectory()){
+				if (ZLFile.createFileByPath(myPath).isArchive())
+					return;
+				//menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
+				menu.add(0, DELETE_FILE_ITEM_ID, 0, myResource.getResource("delete").getValue());
+			}else{
+				final Book book = item.getBook();
+				if (book != null) {
+					createBookContextMenu(menu, book); 
 				}
-				if (file.isDirectory() || file.isArchive() ||
-					PluginCollection.Instance().getPlugin(file) != null) {
-					runOnUiThread(new Runnable() {
-						public void run() {
-							final FileListAdapter adapter = (FileListAdapter)getListAdapter();
-							adapter.add(new FileItem(file));
-							adapter.notifyDataSetChanged();
-						}
-					});
+				if (ZLFile.createFileByPath(myPath).isArchive())
+					return;
+				//menu.add(0, RENAME_FILE_ITEM_ID, 0, myResource.getResource("rename").getValue());
+				menu.add(0, MOVE_FILE_ITEM_ID, 0, myResource.getResource("move").getValue());
+				if (book == null) {
+					menu.add(0, DELETE_FILE_ITEM_ID, 0, myResource.getResource("delete").getValue());
 				}
 			}
-		}
-	}
-
-	private static class FileComparator implements Comparator<ZLFile> {
-		public int compare(ZLFile f0, ZLFile f1) {
-			return f0.getShortName().compareToIgnoreCase(f1.getShortName());
 		}
 	}
 }

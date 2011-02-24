@@ -72,7 +72,7 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 			return false;
 		}
 		BookSearchPatternOption.setValue(pattern);
-		return LibraryInstance.searchBooks(pattern).hasChildren();
+		return LibraryCommon.LibraryInstance.searchBooks(pattern).hasChildren();
 	}
 
 	protected void showNotFoundToast() {
@@ -216,13 +216,13 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 		}
 
 		public void run() {
-			if (LibraryInstance.hasState(Library.STATE_FULLY_INITIALIZED)) {
+			if (LibraryCommon.LibraryInstance.hasState(Library.STATE_FULLY_INITIALIZED)) {
 				myPostRunnable.run();
 			} else {
 				UIUtil.runWithMessage(LibraryBaseActivity.this, "loadingBookList",
 				new Runnable() {
 					public void run() {
-						LibraryInstance.waitForState(Library.STATE_FULLY_INITIALIZED);
+						LibraryCommon.LibraryInstance.waitForState(Library.STATE_FULLY_INITIALIZED);
 					}
 				},
 				myPostRunnable);

@@ -42,24 +42,11 @@ import org.geometerplus.android.fbreader.BookInfoActivity;
 import org.geometerplus.zlibrary.ui.android.R;
 
 
-abstract class BaseActivity extends ListActivity {
-	public static final String SELECTED_BOOK_PATH_KEY = "SelectedBookPath";
-	private static final int OPEN_BOOK_ITEM_ID = 0;
-	private static final int SHOW_BOOK_INFO_ITEM_ID = 1;
-	private static final int ADD_TO_FAVORITES_ITEM_ID = 2;
-	private static final int REMOVE_FROM_FAVORITES_ITEM_ID = 3;
-	private static final int DELETE_BOOK_ITEM_ID = 4;
+abstract class BaseActivity extends ListActivity 
+	implements HasBaseConstants {
+		protected final ZLResource myResource = ZLResource.resource("libraryView");
+		protected String mySelectedBookPath;
 
-	protected static final int CHILD_LIST_REQUEST = 0;
-	protected static final int BOOK_INFO_REQUEST = 1;
-	protected static final int RESULT_DONT_INVALIDATE_VIEWS = 0;
-	protected static final int RESULT_DO_INVALIDATE_VIEWS = 1;
-
-	static BooksDatabase DatabaseInstance;
-	static Library LibraryInstance;
-
-	protected final ZLResource myResource = ZLResource.resource("libraryView");
-	protected String mySelectedBookPath;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -83,12 +70,12 @@ abstract class BaseActivity extends ListActivity {
 		menu.setHeaderTitle(book.getTitle());
 		menu.add(0, OPEN_BOOK_ITEM_ID, 0, myResource.getResource("openBook").getValue());
 		menu.add(0, SHOW_BOOK_INFO_ITEM_ID, 0, myResource.getResource("showBookInfo").getValue());
-		if (LibraryInstance.isBookInFavorites(book)) {
+		if (LibraryCommon.LibraryInstance.isBookInFavorites(book)) {
 			menu.add(0, REMOVE_FROM_FAVORITES_ITEM_ID, 0, myResource.getResource("removeFromFavorites").getValue());
 		} else {
 			menu.add(0, ADD_TO_FAVORITES_ITEM_ID, 0, myResource.getResource("addToFavorites").getValue());
 		}
-		if ((LibraryInstance.getRemoveBookMode(book) & Library.REMOVE_FROM_DISK) != 0) {
+		if ((LibraryCommon.LibraryInstance.getRemoveBookMode(book) & Library.REMOVE_FROM_DISK) != 0) {
 			menu.add(0, DELETE_BOOK_ITEM_ID, 0, myResource.getResource("deleteBook").getValue());
         }
 	}
@@ -175,7 +162,7 @@ abstract class BaseActivity extends ListActivity {
 	}
 
 	protected void deleteBook(Book book, int mode) {
-		LibraryInstance.removeBook(book, mode);
+		LibraryCommon.LibraryInstance.removeBook(book, mode);
 	}
 
 	protected void showBookInfo(Book book) {
@@ -195,10 +182,10 @@ abstract class BaseActivity extends ListActivity {
 				showBookInfo(book);
 				return true;
 			case ADD_TO_FAVORITES_ITEM_ID:
-				LibraryInstance.addBookToFavorites(book);
+				LibraryCommon.LibraryInstance.addBookToFavorites(book);
 				return true;
 			case REMOVE_FROM_FAVORITES_ITEM_ID:
-				LibraryInstance.removeBookFromFavorites(book);
+				LibraryCommon.LibraryInstance.removeBookFromFavorites(book);
 				getListView().invalidateViews();
 				return true;
 			case DELETE_BOOK_ITEM_ID:

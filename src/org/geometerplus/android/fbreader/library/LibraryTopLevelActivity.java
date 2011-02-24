@@ -50,12 +50,12 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		DatabaseInstance = SQLiteBooksDatabase.Instance();
-		if (DatabaseInstance == null) {
-			DatabaseInstance = new SQLiteBooksDatabase(this, "LIBRARY");
+		LibraryCommon.DatabaseInstance = SQLiteBooksDatabase.Instance();
+		if (LibraryCommon.DatabaseInstance == null) {
+			LibraryCommon.DatabaseInstance = new SQLiteBooksDatabase(this, "LIBRARY");
 		}
-		if (LibraryInstance == null) {
-			LibraryInstance = new Library();
+		if (LibraryCommon.LibraryInstance == null) {
+			LibraryCommon.LibraryInstance = new Library();
 			startService(new Intent(getApplicationContext(), InitializationService.class));
 		}
 
@@ -65,7 +65,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			R.drawable.ic_list_library_favorites,
 			new OpenTreeRunnable(new StartTreeActivityRunnable(PATH_FAVORITES, null) {
 				public void run() {
-					if (LibraryInstance.favorites().hasChildren()) {
+					if (LibraryCommon.LibraryInstance.favorites().hasChildren()) {
 						super.run();
 					} else {
 						UIUtil.showErrorMessage(LibraryTopLevelActivity.this, "noFavorites");
@@ -107,7 +107,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 
 	@Override
 	public void onDestroy() {
-		LibraryInstance = null;
+		LibraryCommon.LibraryInstance = null;
 		super.onDestroy();
 	}
 
