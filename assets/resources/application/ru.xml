@@ -50,6 +50,31 @@
 		<node name="deleteBook" value="Удалить книгу"/>
 		<node name="addToFavorites" value="Добавить в избранное"/>
 		<node name="removeFromFavorites" value="Убрать из избранного"/>
+	
+		<node name="rename" value="Переименовать"/>
+		<node name="move" value="Переместить"/>
+		<node name="moveTitle" value="Перемещение файла"/>
+		<node name="delete" value="Удалить"/>
+		<node name="newDirectory" value="Новая папка"/>
+		
+		<node name="messFileExists" value="Файл с таким именем уже существует"/>
+		<node name="messFileIncorrect" value="Некорректное имя файла"/>	
+		<node name="messFileMoved" value="Файл перемещен"/>
+		<node name="messDirectoryIntoArchive" value="Невозможно создать папку внутри архива"/>
+		<node name="messInsertIntoArchive" value="Невозможно вставить файл в архив"/>
+		<node name="messRenameFailed" value="Переименование файла не выполнено"/>
+		<node name="messEmptyDirectory" value="Папка не содержит файлов"/>
+		
+		<node name="sortingBox">
+			<node name="title" value="Сортировка"/>
+			<node name="byName" value="По имени"/>
+			<node name="byDate" value="По дате создания"/>
+		</node>
+		<node name="viewBox">
+			<node name="title" value="Вид"/>
+			<node name="simple" value="Простой"/>
+			<node name="sketch" value="Эскизный"/>
+		</node>	
 	</node>
 	<node name="browser">
 		<node name="errorText" value="Ошибка: %s"/>
@@ -528,6 +553,12 @@
 		</node>
 		<node name="deleteBookBox">
 			<node name="message" value="Файл книги будет удален необратимо. Продолжать?"/>
+		</node>
+		<node name="deleteFileBox">
+			<node name="message" value="Файл будет удален необратимо. Продолжать?"/>
+		</node>
+		<node name="deleteDirBox">
+			<node name="message" value="Директория будет удалена необратимо. Продолжать?"/>
 		</node>
 		<node name="redownloadFileBox">
 			<node name="message" value="Файл уже есть на устройстве. Загрузить заново?"/>

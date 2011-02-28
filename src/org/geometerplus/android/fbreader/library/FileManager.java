@@ -64,12 +64,7 @@ public final class FileManager extends BaseActivity
 		
 		LibraryCommon.SortTypeInstance = SortTypeConf.getSortType();				// TODO move inisialization
 		LibraryCommon.ViewTypeInstance = ViewTypeConf.getViewType(); 				// TODO move inisialization
-
-		if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
-			Log.v(FMCommon.LOG, "FileManager - LibraryCommon.ViewTypeInstance == ViewType.SKETCH");
-			SketchGalleryActivity.launchActivity(this, myPath);
-			finish();
-		}
+		onResume();
 		
 		if (myPath == null) {
 			addItem(Paths.BooksDirectoryOption().getValue(), "fileTreeLibrary");
@@ -303,9 +298,6 @@ public final class FileManager extends BaseActivity
 		}
 
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-			menu.add(0, SORT_FILE_MANAGER_ID, 0, "SORT");
-			menu.add(0, VIEW_FILE_MANAGER_ID, 0, "VIEW");
-
 			if (myPath == null)
 				return;
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;

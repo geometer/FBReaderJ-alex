@@ -50,6 +50,31 @@
 		<node name="deleteBook" value="Delete book"/>
 		<node name="addToFavorites" value="Add to favorites"/>
 		<node name="removeFromFavorites" value="Remove from favorites"/>
+		
+		<node name="rename" value="Rename"/>
+		<node name="move" value="Move"/>
+		<node name="moveTitle" value="Move file"/>
+		<node name="delete" value="Delete"/>
+		<node name="newDirectory" value="New directory"/>
+		
+		<node name="messFileExists" value="File already exists"/>
+		<node name="messFileIncorrect" value="Incorrect file name!"/>	
+		<node name="messFileMoved" value="File moved"/>
+		<node name="messDirectoryIntoArchive" value="Cannot create a directory inside an archive"/>
+		<node name="messInsertIntoArchive" value="Cannot insert a file into archive"/>
+		<node name="messRenameFailed" value="Rename the file failed"/>
+		<node name="messEmptyDirectory" value="Directory is empty"/>
+		
+		<node name="sortingBox">
+			<node name="title" value="Sorting"/>
+			<node name="byName" value="By name"/>
+			<node name="byDate" value="By date"/>
+		</node>
+		<node name="viewBox">
+			<node name="title" value="View"/>
+			<node name="simple" value="Simple"/>
+			<node name="sketch" value="Sketch"/>
+		</node>	
 	</node>
 	<node name="browser">
 		<node name="errorText" value="Error: %s"/>
@@ -528,6 +553,12 @@
 		</node>
 		<node name="deleteBookBox">
 			<node name="message" value="The book file will be removed irreversibly. Are you sure?"/>
+		</node>
+		<node name="deleteFileBox">
+			<node name="message" value="The file will be removed irreversibly. Are you sure?"/>
+		</node>
+		<node name="deleteDirBox">
+			<node name="message" value="The directory will be removed irreversibly. Are you sure?"/>
 		</node>
 		<node name="redownloadFileBox">
 			<node name="message" value="File already exists. Redownload?"/>

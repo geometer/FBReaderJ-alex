@@ -318,7 +318,7 @@ class LibraryTreeChanger extends AbstractViewChangeDialog{
 			ViewTypeConf.setValue(item);
 			LibraryCommon.ViewTypeInstance = ViewType.values()[item];		// TODO think about
 			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-				// LibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString); // TODO
+				LibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString);
 			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
 				GalleryLibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString);	
 			}
@@ -343,7 +343,7 @@ class LibraryTopLevelViewChanger extends AbstractViewChangeDialog{
 			ViewTypeConf.setValue(item);
 			LibraryCommon.ViewTypeInstance = ViewType.values()[item];
 			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-				// LibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath); TODO
+				LibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath);
 			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
 				GalleryLibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath);
 			}
