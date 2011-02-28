@@ -21,21 +21,27 @@ package org.geometerplus.android.fbreader.library;
 
 import java.util.List;
 
-import android.app.*;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.view.*;
-import android.widget.*;
-
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
-
+import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
+import org.geometerplus.android.util.UIUtil;
+import org.geometerplus.fbreader.library.AuthorTree;
+import org.geometerplus.fbreader.library.Book;
+import org.geometerplus.fbreader.library.BookTree;
+import org.geometerplus.fbreader.library.Library;
+import org.geometerplus.fbreader.library.LibraryTree;
+import org.geometerplus.fbreader.library.TagTree;
 import org.geometerplus.fbreader.tree.FBTree;
-import org.geometerplus.fbreader.library.*;
-
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.android.util.UIUtil;
-import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 
 abstract class LibraryBaseActivity extends BaseActivity 
 	implements HasLibraryConstants, MenuItem.OnMenuItemClickListener {
@@ -75,7 +81,7 @@ abstract class LibraryBaseActivity extends BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
     	LibraryUtil.addMenuItem(menu, 1, myResource, "localSearch", R.drawable.ic_menu_search);
-    	LibraryUtil.addMenuItem(menu, 0, myResource, "view", R.drawable.ic_menu_bookinfo);
+    	LibraryUtil.addMenuItem(menu, 0, myResource, "view", R.drawable.ic_menu_view);
     	return true;
     }
 

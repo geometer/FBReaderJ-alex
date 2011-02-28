@@ -93,7 +93,6 @@ public class LibraryTreeActivity extends LibraryBaseActivity {
 		}
 	}
 
-	// TODO
 	@Override
 	protected void onResume() {
 		super.onResume();

@@ -93,7 +93,6 @@ public class BaseGalleryActivity extends Activity
 	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//		Log.v(FMCommon.LOG, "view = " + view);
 		view.setSelected(false);
 	}
 

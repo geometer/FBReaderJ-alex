@@ -44,6 +44,10 @@
 		</node>
 		<node name="menu">
 			<node name="localSearch" value="Поиск"/>
+			<node name="mkdir" value="Создать папку"/>
+			<node name="sorting" value="Отсортировать"/>
+			<node name="view" value="Вид"/>
+			<node name="insert" value="Вставить"/>
 		</node>
 		<node name="openBook" value="Читать книгу"/>
 		<node name="showBookInfo" value="Информация о книге"/>

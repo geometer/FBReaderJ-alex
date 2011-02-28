@@ -106,7 +106,6 @@ public class TextEditDialog extends Dialog{
 	protected void okAction()  {
 		dismiss();
 	}
-	
 }
 
 
