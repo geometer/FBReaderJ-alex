@@ -19,34 +19,33 @@
 
 package org.geometerplus.android.fbreader.library;
 
-import android.app.*;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
-
-import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.fbreader.library.Book;
+import org.geometerplus.fbreader.library.Library;
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.image.ZLLoadableImage;
-
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
-import org.geometerplus.fbreader.library.*;
-
-import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.fbreader.BookInfoActivity;
-
-import org.geometerplus.zlibrary.ui.android.R;
-
+import android.app.ListActivity;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 abstract class BaseActivity extends ListActivity 
 	implements HasBaseConstants {
-		protected final ZLResource myResource = ZLResource.resource("libraryView");
-		protected String mySelectedBookPath;
-
+	protected final ZLResource myResource = ZLResource.resource("libraryView");
+	protected String mySelectedBookPath;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -58,34 +57,32 @@ abstract class BaseActivity extends ListActivity
 	}
 
 	protected void openBook(Book book) {
-		startActivity(
-			new Intent(getApplicationContext(), FBReader.class)
-				.setAction(Intent.ACTION_VIEW)
-				.putExtra(FBReader.BOOK_PATH_KEY, book.File.getPath())
-				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-		);
+		LibraryUtil.openBook(this, book);
 	}
 
 	protected void createBookContextMenu(ContextMenu menu, Book book) {
-		menu.setHeaderTitle(book.getTitle());
-		menu.add(0, OPEN_BOOK_ITEM_ID, 0, myResource.getResource("openBook").getValue());
-		menu.add(0, SHOW_BOOK_INFO_ITEM_ID, 0, myResource.getResource("showBookInfo").getValue());
-		if (LibraryCommon.LibraryInstance.isBookInFavorites(book)) {
-			menu.add(0, REMOVE_FROM_FAVORITES_ITEM_ID, 0, myResource.getResource("removeFromFavorites").getValue());
-		} else {
-			menu.add(0, ADD_TO_FAVORITES_ITEM_ID, 0, myResource.getResource("addToFavorites").getValue());
-		}
-		if ((LibraryCommon.LibraryInstance.getRemoveBookMode(book) & Library.REMOVE_FROM_DISK) != 0) {
-			menu.add(0, DELETE_BOOK_ITEM_ID, 0, myResource.getResource("deleteBook").getValue());
-        }
+		LibraryUtil.createBookContextMenu(menu, book, myResource);
 	}
 
 	protected View createView(View convertView, ViewGroup parent, String name, String summary) {
 		final View view = (convertView != null) ?  convertView :
 			LayoutInflater.from(parent.getContext()).inflate(R.layout.library_tree_item, parent, false);
+		
+		TextView nameTextView = (TextView)view.findViewById(R.id.library_tree_item_name);
+		nameTextView.setText(name);
 
-        ((TextView)view.findViewById(R.id.library_tree_item_name)).setText(name);
-		((TextView)view.findViewById(R.id.library_tree_item_childrenlist)).setText(summary);
+		TextView summaryTextView = (TextView)view.findViewById(R.id.library_tree_item_childrenlist); 
+        summaryTextView.setText(summary);
+
+        if (summary == null || summary.equals("")){
+            summaryTextView.setVisibility(View.GONE);
+        	nameTextView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 0.5f));
+        	nameTextView.setPadding(0, 0, 0, 6);
+        	nameTextView.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+        	summaryTextView.setVisibility(View.VISIBLE);
+        	nameTextView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
+        }
 		return view;
 	}
 
@@ -133,32 +130,22 @@ abstract class BaseActivity extends ListActivity
 		return data != null ? data.getBitmap(2 * myCoverWidth, 2 * myCoverHeight) : null;
 	}
 
+	
 	private class BookDeleter implements DialogInterface.OnClickListener {
-		private final Book myBook;
-		private final int myMode;
-
+		private Book myBook;
+		private int myMode;
 		BookDeleter(Book book, int removeMode) {
 			myBook = book;
 			myMode = removeMode;
 		}
-
 		public void onClick(DialogInterface dialog, int which) {
 			deleteBook(myBook, myMode);
 			setResult(RESULT_DO_INVALIDATE_VIEWS);
 		}
 	}
-
+	
 	private void tryToDeleteBook(Book book) {
-		final ZLResource dialogResource = ZLResource.resource("dialog");
-		final ZLResource buttonResource = dialogResource.getResource("button");
-		final ZLResource boxResource = dialogResource.getResource("deleteBookBox");
-		new AlertDialog.Builder(this)
-			.setTitle(book.getTitle())
-			.setMessage(boxResource.getResource("message").getValue())
-			.setIcon(0)
-			.setPositiveButton(buttonResource.getResource("yes").getValue(), new BookDeleter(book, Library.REMOVE_FROM_DISK))
-			.setNegativeButton(buttonResource.getResource("no").getValue(), null)
-			.create().show();
+		LibraryUtil.tryToDeleteBook(this, book,  new BookDeleter(book, Library.REMOVE_FROM_DISK));
 	}
 
 	protected void deleteBook(Book book, int mode) {
@@ -166,11 +153,7 @@ abstract class BaseActivity extends ListActivity
 	}
 
 	protected void showBookInfo(Book book) {
-		startActivityForResult(
-			new Intent(getApplicationContext(), BookInfoActivity.class)
-				.putExtra(BookInfoActivity.CURRENT_BOOK_PATH_KEY, book.File.getPath()),
-			BOOK_INFO_REQUEST
-		);
+		LibraryUtil.showBookInfo(this, book);
 	}
 
 	protected boolean onContextItemSelected(int itemId, Book book) {

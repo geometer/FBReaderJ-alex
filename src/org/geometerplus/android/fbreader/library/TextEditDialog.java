@@ -301,54 +301,54 @@ class ViewChangeDialog extends AbstractViewChangeDialog{
 	}
 }
 
-//class LibraryTreeChanger extends AbstractViewChangeDialog{
-//	private String mySelectedBook;
-//	private String myTreePathString;
-//
-//	public LibraryTreeChanger(Context content, String selectedBook, String treePathString) {
-//		super(content);
-//		mySelectedBook = selectedBook;
-//		myTreePathString = treePathString;
-//	}
-//
-//	@Override
-//	protected void itemSelected(DialogInterface dialog, int item){
-//		super.itemSelected(dialog, item);
-//		if (ViewTypeConf.getValue() != item){
-//			ViewTypeConf.setValue(item);
-//			LibraryCommon.ViewTypeInstance = ViewType.values()[item];		// TODO think about
-//			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-//				LibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString);
-//			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
-//				GalleryLibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString);	
-//			}
-//			((Activity)myContext).finish();			// TODO ??? Intent.FLAG_ACTIVITY_CLEAR_TOP
-//		}
-//	}
-//}
+class LibraryTreeChanger extends AbstractViewChangeDialog{
+	private String mySelectedBook;
+	private String myTreePathString;
+
+	public LibraryTreeChanger(Context content, String selectedBook, String treePathString) {
+		super(content);
+		mySelectedBook = selectedBook;
+		myTreePathString = treePathString;
+	}
+
+	@Override
+	protected void itemSelected(DialogInterface dialog, int item){
+		super.itemSelected(dialog, item);
+		if (ViewTypeConf.getValue() != item){
+			ViewTypeConf.setValue(item);
+			LibraryCommon.ViewTypeInstance = ViewType.values()[item];		// TODO think about
+			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
+				// LibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString); // TODO
+			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
+				GalleryLibraryTreeActivity.launchActivity((Activity) myContext, mySelectedBook, myTreePathString);	
+			}
+			((Activity)myContext).finish();			// TODO ??? Intent.FLAG_ACTIVITY_CLEAR_TOP
+		}
+	}
+}
 
 
-//class LibraryTopLevelViewChanger extends AbstractViewChangeDialog{
-//	private String mySelectedBookPath;
-//
-//	public LibraryTopLevelViewChanger(Context content, String selectedBookPath) {
-//		super(content);
-//		mySelectedBookPath = selectedBookPath;
-//	}
-//
-//	@Override
-//	protected void itemSelected(DialogInterface dialog, int item){
-//		super.itemSelected(dialog, item);
-//		if (ViewTypeConf.getValue() != item){
-//			ViewTypeConf.setValue(item);
-//			LibraryCommon.ViewTypeInstance = ViewType.values()[item];
-//			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-//				LibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath);
-//			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
-//				GalleryLibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath);
-//			}
-//			((Activity)myContext).finish();			// TODO ??? Intent.FLAG_ACTIVITY_CLEAR_TOP
-//		}
-//	}
-//}
+class LibraryTopLevelViewChanger extends AbstractViewChangeDialog{
+	private String mySelectedBookPath;
+
+	public LibraryTopLevelViewChanger(Context content, String selectedBookPath) {
+		super(content);
+		mySelectedBookPath = selectedBookPath;
+	}
+
+	@Override
+	protected void itemSelected(DialogInterface dialog, int item){
+		super.itemSelected(dialog, item);
+		if (ViewTypeConf.getValue() != item){
+			ViewTypeConf.setValue(item);
+			LibraryCommon.ViewTypeInstance = ViewType.values()[item];
+			if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
+				// LibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath); TODO
+			} else if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
+				GalleryLibraryTopLevelActivity.launchActivity((Activity) myContext, mySelectedBookPath);
+			}
+			((Activity)myContext).finish();			// TODO ??? Intent.FLAG_ACTIVITY_CLEAR_TOP
+		}
+	}
+}
 
