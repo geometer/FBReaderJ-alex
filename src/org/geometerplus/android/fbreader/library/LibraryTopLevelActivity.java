@@ -21,26 +21,29 @@ package org.geometerplus.android.fbreader.library;
 
 import java.util.LinkedList;
 
-import android.app.SearchManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.widget.ListView;
-
+import org.geometerplus.android.fbreader.SQLiteBooksDatabase;
+import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
+import org.geometerplus.android.util.UIUtil;
+import org.geometerplus.fbreader.library.Library;
+import org.geometerplus.fbreader.tree.FBTree;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.fbreader.library.Library;
-import org.geometerplus.fbreader.tree.FBTree;
-
-import org.geometerplus.android.util.UIUtil;
-import org.geometerplus.android.fbreader.SQLiteBooksDatabase;
-import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 public class LibraryTopLevelActivity extends LibraryBaseActivity {
+	// TODO
+//	public static final String SHOW_PATH_KEY = "org.geometerplus.android.fbreader.library.SHOW_PATH";
+//	private String myShowPath;
+
 	public static final String SHOW_PATH_KEY = "org.geometerplus.android.fbreader.library.SHOW_PATH";
-	private String myShowPath;
+//	private String myShowPath;
 
 	private LinkedList<FBTree> myItems;
 	private TopLevelTree mySearchResultsItem;
@@ -48,22 +51,26 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		LibraryCommon.DatabaseInstance = SQLiteBooksDatabase.Instance();
 		if (LibraryCommon.DatabaseInstance == null) {
 			LibraryCommon.DatabaseInstance = new SQLiteBooksDatabase(this, "LIBRARY");
 		}
-		if (LibraryCommon.LibraryInstance == null) {
+		if (LibraryCommon.LibraryInstance == null) {	// TODO
 			LibraryCommon.LibraryInstance = new Library();
+			LibraryCommon.incLibCount();
 			startService(new Intent(getApplicationContext(), InitializationService.class));
 		}
 
+		LibraryCommon.ViewTypeInstance = ViewTypeConf.getViewType();	// TODO move inicialization
+		onResume();
+		
 		myItems = new LinkedList<FBTree>();
 		myItems.add(new TopLevelTree(
 			myResource.getResource(PATH_FAVORITES),
 			R.drawable.ic_list_library_favorites,
-			new OpenTreeRunnable(new StartTreeActivityRunnable(PATH_FAVORITES, null) {
+			new OpenTreeRunnable(LibraryCommon.LibraryInstance, new StartTreeActivityRunnable(PATH_FAVORITES, null) {
 				public void run() {
 					if (LibraryCommon.LibraryInstance.favorites().hasChildren()) {
 						super.run();
@@ -76,17 +83,23 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 		myItems.add(new TopLevelTree(
 			myResource.getResource(PATH_RECENT),
 			R.drawable.ic_list_library_recent,
-			new OpenTreeRunnable(PATH_RECENT)
+			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_RECENT)
 		));
 		myItems.add(new TopLevelTree(
 			myResource.getResource(PATH_BY_AUTHOR),
 			R.drawable.ic_list_library_authors,
-			new OpenTreeRunnable(PATH_BY_AUTHOR)
+			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_AUTHOR)
 		));
+		// TODO uncomment later
+//		myItems.add(new TopLevelTree(
+//			myResource.getResource(PATH_BY_TITLE),
+//			R.drawable.ic_list_library_books,
+//			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_TITLE)
+//		));
 		myItems.add(new TopLevelTree(
 			myResource.getResource(PATH_BY_TAG),
 			R.drawable.ic_list_library_tags,
-			new OpenTreeRunnable(PATH_BY_TAG)
+			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_TAG)
 		));
 		myItems.add(new TopLevelTree(
 			myResource.getResource("fileTree"),
@@ -101,13 +114,22 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			}
 		));
 		setListAdapter(new LibraryAdapter(myItems));
-
 		onNewIntent(getIntent());
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if (LibraryCommon.ViewTypeInstance == ViewType.SKETCH){
+			GalleryLibraryTopLevelActivity.launchActivity(this, mySelectedBookPath);
+			finish();
+			return;
+		}
+	}
+	
+	@Override
 	public void onDestroy() {
-		LibraryCommon.LibraryInstance = null;
+		LibraryCommon.DestroyLibInstance();	// TODO
 		super.onDestroy();
 	}
 
@@ -126,7 +148,7 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 			myResource.getResource(PATH_SEARCH_RESULTS),
 			pattern,
 			R.drawable.ic_list_library_books,
-			new OpenTreeRunnable(PATH_SEARCH_RESULTS, pattern)
+			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_SEARCH_RESULTS, pattern)
 		);
 		myItems.add(0, mySearchResultsItem);
 		getListView().invalidateViews();
@@ -143,18 +165,28 @@ public class LibraryTopLevelActivity extends LibraryBaseActivity {
 		} else if (ACTION_FOUND.equals(intent.getAction())) {
 			setSearchResults(intent);
 		}
-		myShowPath = intent.getStringExtra(SHOW_PATH_KEY);
-		intent.removeExtra(SHOW_PATH_KEY);
 	}
-
+	
 	@Override
-	protected void onResume() {
-		super.onResume();
-		if (myShowPath != null) {
-			final Runnable runnable = new OpenTreeRunnable(myShowPath);
-			myShowPath = null;
-			runnable.run();
+	public boolean onOptionsItemSelected(MenuItem item) {
+		onMenuItemClick(item);
+		switch (item.getItemId()) {
+		case 0:
+			new LibraryTopLevelViewChanger(this, mySelectedBookPath).show();	
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public static void launchActivity(Activity activity, String selectedBookPath){
+		Intent intent = new Intent(activity.getApplicationContext(), LibraryTopLevelActivity.class);
+		intent.putExtra(SELECTED_BOOK_PATH_KEY, selectedBookPath);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		activity.startActivity(intent);
+	
+		LibraryCommon.incLibCount();
 	}
 }
 

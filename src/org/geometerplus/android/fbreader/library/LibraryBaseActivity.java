@@ -37,18 +37,10 @@ import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.android.fbreader.tree.ZLAndroidTree;
 
-abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMenuItemClickListener {
-	static final String TREE_PATH_KEY = "TreePath";
-	static final String PARAMETER_KEY = "Parameter";
+abstract class LibraryBaseActivity extends BaseActivity 
+	implements HasLibraryConstants, MenuItem.OnMenuItemClickListener {
 
-	public static final String PATH_FAVORITES = "favorites";
-	public static final String PATH_SEARCH_RESULTS = "searchResults";
-	public static final String PATH_RECENT = "recent";
-	public static final String PATH_BY_AUTHOR = "byAuthor";
-	public static final String PATH_BY_TAG = "byTag";
-
-	static final ZLStringOption BookSearchPatternOption =
-		new ZLStringOption("BookSearch", "Pattern", "");
+	protected Book mySelectedBook;
 
 	@Override
 	protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
@@ -60,7 +52,7 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 
 	@Override
 	public boolean onSearchRequested() {
-		startSearch(BookSearchPatternOption.getValue(), true, null, false);
+		startSearch(LibraryCommon.BookSearchPatternOption.getValue(), true, null, false);
 		return true;
 	}
 
@@ -71,7 +63,7 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 		if (pattern == null || pattern.length() == 0) {
 			return false;
 		}
-		BookSearchPatternOption.setValue(pattern);
+		LibraryCommon.BookSearchPatternOption.setValue(pattern);
 		return LibraryCommon.LibraryInstance.searchBooks(pattern).hasChildren();
 	}
 
@@ -81,17 +73,10 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        addMenuItem(menu, 1, "localSearch", R.drawable.ic_menu_search);
-        return true;
-    }
-
-    private MenuItem addMenuItem(Menu menu, int index, String resourceKey, int iconId) {
-        final String label = myResource.getResource("menu").getResource(resourceKey).getValue();
-        final MenuItem item = menu.add(0, index, Menu.NONE, label);
-        item.setOnMenuItemClickListener(this);
-        item.setIcon(iconId);
-        return item;
+    	super.onCreateOptionsMenu(menu);
+    	LibraryUtil.addMenuItem(menu, 1, myResource, "localSearch", R.drawable.ic_menu_search);
+    	LibraryUtil.addMenuItem(menu, 0, myResource, "view", R.drawable.ic_menu_bookinfo);
+    	return true;
     }
 
     public boolean onMenuItemClick(MenuItem item) {
@@ -103,25 +88,24 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
         }
     }
 
-	protected final class LibraryAdapter extends BaseAdapter implements View.OnCreateContextMenuListener {
-		private final List<FBTree> myItems;
-
+	protected final class LibraryAdapter extends LibraryBaseAdapter {
 		public LibraryAdapter(List<FBTree> items) {
-			myItems = items;
+			super(items);
 		}
 
-		public final int getCount() {
-			return myItems.size();
+		@Override
+		public int getFirstSelectedItemIndex() {
+			int index = 0;
+			for (FBTree t : myItems) {
+				if (isTreeSelected(t)) {
+					return index;
+				}
+				++index;
+			}
+			return -1;
 		}
 
-		public final FBTree getItem(int position) {
-			return myItems.get(position);
-		}
-
-		public final long getItemId(int position) {
-			return position;
-		}
-
+		@Override
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
 			final LibraryTree tree = (LibraryTree)getItem(position);
@@ -130,13 +114,12 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 			}
 		}
 
+		@Override
 		public View getView(int position, View convertView, final ViewGroup parent) {
 			final FBTree tree = getItem(position);
 			final View view = createView(convertView, parent, tree.getName(), tree.getSecondString());
-			if (tree instanceof BookTree &&
-				mySelectedBookPath != null &&
-				mySelectedBookPath.equals(((BookTree)tree).Book.File.getPath())) {
-				view.setBackgroundColor(0xff808080);
+			if (isTreeSelected(tree)) {
+				view.setBackgroundColor(0xff555555);
 			} else {
 				view.setBackgroundColor(0);
 			}
@@ -179,14 +162,16 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 		super.deleteBook(book, mode);
 		getListView().invalidateViews();
 	}
+	
+	//TODO
+	protected boolean isTreeSelected(FBTree tree) {
+		//return LibraryUtil.isTreeSelected(tree, mySelectedBook);
+		return false;
+	}
 
-	protected class StartTreeActivityRunnable implements Runnable {
-		private final String myTreePath;
-		private final String myParameter;
-
+	protected class StartTreeActivityRunnable extends AStartTreeActivityRunnable{
 		public StartTreeActivityRunnable(String treePath, String parameter) {
-			myTreePath = treePath;
-			myParameter = parameter;
+			super(treePath, parameter);
 		}
 
 		public void run() {
@@ -200,33 +185,15 @@ abstract class LibraryBaseActivity extends BaseActivity implements MenuItem.OnMe
 		}
 	}
 
-	protected class OpenTreeRunnable implements Runnable {
-		private final Runnable myPostRunnable;
-
-		public OpenTreeRunnable(String treePath) {
-			this(treePath, null);
+	protected class OpenTreeRunnable extends AOpenTreeRunnable {
+		public OpenTreeRunnable(Library library, String treePath) {
+			this(library, treePath, null);
 		}
-
-		public OpenTreeRunnable(String treePath, String parameter) {
-			this(new StartTreeActivityRunnable(treePath, parameter));
+		public OpenTreeRunnable(Library library, String treePath, String parameter) {
+			this(library, new StartTreeActivityRunnable(treePath, parameter));
 		}
-
-		public OpenTreeRunnable(Runnable postRunnable) {
-			myPostRunnable = postRunnable;
-		}
-
-		public void run() {
-			if (LibraryCommon.LibraryInstance.hasState(Library.STATE_FULLY_INITIALIZED)) {
-				myPostRunnable.run();
-			} else {
-				UIUtil.runWithMessage(LibraryBaseActivity.this, "loadingBookList",
-				new Runnable() {
-					public void run() {
-						LibraryCommon.LibraryInstance.waitForState(Library.STATE_FULLY_INITIALIZED);
-					}
-				},
-				myPostRunnable);
-			}
+		public OpenTreeRunnable(Library library, Runnable postRunnable) {
+			super(library, postRunnable, LibraryBaseActivity.this);
 		}
 	}
 }

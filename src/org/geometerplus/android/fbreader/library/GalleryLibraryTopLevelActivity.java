@@ -75,11 +75,12 @@ public class GalleryLibraryTopLevelActivity extends GalleryLibraryBaseActivity
 			R.drawable.ic_list_library_authors,
 			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_AUTHOR)
 		));
-		myItems.add(new TopLevelTree(
-			myResource.getResource(PATH_BY_TITLE),
-			R.drawable.ic_list_library_books,
-			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_TITLE)
-		));
+		// TODO uncomment later
+//		myItems.add(new TopLevelTree(
+//			myResource.getResource(PATH_BY_TITLE),
+//			R.drawable.ic_list_library_books,
+//			new OpenTreeRunnable(LibraryCommon.LibraryInstance, PATH_BY_TITLE)
+//		));
 		myItems.add(new TopLevelTree(
 			myResource.getResource(PATH_BY_TAG),
 			R.drawable.ic_list_library_tags,
@@ -109,7 +110,7 @@ public class GalleryLibraryTopLevelActivity extends GalleryLibraryBaseActivity
 	protected void onResume() {
 		super.onResume();
 		if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-			//LibraryTopLevelActivity.launchActivity(this, mySelectedBookPath); TODO
+			LibraryTopLevelActivity.launchActivity(this, mySelectedBookPath); 
 			finish();
 			return;
 		}

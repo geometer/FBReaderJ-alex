@@ -93,7 +93,6 @@ public class GalleryLibraryTreeActivity extends GalleryLibraryBaseActivity
 			myGallery.setAdapter(adapter);
 			myGallery.setOnItemClickListener(this);
 			myGallery.setOnCreateContextMenuListener(adapter);
-//			myGallery.setSelection(adapter.getFirstSelectedItemIndex());	// TODO						
 		} else {
 			Log.v(FMCommon.LOG, "GalleryLibraryTreeActivity - tree == null");
 		}
@@ -103,7 +102,7 @@ public class GalleryLibraryTreeActivity extends GalleryLibraryBaseActivity
 	protected void onResume() {
 		super.onResume();
 		if (LibraryCommon.ViewTypeInstance == ViewType.SIMPLE){
-			// LibraryTreeActivity.launchActivity(this, mySelectedBookPath, myTreePathString); // TODO
+			LibraryTreeActivity.launchActivity(this, mySelectedBookPath, myTreePathString);
 			finish();
 			return;
 		}
