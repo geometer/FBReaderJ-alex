@@ -204,6 +204,7 @@ public final class FBReader extends ZLAndroidActivity {
 
 		setupEditMode();
 		initializeButtons();
+		
 	}
 
 	private final void initializeButtons() {
